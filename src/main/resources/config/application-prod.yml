@@ -18,7 +18,7 @@ eureka:
         prefer-ip-address: true
     client:
         service-url:
-            defaultZone: http://admin:${jhipster.registry.password}@localhost:8761/eureka/
+            defaultZone: http://admin:${jhipster.registry.password}@register.emcloud.com:8761/eureka/
 
 spring:
     devtools:
@@ -28,9 +28,9 @@ spring:
             enabled: false
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:mysql://localhost:3306/EmCloudUAA?useUnicode=true&characterEncoding=utf8&useSSL=false
+        url: jdbc:mysql://mysql.emcloud.com:3306/EmCloudUAA?useUnicode=true&characterEncoding=utf8&useSSL=false
         username: root
-        password:
+        password: hxxn123
         hikari:
             data-source-properties:
                 cachePrepStmts: true
