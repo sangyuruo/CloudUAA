@@ -664,7 +664,7 @@
                     <changeLogFile>src/main/resources/config/liquibase/master.xml</changeLogFile>
                     <diffChangeLogFile>src/main/resources/config/liquibase/changelog/${maven.build.timestamp}_changelog.xml</diffChangeLogFile>
                     <driver>com.mysql.jdbc.Driver</driver>
-                    <url>jdbc:mysql://mysql.emcloud.dev.com:3306/EmCloudUAA</url>
+                    <url>jdbc:mysql://mysql.emcloud.dev.com:3306/EmCloudUAADev</url>
                     <defaultSchemaName>EmCloudUAA</defaultSchemaName>
                     <username>hxxndev</username>
                     <password>123456</password>
