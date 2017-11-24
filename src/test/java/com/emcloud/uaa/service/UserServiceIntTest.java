@@ -2,6 +2,7 @@ package com.emcloud.uaa.service;
 
 import com.emcloud.uaa.EmCloudUaaApp;
 import com.emcloud.uaa.config.Constants;
+import com.emcloud.uaa.domain.Authority;
 import com.emcloud.uaa.domain.User;
 import com.emcloud.uaa.repository.UserRepository;
 import com.emcloud.uaa.service.dto.UserDTO;
@@ -20,8 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,7 +35,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = EmCloudUaaApp.class)
-@Transactional
 public class UserServiceIntTest {
 
     @Autowired
@@ -46,7 +48,7 @@ public class UserServiceIntTest {
     @Before
     public void init() {
         user = new User();
-        user.setLogin("johndoe");
+        user.setLogin("johndoe2");
         user.setPassword(RandomStringUtils.random(60));
         user.setActivated(true);
         user.setEmail("johndoe@localhost");
@@ -55,6 +57,41 @@ public class UserServiceIntTest {
         user.setImageUrl("http://placehold.it/50x50");
         user.setLangKey("en");
     }
+
+
+    @Test
+    public void testRegisterUser(){
+        Set<Authority> authorities = new HashSet<>();
+        Authority a = new Authority();
+        a.setName("ROLE_OU");
+        a.setDesc("ROLE_OU");
+        authorities.add( a );
+
+        a = new Authority();
+        a.setName("ROLE_ADMIN");
+        a.setDesc("ROLE_ADMIN");
+        authorities.add( a );
+
+        user.setAuthorities(authorities);
+        UserDTO dto = new UserDTO( user );
+        userService.createUser(dto);
+    }
+
+    @Test
+    @Transactional
+    public void testUpdateUser(){
+        userService.getUserWithAuthoritiesByLogin("demo").ifPresent( user-> {
+            UserDTO dto = new UserDTO( user );
+            dto.setLastName("demo");
+            dto.setLastModifiedDate(Instant.now());
+            userService.updateUser(dto);
+        } );
+    }
+
+
+
+
+
 
     @Test
     @Transactional

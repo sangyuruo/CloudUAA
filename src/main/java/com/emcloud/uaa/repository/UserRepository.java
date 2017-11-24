@@ -16,16 +16,36 @@ import java.time.Instant;
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-
+    /**
+     * 通过激活码查找某个 findOneByActivationKey
+     */
     Optional<User> findOneByActivationKey(String activationKey);
 
+
+    /**
+     * 查找激活状态为False 且 创建日期 在指定日期之前的所有
+     */
     List<User> findAllByActivatedIsFalseAndCreatedDateBefore(Instant dateTime);
 
+
+    /**
+     * 通过重置码查找某个 findOneByResetKey
+     */
     Optional<User> findOneByResetKey(String resetKey);
 
+
+    /**
+     * 通过Email查找且忽略大小写 findOneByEmailIgnoreCase
+     */
     Optional<User> findOneByEmailIgnoreCase(String email);
 
+
+    /**
+     * 通过登录名查找   findOneByLogin
+     */
     Optional<User> findOneByLogin(String login);
+
+
 
     @EntityGraph(attributePaths = "authorities")
     User findOneWithAuthoritiesById(Long id);

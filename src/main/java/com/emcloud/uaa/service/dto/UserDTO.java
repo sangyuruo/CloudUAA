@@ -28,6 +28,14 @@ public class UserDTO {
     @Size(max = 50)
     private String firstName;
 
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     @Size(max = 50)
     private String lastName;
 

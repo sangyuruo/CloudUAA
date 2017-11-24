@@ -1,0 +1,12 @@
+/**
+ * 角色表
+ * @author daiziying
+ */
+entity Authority {
+  /** 角色名 */
+name String maxlength(40) required,
+
+ /** 角色描述 */
+ desc String maxlength(500)
+
+}
