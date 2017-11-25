@@ -1,9 +1,8 @@
 package com.emcloud.uaa.service.impl;
 
+import com.emcloud.uaa.domain.Role;
 import com.emcloud.uaa.service.AuthorityService;
-import com.emcloud.uaa.domain.Authority;
 import com.emcloud.uaa.repository.AuthorityRepository;
-import org.hibernate.validator.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -13,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 /**
- * Service Implementation for managing Authority.
+ * Service Implementation for managing Role.
  */
 @Service
 @Transactional
@@ -28,29 +27,29 @@ public class AuthorityServiceImpl implements AuthorityService{
     }
 
     /**
-     * Save a authority.
+     * Save a role.
      *
-     * @param authority the entity to save
+     * @param role the entity to save
      * @return the persisted entity
      */
     @Override
-    public Authority save(Authority authority) {
-        log.debug("Request to save Authority : {}", authority);
-        return authorityRepository.save(authority);
+    public Role save(Role role) {
+        log.debug("Request to save Role : {}", role);
+        return authorityRepository.save(role);
     }
 
 
 
     /**
-     * Update a authority.
+     * Update a role.
      *
-     * @param authority the entity to update
+     * @param role the entity to update
      * @return the persisted entity
      */
     @Override
-    public Authority update(Authority authority) {
-        log.debug("Request to save Authority : {}", authority);
-        return authorityRepository.save(authority);
+    public Role update(Role role) {
+        log.debug("Request to save Role : {}", role);
+        return authorityRepository.save(role);
     }
 
     /**
@@ -61,7 +60,7 @@ public class AuthorityServiceImpl implements AuthorityService{
      */
     @Override
     @Transactional(readOnly = true)
-    public Page<Authority> findAll(Pageable pageable) {
+    public Page<Role> findAll(Pageable pageable) {
         log.debug("Request to get all Authorities");
         return authorityRepository.findAll(pageable);
     }
@@ -74,7 +73,7 @@ public class AuthorityServiceImpl implements AuthorityService{
      */
     @Override
     @Transactional(readOnly = true)
-    public Page<Authority> findAllByNameOrDesc(String name,String desc,Pageable pageable){
+    public Page<Role> findAllByNameOrDesc(String name, String desc, Pageable pageable){
         log.debug("Request to get all Authorities by id or name");
         return authorityRepository.findAllByNameOrDescContaining(pageable, name,desc);
     }
@@ -90,8 +89,8 @@ public class AuthorityServiceImpl implements AuthorityService{
      */
     @Override
     @Transactional(readOnly = true)
-    public Authority findOne(Long id) {
-        log.debug("Request to get Authority : {}", id);
+    public Role findOne(Long id) {
+        log.debug("Request to get Role : {}", id);
         return authorityRepository.findOne(id);
     }
 
@@ -102,7 +101,7 @@ public class AuthorityServiceImpl implements AuthorityService{
      */
     @Override
     public void delete(Long id) {
-        log.debug("Request to delete Authority : {}", id);
+        log.debug("Request to delete Role : {}", id);
         authorityRepository.delete(id);
     }
 }

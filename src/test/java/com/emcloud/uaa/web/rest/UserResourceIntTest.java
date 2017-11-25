@@ -1,7 +1,7 @@
 package com.emcloud.uaa.web.rest;
 
 import com.emcloud.uaa.EmCloudUaaApp;
-import com.emcloud.uaa.domain.Authority;
+import com.emcloud.uaa.domain.Role;
 import com.emcloud.uaa.domain.User;
 import com.emcloud.uaa.repository.UserRepository;
 import com.emcloud.uaa.security.AuthoritiesConstants;
@@ -97,6 +97,7 @@ public class UserResourceIntTest {
     private MockMvc restUserMockMvc;
 
     private User user;
+    private Set<Role> roles;
 
     @Before
     public void setup() {
@@ -582,7 +583,7 @@ public class UserResourceIntTest {
         assertThat(user.getCreatedDate()).isNotNull();
         assertThat(user.getLastModifiedBy()).isNull();
         assertThat(user.getLastModifiedDate()).isNotNull();
-        assertThat(user.getAuthorities()).extracting("name").containsExactly(AuthoritiesConstants.USER);
+        assertThat(user.getRoles()).extracting("name").containsExactly(AuthoritiesConstants.USER);
     }
 
     @Test
@@ -593,11 +594,11 @@ public class UserResourceIntTest {
         user.setLastModifiedBy(DEFAULT_LOGIN);
         user.setLastModifiedDate(Instant.now());
 
-        Set<Authority> authorities = new HashSet<>();
-        Authority authority = new Authority();
-        authority.setName(AuthoritiesConstants.USER);
-        authorities.add(authority);
-        user.setAuthorities(authorities);
+        Set<Role> roles = new HashSet<>();
+        Role role = new Role();
+        role.setName(AuthoritiesConstants.USER);
+        roles.add(role);
+        user.setRoles(roles);
 
         UserDTO userDTO = userMapper.userToUserDTO(user);
 
@@ -619,24 +620,24 @@ public class UserResourceIntTest {
 
     @Test
     public void testAuthorityEquals() throws Exception {
-        Authority authorityA = new Authority();
-        assertThat(authorityA).isEqualTo(authorityA);
-        assertThat(authorityA).isNotEqualTo(null);
-        assertThat(authorityA).isNotEqualTo(new Object());
-        assertThat(authorityA.hashCode()).isEqualTo(0);
-        assertThat(authorityA.toString()).isNotNull();
+        Role roleA = new Role();
+        assertThat(roleA).isEqualTo(roleA);
+        assertThat(roleA).isNotEqualTo(null);
+        assertThat(roleA).isNotEqualTo(new Object());
+        assertThat(roleA.hashCode()).isEqualTo(0);
+        assertThat(roleA.toString()).isNotNull();
 
-        Authority authorityB = new Authority();
-        assertThat(authorityA).isEqualTo(authorityB);
+        Role roleB = new Role();
+        assertThat(roleA).isEqualTo(roleB);
 
-        authorityB.setName(AuthoritiesConstants.ADMIN);
-        assertThat(authorityA).isNotEqualTo(authorityB);
+        roleB.setName(AuthoritiesConstants.ADMIN);
+        assertThat(roleA).isNotEqualTo(roleB);
 
-        authorityA.setName(AuthoritiesConstants.USER);
-        assertThat(authorityA).isNotEqualTo(authorityB);
+        roleA.setName(AuthoritiesConstants.USER);
+        assertThat(roleA).isNotEqualTo(roleB);
 
-        authorityB.setName(AuthoritiesConstants.USER);
-        assertThat(authorityA).isEqualTo(authorityB);
-        assertThat(authorityA.hashCode()).isEqualTo(authorityB.hashCode());
+        roleB.setName(AuthoritiesConstants.USER);
+        assertThat(roleA).isEqualTo(roleB);
+        assertThat(roleA.hashCode()).isEqualTo(roleB.hashCode());
     }
 }

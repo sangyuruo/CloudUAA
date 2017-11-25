@@ -1,7 +1,7 @@
 package com.emcloud.uaa.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.emcloud.uaa.domain.Authority;
+import com.emcloud.uaa.domain.Role;
 import com.emcloud.uaa.service.AuthorityService;
 import com.emcloud.uaa.web.rest.errors.BadRequestAlertException;
 import com.emcloud.uaa.web.rest.util.HeaderUtil;
@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * REST controller for managing Authority.
+ * REST controller for managing Role.
  */
 @RestController
 @RequestMapping("/api")
@@ -42,44 +42,44 @@ public class AuthorityResource {
     }
 
     /**
-     * POST  /authorities : Create a new authority.
+     * POST  /authorities : Create a new role.
      *
-     * @param authority the authority to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new authority, or with status 400 (Bad Request) if the authority has already an ID
+     * @param role the role to create
+     * @return the ResponseEntity with status 201 (Created) and with body the new role, or with status 400 (Bad Request) if the role has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/authorities")
     @Timed
-    public ResponseEntity<Authority> createAuthority(@Valid @RequestBody Authority authority) throws URISyntaxException {
-        log.debug("REST request to save Authority : {}", authority);
-        if (authority.getId() != null) {
-            throw new BadRequestAlertException("A new authority cannot already have an ID", ENTITY_NAME, "idexists");
+    public ResponseEntity<Role> createAuthority(@Valid @RequestBody Role role) throws URISyntaxException {
+        log.debug("REST request to save Role : {}", role);
+        if (role.getId() != null) {
+            throw new BadRequestAlertException("A new role cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Authority result = authorityService.save(authority);
+        Role result = authorityService.save(role);
         return ResponseEntity.created(new URI("/api/authorities/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * PUT  /authorities : Updates an existing authority.
+     * PUT  /authorities : Updates an existing role.
      *
-     * @param authority the authority to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated authority,
-     * or with status 400 (Bad Request) if the authority is not valid,
-     * or with status 500 (Internal Server Error) if the authority couldn't be updated
+     * @param role the role to update
+     * @return the ResponseEntity with status 200 (OK) and with body the updated role,
+     * or with status 400 (Bad Request) if the role is not valid,
+     * or with status 500 (Internal Server Error) if the role couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/authorities")
     @Timed
-    public ResponseEntity<Authority> updateAuthority(@Valid @RequestBody Authority authority) throws URISyntaxException {
-        log.debug("REST request to update Authority : {}", authority);
-        if (authority.getId() == null) {
-            return createAuthority(authority);
+    public ResponseEntity<Role> updateAuthority(@Valid @RequestBody Role role) throws URISyntaxException {
+        log.debug("REST request to update Role : {}", role);
+        if (role.getId() == null) {
+            return createAuthority(role);
         }
-        Authority result = authorityService.update(authority);
+        Role result = authorityService.update(role);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, authority.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, role.getId().toString()))
             .body(result);
     }
 
@@ -91,9 +91,9 @@ public class AuthorityResource {
      */
     @GetMapping("/authorities")
     @Timed
-    public ResponseEntity<List<Authority>> getAllAuthorities(@ApiParam Pageable pageable) {
+    public ResponseEntity<List<Role>> getAllAuthorities(@ApiParam Pageable pageable) {
         log.debug("REST request to get a page of Authorities");
-        Page<Authority> page = authorityService.findAll(pageable);
+        Page<Role> page = authorityService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/authorities");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -106,9 +106,9 @@ public class AuthorityResource {
      */
     @GetMapping("/authorities/{name}or{desc}")
     @Timed
-    public ResponseEntity<List<Authority>> getAllAuthoritiesByNameOrDesc(@PathVariable String name,@PathVariable String desc,@ApiParam Pageable pageable) {
+    public ResponseEntity<List<Role>> getAllAuthoritiesByNameOrDesc(@PathVariable String name, @PathVariable String desc, @ApiParam Pageable pageable) {
         log.debug("REST request to get a page of Authorities");
-        Page<Authority> page = authorityService.findAllByNameOrDesc(name,desc,pageable);
+        Page<Role> page = authorityService.findAllByNameOrDesc(name,desc,pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/authorities/{name}or{desc}");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -125,10 +125,10 @@ public class AuthorityResource {
      */
     @GetMapping("/authorities/{id}")
     @Timed
-    public ResponseEntity<Authority> getAuthority(@PathVariable Long id) {
-        log.debug("REST request to get Authority : {}", id);
-        Authority authority = authorityService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(authority));
+    public ResponseEntity<Role> getAuthority(@PathVariable Long id) {
+        log.debug("REST request to get Role : {}", id);
+        Role role = authorityService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(role));
     }
 
     /**
@@ -140,7 +140,7 @@ public class AuthorityResource {
     @DeleteMapping("/authorities/{id}")
     @Timed
     public ResponseEntity<Void> deleteAuthority(@PathVariable Long id) {
-        log.debug("REST request to delete Authority : {}", id);
+        log.debug("REST request to delete Role : {}", id);
         authorityService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }

@@ -1,25 +1,20 @@
-/**
- * 资源管理
- * @author youhong
- */
-entity ResourceAdministration {
+entity Resource{
   /** 资源编号*/
-  resourceCode String maxlength(64),
+  resourceCode String maxlength(64)  required,
   /** 资源名称*/
   resourceName String maxlength(100) required,
   /** 资源类型*/
   resourceType String maxlength(100) required,
   /** 访问地址*/
-  visitAddress String maxlength(100)  required,
+  resourceUrl String maxlength(100)  required,
   /** 是否有效 */
   enable Boolean required,
    /** 创建人*/
-  createdBy String maxlength(20) required, 
+  createdBy String maxlength(20) required,
   /** 创建时间*/
   createTime Instant  required,
   /** 修改人*/
   updatedBy String maxlength(20) required,
   /** 修改时间*/
-  updateTime Instant  required	
+  updateTime Instant  required
 }
-

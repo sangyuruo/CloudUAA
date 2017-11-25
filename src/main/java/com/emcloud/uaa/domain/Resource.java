@@ -1,6 +1,5 @@
 package com.emcloud.uaa.domain;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -12,14 +11,12 @@ import java.time.Instant;
 import java.util.Objects;
 
 /**
- * 资源管理
- * @author youhong
+ * A Resource.
  */
-@ApiModel(description = "资源管理 @author youhong")
 @Entity
-@Table(name = "resource_administration")
+@Table(name = "resource")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class ResourceAdministration implements Serializable {
+public class Resource implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -30,9 +27,10 @@ public class ResourceAdministration implements Serializable {
     /**
      * 资源编号
      */
+    @NotNull
     @Size(max = 64)
-    @ApiModelProperty(value = "资源编号")
-    @Column(name = "resource_code", length = 64)
+    @ApiModelProperty(value = "资源编号", required = true)
+    @Column(name = "resource_code", length = 64, nullable = false)
     private String resourceCode;
 
     /**
@@ -59,8 +57,8 @@ public class ResourceAdministration implements Serializable {
     @NotNull
     @Size(max = 100)
     @ApiModelProperty(value = "访问地址", required = true)
-    @Column(name = "visit_address", length = 100, nullable = false)
-    private String visitAddress;
+    @Column(name = "resource_url", length = 100, nullable = false)
+    private String resourceUrl;
 
     /**
      * 是否有效
@@ -113,7 +111,7 @@ public class ResourceAdministration implements Serializable {
         return resourceCode;
     }
 
-    public ResourceAdministration resourceCode(String resourceCode) {
+    public Resource resourceCode(String resourceCode) {
         this.resourceCode = resourceCode;
         return this;
     }
@@ -126,7 +124,7 @@ public class ResourceAdministration implements Serializable {
         return resourceName;
     }
 
-    public ResourceAdministration resourceName(String resourceName) {
+    public Resource resourceName(String resourceName) {
         this.resourceName = resourceName;
         return this;
     }
@@ -139,7 +137,7 @@ public class ResourceAdministration implements Serializable {
         return resourceType;
     }
 
-    public ResourceAdministration resourceType(String resourceType) {
+    public Resource resourceType(String resourceType) {
         this.resourceType = resourceType;
         return this;
     }
@@ -148,24 +146,24 @@ public class ResourceAdministration implements Serializable {
         this.resourceType = resourceType;
     }
 
-    public String getVisitAddress() {
-        return visitAddress;
+    public String getResourceUrl() {
+        return resourceUrl;
     }
 
-    public ResourceAdministration visitAddress(String visitAddress) {
-        this.visitAddress = visitAddress;
+    public Resource resourceUrl(String resourceUrl) {
+        this.resourceUrl = resourceUrl;
         return this;
     }
 
-    public void setVisitAddress(String visitAddress) {
-        this.visitAddress = visitAddress;
+    public void setResourceUrl(String resourceUrl) {
+        this.resourceUrl = resourceUrl;
     }
 
     public Boolean isEnable() {
         return enable;
     }
 
-    public ResourceAdministration enable(Boolean enable) {
+    public Resource enable(Boolean enable) {
         this.enable = enable;
         return this;
     }
@@ -178,7 +176,7 @@ public class ResourceAdministration implements Serializable {
         return createdBy;
     }
 
-    public ResourceAdministration createdBy(String createdBy) {
+    public Resource createdBy(String createdBy) {
         this.createdBy = createdBy;
         return this;
     }
@@ -191,7 +189,7 @@ public class ResourceAdministration implements Serializable {
         return createTime;
     }
 
-    public ResourceAdministration createTime(Instant createTime) {
+    public Resource createTime(Instant createTime) {
         this.createTime = createTime;
         return this;
     }
@@ -204,7 +202,7 @@ public class ResourceAdministration implements Serializable {
         return updatedBy;
     }
 
-    public ResourceAdministration updatedBy(String updatedBy) {
+    public Resource updatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
         return this;
     }
@@ -217,7 +215,7 @@ public class ResourceAdministration implements Serializable {
         return updateTime;
     }
 
-    public ResourceAdministration updateTime(Instant updateTime) {
+    public Resource updateTime(Instant updateTime) {
         this.updateTime = updateTime;
         return this;
     }
@@ -235,11 +233,11 @@ public class ResourceAdministration implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ResourceAdministration resourceAdministration = (ResourceAdministration) o;
-        if (resourceAdministration.getId() == null || getId() == null) {
+        Resource resource = (Resource) o;
+        if (resource.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(getId(), resourceAdministration.getId());
+        return Objects.equals(getId(), resource.getId());
     }
 
     @Override
@@ -249,12 +247,12 @@ public class ResourceAdministration implements Serializable {
 
     @Override
     public String toString() {
-        return "ResourceAdministration{" +
+        return "Resource{" +
             "id=" + getId() +
             ", resourceCode='" + getResourceCode() + "'" +
             ", resourceName='" + getResourceName() + "'" +
             ", resourceType='" + getResourceType() + "'" +
-            ", visitAddress='" + getVisitAddress() + "'" +
+            ", resourceUrl='" + getResourceUrl() + "'" +
             ", enable='" + isEnable() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", createTime='" + getCreateTime() + "'" +

@@ -2,7 +2,7 @@ package com.emcloud.uaa.service;
 
 import com.emcloud.uaa.EmCloudUaaApp;
 import com.emcloud.uaa.config.Constants;
-import com.emcloud.uaa.domain.Authority;
+import com.emcloud.uaa.domain.Role;
 import com.emcloud.uaa.domain.User;
 import com.emcloud.uaa.repository.UserRepository;
 import com.emcloud.uaa.service.dto.UserDTO;
@@ -18,7 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import sun.applet.Main;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -62,17 +61,17 @@ public class UserServiceIntTest {
 
     @Test
     public void testRegisterUser(){
-        Set<Authority> authorities = new HashSet<>();
-        Authority a = new Authority();
+        Set<Role> authorities = new HashSet<>();
+        Role a = new Role();
         a.setName("ROLE_OU");
         a.setDesc("ROLE_OU");
         authorities.add( a );
-        a = new Authority();
+        a = new Role();
         a.setName("ROLE_ADMIN");
         a.setDesc("ROLE_ADMIN");
         authorities.add( a );
 
-        user.setAuthorities(authorities);
+        user.setRoles(authorities);
         UserDTO dto = new UserDTO( user );
         userService.createUser(dto);
 

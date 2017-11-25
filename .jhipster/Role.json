@@ -24,7 +24,7 @@
     ],
     "changelogDate": "20171123105005",
     "javadoc": "角色表\n@author daiziying",
-    "entityTableName": "authority",
+    "entityTableName": "role",
     "dto": "no",
     "pagination": "pager",
     "service": "serviceImpl",

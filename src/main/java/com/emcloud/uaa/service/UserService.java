@@ -1,6 +1,6 @@
 package com.emcloud.uaa.service;
 
-import com.emcloud.uaa.domain.Authority;
+import com.emcloud.uaa.domain.Role;
 import com.emcloud.uaa.domain.User;
 import com.emcloud.uaa.repository.AuthorityRepository;
 import com.emcloud.uaa.config.Constants;
@@ -52,8 +52,9 @@ public class UserService {
         this.cacheManager = cacheManager;
     }
 
-    public void saveUserRole(Long userid,Long authorityid){
-        //通过选择的用户找到它所拥有的角色
+    public void saveUserRole(String loginName,Long authorityid){
+
+        userRepository.findOneByLogin(loginName);//拿到用户
 
 
     }
@@ -112,8 +113,8 @@ public class UserService {
     public User registerUser(ManagedUserVM userDTO) {
 
         User newUser = new User();
-        Authority authority = authorityRepository.findOneByName(AuthoritiesConstants.USER);
-        Set<Authority> authorities = new HashSet<>();
+        Role role = authorityRepository.findOneByName(AuthoritiesConstants.USER);
+        Set<Role> authorities = new HashSet<>();
         String encryptedPassword = passwordEncoder.encode(userDTO.getPassword());
         newUser.setLogin(userDTO.getLogin());
         // new user gets initially a generated password
@@ -127,8 +128,8 @@ public class UserService {
         newUser.setActivated(false);
         // new user gets registration key
         newUser.setActivationKey(RandomUtil.generateActivationKey());
-        authorities.add(authority);
-        newUser.setAuthorities(authorities);
+        authorities.add(role);
+        newUser.setRoles(authorities);
         userRepository.save(newUser);
         log.debug("Created Information for User: {}", newUser);
         return newUser;
@@ -147,10 +148,10 @@ public class UserService {
             user.setLangKey(userDTO.getLangKey());
         }
         if (userDTO.getAuthorities() != null) {
-            Set<Authority> authorities = userDTO.getAuthorities().stream()
+            Set<Role> authorities = userDTO.getAuthorities().stream()
                 .map(authorityRepository::findOneByName)
                 .collect(Collectors.toSet());
-            user.setAuthorities(authorities);
+            user.setRoles(authorities);
         }
         String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
         user.setPassword(encryptedPassword);
@@ -200,7 +201,7 @@ public class UserService {
                 user.setImageUrl(userDTO.getImageUrl());
                 user.setActivated(userDTO.isActivated());
                 user.setLangKey(userDTO.getLangKey());
-                Set<Authority> managedAuthorities = user.getAuthorities();
+                Set<Role> managedAuthorities = user.getRoles();
                 managedAuthorities.clear();
                 userDTO.getAuthorities().stream()
                     .map(authorityRepository::findOneByName)
@@ -236,17 +237,17 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public Optional<User> getUserWithAuthoritiesByLogin(String login) {
-        return userRepository.findOneWithAuthoritiesByLogin(login);
+        return userRepository.findOneWithRolesByLogin(login);
     }
 
     @Transactional(readOnly = true)
     public User getUserWithAuthorities(Long id) {
-        return userRepository.findOneWithAuthoritiesById(id);
+        return userRepository.findOneWithRolesById(id);
     }
 
     @Transactional(readOnly = true)
     public User getUserWithAuthorities() {
-        return userRepository.findOneWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin()).orElse(null);
+        return userRepository.findOneWithRolesByLogin(SecurityUtils.getCurrentUserLogin()).orElse(null);
     }
 
     /**
@@ -268,6 +269,6 @@ public class UserService {
      * @return a list of all the authorities
      */
     public List<String> getAuthorities() {
-        return authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
+        return authorityRepository.findAll().stream().map(Role::getName).collect(Collectors.toList());
     }
 }

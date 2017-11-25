@@ -1,32 +1,32 @@
 package com.emcloud.uaa.service;
 
-import com.emcloud.uaa.domain.Authority;
+import com.emcloud.uaa.domain.Role;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 /**
- * Service Interface for managing Authority.
+ * Service Interface for managing Role.
  */
 public interface AuthorityService {
 
     /**
-     * Save a authority.
+     * Save a role.
      *
-     * @param authority the entity to save
+     * @param role the entity to save
      * @return the persisted entity
      */
-    Authority save(Authority authority);
+    Role save(Role role);
 
 
 
 
     /**
-     * Update a authority.
+     * Update a role.
      *
-     * @param authority the entity to update
+     * @param role the entity to update
      * @return the persisted entity
      */
-    Authority update(Authority authority);
+    Role update(Role role);
 
 
     /**
@@ -35,7 +35,7 @@ public interface AuthorityService {
      *  @param pageable the pagination information
      *  @return the list of entities
      */
-    Page<Authority> findAll(Pageable pageable);
+    Page<Role> findAll(Pageable pageable);
 
     /**
      *  Get the "id" authority.
@@ -43,7 +43,7 @@ public interface AuthorityService {
      *  @param id the id of the entity
      *  @return the entity
      */
-    Authority findOne(Long id);
+    Role findOne(Long id);
 
     /**
      *  Delete the "id" authority.
@@ -59,6 +59,6 @@ public interface AuthorityService {
      *  @param pageable the pagination information
      *  @return the list of entities
      */
-    Page<Authority> findAllByNameOrDesc(String name ,String desc,Pageable pageable);
+    Page<Role> findAllByNameOrDesc(String name , String desc, Pageable pageable);
 
 }

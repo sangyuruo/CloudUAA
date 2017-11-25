@@ -15,10 +15,10 @@
     <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
 
     <!--
-        Added the entity Authority.
+        Added the entity Role.
     -->
     <changeSet id="20171123105005-1" author="jhipster">
-        <createTable tableName="authority">
+        <createTable tableName="role">
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -26,13 +26,13 @@
                 <constraints nullable="false" />
             </column>
 
-            <column name="jhi_desc" type="varchar(500)">
+            <column name="desc" type="varchar(500)">
                 <constraints nullable="true" />
             </column>
 
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
-        
+
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
 </databaseChangeLog>

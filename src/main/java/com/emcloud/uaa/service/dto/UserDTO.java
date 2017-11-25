@@ -2,7 +2,7 @@ package com.emcloud.uaa.service.dto;
 
 import com.emcloud.uaa.config.Constants;
 
-import com.emcloud.uaa.domain.Authority;
+import com.emcloud.uaa.domain.Role;
 import com.emcloud.uaa.domain.User;
 
 import org.hibernate.validator.constraints.Email;
@@ -69,7 +69,7 @@ public class UserDTO {
         this(user.getId(), user.getLogin(), user.getFirstName(), user.getLastName(),
             user.getEmail(), user.getActivated(), user.getImageUrl(), user.getLangKey(),
             user.getCreatedBy(), user.getCreatedDate(), user.getLastModifiedBy(), user.getLastModifiedDate(),
-            user.getAuthorities().stream().map(Authority::getName)
+            user.getRoles().stream().map(Role::getName)
                 .collect(Collectors.toSet()));
     }
 

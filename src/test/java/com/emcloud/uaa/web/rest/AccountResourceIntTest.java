@@ -1,20 +1,19 @@
 package com.emcloud.uaa.web.rest;
 
-import com.emcloud.uaa.config.Constants;
 import com.emcloud.uaa.EmCloudUaaApp;
-import com.emcloud.uaa.domain.Authority;
+import com.emcloud.uaa.config.Constants;
+import com.emcloud.uaa.domain.Role;
 import com.emcloud.uaa.domain.User;
 import com.emcloud.uaa.repository.AuthorityRepository;
 import com.emcloud.uaa.repository.UserRepository;
 import com.emcloud.uaa.security.AuthoritiesConstants;
 import com.emcloud.uaa.service.MailService;
+import com.emcloud.uaa.service.UserService;
 import com.emcloud.uaa.service.dto.UserDTO;
 import com.emcloud.uaa.web.rest.errors.ExceptionTranslator;
 import com.emcloud.uaa.web.rest.vm.KeyAndPasswordVM;
 import com.emcloud.uaa.web.rest.vm.ManagedUserVM;
-import com.emcloud.uaa.service.UserService;
 import org.apache.commons.lang3.RandomStringUtils;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,17 +29,19 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.Instant;
-import java.time.LocalDate;
 
-import java.util.*;
+import java.time.Instant;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -120,10 +121,10 @@ public class AccountResourceIntTest {
 
     @Test
     public void testGetExistingAccount() throws Exception {
-        Set<Authority> authorities = new HashSet<>();
-        Authority authority = new Authority();
-        authority.setName(AuthoritiesConstants.ADMIN);
-        authorities.add(authority);
+        Set<Role> authorities = new HashSet<>();
+        Role role = new Role();
+        role.setName(AuthoritiesConstants.ADMIN);
+        authorities.add(role);
 
         User user = new User();
         user.setLogin("test");
@@ -132,7 +133,7 @@ public class AccountResourceIntTest {
         user.setEmail("john.doe@jhipster.com");
         user.setImageUrl("http://placehold.it/50x50");
         user.setLangKey("en");
-        user.setAuthorities(authorities);
+        user.setRoles(authorities);
         when(mockUserService.getUserWithAuthorities()).thenReturn(user);
 
         restUserMockMvc.perform(get("/api/account")
@@ -423,7 +424,7 @@ public class AccountResourceIntTest {
 
         Optional<User> userDup = userRepository.findOneByLogin("badguy");
         assertThat(userDup.isPresent()).isTrue();
-        assertThat(userDup.get().getAuthorities()).hasSize(1)
+        assertThat(userDup.get().getRoles()).hasSize(1)
             .containsExactly(authorityRepository.findOneByName(AuthoritiesConstants.USER));
     }
 
@@ -496,7 +497,7 @@ public class AccountResourceIntTest {
         assertThat(updatedUser.getPassword()).isEqualTo(user.getPassword());
         assertThat(updatedUser.getImageUrl()).isEqualTo(userDTO.getImageUrl());
         assertThat(updatedUser.getActivated()).isEqualTo(true);
-        assertThat(updatedUser.getAuthorities()).isEmpty();
+        assertThat(updatedUser.getRoles()).isEmpty();
     }
 
     @Test

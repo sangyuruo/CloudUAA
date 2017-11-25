@@ -2,9 +2,7 @@ package com.emcloud.uaa.web.rest;
 
 import com.emcloud.uaa.EmCloudUaaApp;
 
-import com.emcloud.uaa.config.SecurityBeanOverrideConfiguration;
-
-import com.emcloud.uaa.domain.Authority;
+import com.emcloud.uaa.domain.Role;
 import com.emcloud.uaa.repository.AuthorityRepository;
 import com.emcloud.uaa.service.AuthorityService;
 import com.emcloud.uaa.web.rest.errors.ExceptionTranslator;
@@ -39,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = EmCloudUaaApp.class)
-public class AuthorityResourceIntTest {
+public class RoleResourceIntTest {
 
     private static final String DEFAULT_NAME = "ROLE_OU";
     private static final String UPDATED_NAME = "ROLE_OU";
@@ -67,7 +65,7 @@ public class AuthorityResourceIntTest {
 
     private MockMvc restAuthorityMockMvc;
 
-    private Authority authority;
+    private Role role;
 
     @Before
     public void setup() {
@@ -86,24 +84,24 @@ public class AuthorityResourceIntTest {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Authority createEntity(EntityManager em) {
-        Authority authority = new Authority()
+    public static Role createEntity(EntityManager em) {
+        Role role = new Role()
             .name(DEFAULT_NAME)
             .desc(DEFAULT_DESC);
-        return authority;
+        return role;
     }
 
     @Before
     public void initTest() {
-        authority = createEntity(em);
+        role = createEntity(em);
     }
 
     @Test
     public void createAuthorityToDB() throws Exception {
-        Authority authority = new Authority()
+        Role role = new Role()
             .name("ROLE_ADMIN")
             .desc("ROLE_ADMIN");
-        authorityService.save(authority);
+        authorityService.save(role);
     }
 
     @Test
@@ -111,18 +109,18 @@ public class AuthorityResourceIntTest {
     public void createAuthority() throws Exception {
         int databaseSizeBeforeCreate = authorityRepository.findAll().size();
 
-        // Create the Authority
+        // Create the Role
         restAuthorityMockMvc.perform(post("/api/authorities")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(authority)))
+            .content(TestUtil.convertObjectToJsonBytes(role)))
             .andExpect(status().isCreated());
 
-        // Validate the Authority in the database
-        List<Authority> authorityList = authorityRepository.findAll();
-        assertThat(authorityList).hasSize(databaseSizeBeforeCreate + 1);
-        Authority testAuthority = authorityList.get(authorityList.size() - 1);
-        assertThat(testAuthority.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testAuthority.getDesc()).isEqualTo(DEFAULT_DESC);
+        // Validate the Role in the database
+        List<Role> roleList = authorityRepository.findAll();
+        assertThat(roleList).hasSize(databaseSizeBeforeCreate + 1);
+        Role testRole = roleList.get(roleList.size() - 1);
+        assertThat(testRole.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testRole.getDesc()).isEqualTo(DEFAULT_DESC);
     }
 
     @Test
@@ -130,18 +128,18 @@ public class AuthorityResourceIntTest {
     public void createAuthorityWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = authorityRepository.findAll().size();
 
-        // Create the Authority with an existing ID
-        authority.setId(1L);
+        // Create the Role with an existing ID
+        role.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restAuthorityMockMvc.perform(post("/api/authorities")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(authority)))
+            .content(TestUtil.convertObjectToJsonBytes(role)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Authority in the database
-        List<Authority> authorityList = authorityRepository.findAll();
-        assertThat(authorityList).hasSize(databaseSizeBeforeCreate);
+        // Validate the Role in the database
+        List<Role> roleList = authorityRepository.findAll();
+        assertThat(roleList).hasSize(databaseSizeBeforeCreate);
     }
 
     @Test
@@ -149,30 +147,30 @@ public class AuthorityResourceIntTest {
     public void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = authorityRepository.findAll().size();
         // set the field null
-        authority.setName(null);
+        role.setName(null);
 
-        // Create the Authority, which fails.
+        // Create the Role, which fails.
 
         restAuthorityMockMvc.perform(post("/api/authorities")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(authority)))
+            .content(TestUtil.convertObjectToJsonBytes(role)))
             .andExpect(status().isBadRequest());
 
-        List<Authority> authorityList = authorityRepository.findAll();
-        assertThat(authorityList).hasSize(databaseSizeBeforeTest);
+        List<Role> roleList = authorityRepository.findAll();
+        assertThat(roleList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     public void getAllAuthorities() throws Exception {
         // Initialize the database
-        authorityRepository.saveAndFlush(authority);
+        authorityRepository.saveAndFlush(role);
 
         // Get all the authorityList
         restAuthorityMockMvc.perform(get("/api/authorities?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(authority.getId().intValue())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(role.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].desc").value(hasItem(DEFAULT_DESC.toString())));
     }
@@ -181,13 +179,13 @@ public class AuthorityResourceIntTest {
     @Transactional
     public void getAuthority() throws Exception {
         // Initialize the database
-        authorityRepository.saveAndFlush(authority);
+        authorityRepository.saveAndFlush(role);
 
-        // Get the authority
-        restAuthorityMockMvc.perform(get("/api/authorities/{id}", authority.getId()))
+        // Get the role
+        restAuthorityMockMvc.perform(get("/api/authorities/{id}", role.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(authority.getId().intValue()))
+            .andExpect(jsonPath("$.id").value(role.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
             .andExpect(jsonPath("$.desc").value(DEFAULT_DESC.toString()));
     }
@@ -195,7 +193,7 @@ public class AuthorityResourceIntTest {
     @Test
     @Transactional
     public void getNonExistingAuthority() throws Exception {
-        // Get the authority
+        // Get the role
         restAuthorityMockMvc.perform(get("/api/authorities/{id}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
     }
@@ -204,27 +202,27 @@ public class AuthorityResourceIntTest {
     @Transactional
     public void updateAuthority() throws Exception {
         // Initialize the database
-        authorityService.save(authority);
+        authorityService.save(role);
 
         int databaseSizeBeforeUpdate = authorityRepository.findAll().size();
 
-        // Update the authority
-        Authority updatedAuthority = authorityRepository.findOne(authority.getId());
-        updatedAuthority
+        // Update the role
+        Role updatedRole = authorityRepository.findOne(role.getId());
+        updatedRole
             .name(UPDATED_NAME)
             .desc(UPDATED_DESC);
 
         restAuthorityMockMvc.perform(put("/api/authorities")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedAuthority)))
+            .content(TestUtil.convertObjectToJsonBytes(updatedRole)))
             .andExpect(status().isOk());
 
-        // Validate the Authority in the database
-        List<Authority> authorityList = authorityRepository.findAll();
-        assertThat(authorityList).hasSize(databaseSizeBeforeUpdate);
-        Authority testAuthority = authorityList.get(authorityList.size() - 1);
-        assertThat(testAuthority.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testAuthority.getDesc()).isEqualTo(UPDATED_DESC);
+        // Validate the Role in the database
+        List<Role> roleList = authorityRepository.findAll();
+        assertThat(roleList).hasSize(databaseSizeBeforeUpdate);
+        Role testRole = roleList.get(roleList.size() - 1);
+        assertThat(testRole.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testRole.getDesc()).isEqualTo(UPDATED_DESC);
     }
 
     @Test
@@ -232,49 +230,49 @@ public class AuthorityResourceIntTest {
     public void updateNonExistingAuthority() throws Exception {
         int databaseSizeBeforeUpdate = authorityRepository.findAll().size();
 
-        // Create the Authority
+        // Create the Role
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
         restAuthorityMockMvc.perform(put("/api/authorities")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(authority)))
+            .content(TestUtil.convertObjectToJsonBytes(role)))
             .andExpect(status().isCreated());
 
-        // Validate the Authority in the database
-        List<Authority> authorityList = authorityRepository.findAll();
-        assertThat(authorityList).hasSize(databaseSizeBeforeUpdate + 1);
+        // Validate the Role in the database
+        List<Role> roleList = authorityRepository.findAll();
+        assertThat(roleList).hasSize(databaseSizeBeforeUpdate + 1);
     }
 
     @Test
     @Transactional
     public void deleteAuthority() throws Exception {
         // Initialize the database
-        authorityService.save(authority);
+        authorityService.save(role);
 
         int databaseSizeBeforeDelete = authorityRepository.findAll().size();
 
-        // Get the authority
-        restAuthorityMockMvc.perform(delete("/api/authorities/{id}", authority.getId())
+        // Get the role
+        restAuthorityMockMvc.perform(delete("/api/authorities/{id}", role.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
 
         // Validate the database is empty
-        List<Authority> authorityList = authorityRepository.findAll();
-        assertThat(authorityList).hasSize(databaseSizeBeforeDelete - 1);
+        List<Role> roleList = authorityRepository.findAll();
+        assertThat(roleList).hasSize(databaseSizeBeforeDelete - 1);
     }
 
     @Test
     @Transactional
     public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(Authority.class);
-        Authority authority1 = new Authority();
-        authority1.setId(1L);
-        Authority authority2 = new Authority();
-        authority2.setId(authority1.getId());
-        assertThat(authority1).isEqualTo(authority2);
-        authority2.setId(2L);
-        assertThat(authority1).isNotEqualTo(authority2);
-        authority1.setId(null);
-        assertThat(authority1).isNotEqualTo(authority2);
+        TestUtil.equalsVerifier(Role.class);
+        Role role1 = new Role();
+        role1.setId(1L);
+        Role role2 = new Role();
+        role2.setId(role1.getId());
+        assertThat(role1).isEqualTo(role2);
+        role2.setId(2L);
+        assertThat(role1).isNotEqualTo(role2);
+        role1.setId(null);
+        assertThat(role1).isNotEqualTo(role2);
     }
 }

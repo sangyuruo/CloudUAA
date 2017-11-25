@@ -1,14 +1,19 @@
 package com.emcloud.uaa.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * 角色表
@@ -16,9 +21,9 @@ import java.util.Objects;
  */
 @ApiModel(description = "角色表 @author daiziying")
 @Entity
-@Table(name = "authority")
+@Table(name = "role")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Authority implements Serializable {
+public class Role implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -40,11 +45,20 @@ public class Authority implements Serializable {
      */
     @Size(max = 500)
     @ApiModelProperty(value = "角色描述")
-    @Column(name = "jhi_desc", length = 500)
+    @Column(name = "desc", length = 500)
     private String desc;
 
 
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+        name = "role_resource",
+        joinColumns = {@JoinColumn(name = "role_name", referencedColumnName = "name")},
+        inverseJoinColumns = {@JoinColumn(name = "resource_code", referencedColumnName = "resource_code")})
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @BatchSize(size = 20)
 
+    private Set<Role> roles = new HashSet<>();
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -58,7 +72,7 @@ public class Authority implements Serializable {
         return name;
     }
 
-    public Authority name(String name) {
+    public Role name(String name) {
         this.name = name;
         return this;
     }
@@ -71,7 +85,7 @@ public class Authority implements Serializable {
         return desc;
     }
 
-    public Authority desc(String desc) {
+    public Role desc(String desc) {
         this.desc = desc;
         return this;
     }
@@ -89,11 +103,11 @@ public class Authority implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Authority authority = (Authority) o;
-        if (authority.getId() == null || getId() == null) {
+        Role role = (Role) o;
+        if (role.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(getId(), authority.getId());
+        return Objects.equals(getId(), role.getId());
     }
 
     @Override
@@ -103,7 +117,7 @@ public class Authority implements Serializable {
 
     @Override
     public String toString() {
-        return "Authority{" +
+        return "Role{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", desc='" + getDesc() + "'" +
