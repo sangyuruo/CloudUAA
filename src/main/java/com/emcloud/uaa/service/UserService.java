@@ -52,6 +52,25 @@ public class UserService {
         this.cacheManager = cacheManager;
     }
 
+    public void saveUserRole(Long userid,Long authorityid){
+        //通过选择的用户找到它所拥有的角色
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public Optional<User> activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);
         return userRepository.findOneByActivationKey(key)

@@ -104,12 +104,12 @@ public class AuthorityResource {
      * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of authorities in body
      */
-    @GetMapping("/authorities/{id}or{name}")
+    @GetMapping("/authorities/{name}or{desc}")
     @Timed
-    public ResponseEntity<List<Authority>> getAllAuthoritiesByIdOrName(@PathVariable Long id,@PathVariable String name,@ApiParam Pageable pageable) {
+    public ResponseEntity<List<Authority>> getAllAuthoritiesByNameOrDesc(@PathVariable String name,@PathVariable String desc,@ApiParam Pageable pageable) {
         log.debug("REST request to get a page of Authorities");
-        Page<Authority> page = authorityService.findAllByIdOrName(id,name,pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/authorities/{id}or{name}");
+        Page<Authority> page = authorityService.findAllByNameOrDesc(name,desc,pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/authorities/{name}or{desc}");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 

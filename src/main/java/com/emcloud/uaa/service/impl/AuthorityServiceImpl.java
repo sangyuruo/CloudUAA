@@ -3,6 +3,7 @@ package com.emcloud.uaa.service.impl;
 import com.emcloud.uaa.service.AuthorityService;
 import com.emcloud.uaa.domain.Authority;
 import com.emcloud.uaa.repository.AuthorityRepository;
+import org.hibernate.validator.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -65,9 +66,6 @@ public class AuthorityServiceImpl implements AuthorityService{
         return authorityRepository.findAll(pageable);
     }
 
-
-
-
     /**
      *  Get all the authorities by id or name.
      *
@@ -76,9 +74,9 @@ public class AuthorityServiceImpl implements AuthorityService{
      */
     @Override
     @Transactional(readOnly = true)
-    public Page<Authority> findAllByIdOrName(Long id,String name,Pageable pageable){
+    public Page<Authority> findAllByNameOrDesc(String name,String desc,Pageable pageable){
         log.debug("Request to get all Authorities by id or name");
-        return authorityRepository.findAllByIdOrNameContaining(pageable, name,id);
+        return authorityRepository.findAllByNameOrDescContaining(pageable, name,desc);
     }
 
 

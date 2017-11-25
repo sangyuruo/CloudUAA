@@ -54,11 +54,11 @@ public interface AuthorityService {
 
 
     /**
-     *  Get all the authorities by id or name .
+     *  Get all the authorities by desc or name .
      *  azi
      *  @param pageable the pagination information
      *  @return the list of entities
      */
-    Page<Authority> findAllByIdOrName(Long id,String name,Pageable pageable);
+    Page<Authority> findAllByNameOrDesc(String name ,String desc,Pageable pageable);
 
 }

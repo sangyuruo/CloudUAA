@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+import sun.applet.Main;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -48,7 +49,7 @@ public class UserServiceIntTest {
     @Before
     public void init() {
         user = new User();
-        user.setLogin("johndoe2");
+        user.setLogin("johndoe3");
         user.setPassword(RandomStringUtils.random(60));
         user.setActivated(true);
         user.setEmail("johndoe@localhost");
@@ -66,7 +67,6 @@ public class UserServiceIntTest {
         a.setName("ROLE_OU");
         a.setDesc("ROLE_OU");
         authorities.add( a );
-
         a = new Authority();
         a.setName("ROLE_ADMIN");
         a.setDesc("ROLE_ADMIN");
@@ -75,7 +75,9 @@ public class UserServiceIntTest {
         user.setAuthorities(authorities);
         UserDTO dto = new UserDTO( user );
         userService.createUser(dto);
+
     }
+
 
     @Test
     @Transactional

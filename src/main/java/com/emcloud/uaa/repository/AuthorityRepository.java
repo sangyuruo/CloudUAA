@@ -18,7 +18,7 @@ public interface AuthorityRepository extends JpaRepository<Authority, Long> {
      * 通过id或name查找
      *
      * */
-    Page<Authority> findAllByIdOrNameContaining(Pageable pageable, String name,Long id);
+    Page<Authority> findAllByNameOrDescContaining(Pageable pageable, String name,String desc);
 
     Authority findOneByName(String name);
 }

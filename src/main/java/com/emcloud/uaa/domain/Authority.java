@@ -27,7 +27,7 @@ public class Authority implements Serializable {
     private Long id;
 
     /**
-     * 角色名
+     * 角色名  表对应的是这个东西？
      */
     @NotNull
     @Size(max = 40)
@@ -42,6 +42,8 @@ public class Authority implements Serializable {
     @ApiModelProperty(value = "角色描述")
     @Column(name = "jhi_desc", length = 500)
     private String desc;
+
+
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
