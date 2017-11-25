@@ -18,6 +18,15 @@ public interface ResourceAdministrationService {
     ResourceAdministration save(ResourceAdministration resourceAdministration);
 
     /**
+     * update a resourceAdministration.
+     *
+     * @param resourceAdministration the entity to update
+     * @return the persisted entity
+     */
+    ResourceAdministration update(ResourceAdministration resourceAdministration);
+
+
+    /**
      *  Get all the resourceAdministrations.
      *
      *  @param pageable the pagination information

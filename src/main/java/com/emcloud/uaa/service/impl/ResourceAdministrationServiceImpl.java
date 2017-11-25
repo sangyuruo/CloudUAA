@@ -1,5 +1,6 @@
 package com.emcloud.uaa.service.impl;
 
+import com.emcloud.uaa.security.SecurityUtils;
 import com.emcloud.uaa.service.ResourceAdministrationService;
 import com.emcloud.uaa.domain.ResourceAdministration;
 import com.emcloud.uaa.repository.ResourceAdministrationRepository;
@@ -9,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
 
 
 /**
@@ -35,6 +38,25 @@ public class ResourceAdministrationServiceImpl implements ResourceAdministration
     @Override
     public ResourceAdministration save(ResourceAdministration resourceAdministration) {
         log.debug("Request to save ResourceAdministration : {}", resourceAdministration);
+        resourceAdministration.setCreatedBy(SecurityUtils.getCurrentUserLogin());
+        resourceAdministration.setCreateTime(Instant.now());
+        resourceAdministration.setUpdatedBy(SecurityUtils.getCurrentUserLogin());
+        resourceAdministration.setUpdateTime(Instant.now());
+
+        return resourceAdministrationRepository.save(resourceAdministration);
+    }
+
+    /**
+     * update a resourceAdministration.
+     *
+     * @param resourceAdministration the entity to update
+     * @return the persisted entity
+     */
+    @Override
+    public ResourceAdministration update(ResourceAdministration resourceAdministration) {
+        log.debug("Request to save Company : {}", resourceAdministration);
+        resourceAdministration.setUpdatedBy(SecurityUtils.getCurrentUserLogin());
+        resourceAdministration.setUpdateTime(Instant.now());
         return resourceAdministrationRepository.save(resourceAdministration);
     }
 

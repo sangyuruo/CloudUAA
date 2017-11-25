@@ -78,12 +78,11 @@ public class ResourceAdministrationResource {
         if (resourceAdministration.getId() == null) {
             return createResourceAdministration(resourceAdministration);
         }
-        ResourceAdministration result = resourceAdministrationService.save(resourceAdministration);
+        ResourceAdministration result = resourceAdministrationService.update(resourceAdministration);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, resourceAdministration.getId().toString()))
             .body(result);
     }
-
 
     /**
      * GET  /resource-administrations : get all the resourceAdministrations.
