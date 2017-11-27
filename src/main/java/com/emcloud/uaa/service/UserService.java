@@ -2,7 +2,7 @@ package com.emcloud.uaa.service;
 
 import com.emcloud.uaa.domain.Role;
 import com.emcloud.uaa.domain.User;
-import com.emcloud.uaa.repository.AuthorityRepository;
+import com.emcloud.uaa.repository.RoleRepository;
 import com.emcloud.uaa.config.Constants;
 import com.emcloud.uaa.repository.UserRepository;
 import com.emcloud.uaa.security.AuthoritiesConstants;
@@ -41,14 +41,14 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final AuthorityRepository authorityRepository;
+    private final RoleRepository roleRepository;
 
     private final CacheManager cacheManager;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository, CacheManager cacheManager) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, CacheManager cacheManager) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.authorityRepository = authorityRepository;
+        this.roleRepository = roleRepository;
         this.cacheManager = cacheManager;
     }
 
@@ -113,7 +113,7 @@ public class UserService {
     public User registerUser(ManagedUserVM userDTO) {
 
         User newUser = new User();
-        Role role = authorityRepository.findOneByName(AuthoritiesConstants.USER);
+        Role role = roleRepository.findOneByName(AuthoritiesConstants.USER);
         Set<Role> authorities = new HashSet<>();
         String encryptedPassword = passwordEncoder.encode(userDTO.getPassword());
         newUser.setLogin(userDTO.getLogin());
@@ -149,7 +149,7 @@ public class UserService {
         }
         if (userDTO.getAuthorities() != null) {
             Set<Role> authorities = userDTO.getAuthorities().stream()
-                .map(authorityRepository::findOneByName)
+                .map(roleRepository::findOneByName)
                 .collect(Collectors.toSet());
             user.setRoles(authorities);
         }
@@ -204,7 +204,7 @@ public class UserService {
                 Set<Role> managedAuthorities = user.getRoles();
                 managedAuthorities.clear();
                 userDTO.getAuthorities().stream()
-                    .map(authorityRepository::findOneByName)
+                    .map(roleRepository::findOneByName)
                     .forEach(managedAuthorities::add);
                 cacheManager.getCache(USERS_CACHE).evict(user.getLogin());
                 log.debug("Changed Information for User: {}", user);
@@ -269,6 +269,6 @@ public class UserService {
      * @return a list of all the authorities
      */
     public List<String> getAuthorities() {
-        return authorityRepository.findAll().stream().map(Role::getName).collect(Collectors.toList());
+        return roleRepository.findAll().stream().map(Role::getName).collect(Collectors.toList());
     }
 }

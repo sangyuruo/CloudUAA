@@ -2,7 +2,7 @@ package com.emcloud.uaa.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.emcloud.uaa.domain.Role;
-import com.emcloud.uaa.service.AuthorityService;
+import com.emcloud.uaa.service.RoleService;
 import com.emcloud.uaa.web.rest.errors.BadRequestAlertException;
 import com.emcloud.uaa.web.rest.util.HeaderUtil;
 import com.emcloud.uaa.web.rest.util.PaginationUtil;
@@ -29,16 +29,16 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
-public class AuthorityResource {
+public class RoleResource {
 
-    private final Logger log = LoggerFactory.getLogger(AuthorityResource.class);
+    private final Logger log = LoggerFactory.getLogger(RoleResource.class);
 
     private static final String ENTITY_NAME = "authority";
 
-    private final AuthorityService authorityService;
+    private final RoleService roleService;
 
-    public AuthorityResource(AuthorityService authorityService) {
-        this.authorityService = authorityService;
+    public RoleResource(RoleService roleService) {
+        this.roleService = roleService;
     }
 
     /**
@@ -55,7 +55,7 @@ public class AuthorityResource {
         if (role.getId() != null) {
             throw new BadRequestAlertException("A new role cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Role result = authorityService.save(role);
+        Role result = roleService.save(role);
         return ResponseEntity.created(new URI("/api/authorities/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -77,7 +77,7 @@ public class AuthorityResource {
         if (role.getId() == null) {
             return createAuthority(role);
         }
-        Role result = authorityService.update(role);
+        Role result = roleService.update(role);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, role.getId().toString()))
             .body(result);
@@ -93,7 +93,7 @@ public class AuthorityResource {
     @Timed
     public ResponseEntity<List<Role>> getAllAuthorities(@ApiParam Pageable pageable) {
         log.debug("REST request to get a page of Authorities");
-        Page<Role> page = authorityService.findAll(pageable);
+        Page<Role> page = roleService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/authorities");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -108,7 +108,7 @@ public class AuthorityResource {
     @Timed
     public ResponseEntity<List<Role>> getAllAuthoritiesByNameOrDesc(@PathVariable String name, @PathVariable String desc, @ApiParam Pageable pageable) {
         log.debug("REST request to get a page of Authorities");
-        Page<Role> page = authorityService.findAllByNameOrDesc(name,desc,pageable);
+        Page<Role> page = roleService.findAllByNameOrDesc(name,desc,pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/authorities/{name}or{desc}");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -127,7 +127,7 @@ public class AuthorityResource {
     @Timed
     public ResponseEntity<Role> getAuthority(@PathVariable Long id) {
         log.debug("REST request to get Role : {}", id);
-        Role role = authorityService.findOne(id);
+        Role role = roleService.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(role));
     }
 
@@ -141,7 +141,7 @@ public class AuthorityResource {
     @Timed
     public ResponseEntity<Void> deleteAuthority(@PathVariable Long id) {
         log.debug("REST request to delete Role : {}", id);
-        authorityService.delete(id);
+        roleService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 }

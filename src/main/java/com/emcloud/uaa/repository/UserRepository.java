@@ -54,5 +54,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Cacheable(cacheNames="users")
     Optional<User> findOneWithRolesByLogin(String login);
 
+    /**
+     * 查找登录名不为login的方法   findOneByLoginNot
+     */
     Page<User> findAllByLoginNot(Pageable pageable, String login);
 }

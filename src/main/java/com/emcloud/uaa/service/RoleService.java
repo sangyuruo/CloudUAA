@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 /**
  * Service Interface for managing Role.
  */
-public interface AuthorityService {
+public interface RoleService {
 
     /**
      * Save a role.

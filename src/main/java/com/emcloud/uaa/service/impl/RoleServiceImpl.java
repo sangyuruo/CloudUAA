@@ -1,8 +1,8 @@
 package com.emcloud.uaa.service.impl;
 
 import com.emcloud.uaa.domain.Role;
-import com.emcloud.uaa.service.AuthorityService;
-import com.emcloud.uaa.repository.AuthorityRepository;
+import com.emcloud.uaa.service.RoleService;
+import com.emcloud.uaa.repository.RoleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -16,14 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class AuthorityServiceImpl implements AuthorityService{
+public class RoleServiceImpl implements RoleService {
 
-    private final Logger log = LoggerFactory.getLogger(AuthorityServiceImpl.class);
+    private final Logger log = LoggerFactory.getLogger(RoleServiceImpl.class);
 
-    private final AuthorityRepository authorityRepository;
+    private final RoleRepository roleRepository;
 
-    public AuthorityServiceImpl(AuthorityRepository authorityRepository) {
-        this.authorityRepository = authorityRepository;
+    public RoleServiceImpl(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
     }
 
     /**
@@ -35,7 +35,7 @@ public class AuthorityServiceImpl implements AuthorityService{
     @Override
     public Role save(Role role) {
         log.debug("Request to save Role : {}", role);
-        return authorityRepository.save(role);
+        return roleRepository.save(role);
     }
 
 
@@ -49,7 +49,7 @@ public class AuthorityServiceImpl implements AuthorityService{
     @Override
     public Role update(Role role) {
         log.debug("Request to save Role : {}", role);
-        return authorityRepository.save(role);
+        return roleRepository.save(role);
     }
 
     /**
@@ -62,7 +62,7 @@ public class AuthorityServiceImpl implements AuthorityService{
     @Transactional(readOnly = true)
     public Page<Role> findAll(Pageable pageable) {
         log.debug("Request to get all Authorities");
-        return authorityRepository.findAll(pageable);
+        return roleRepository.findAll(pageable);
     }
 
     /**
@@ -75,7 +75,7 @@ public class AuthorityServiceImpl implements AuthorityService{
     @Transactional(readOnly = true)
     public Page<Role> findAllByNameOrDesc(String name, String desc, Pageable pageable){
         log.debug("Request to get all Authorities by id or name");
-        return authorityRepository.findAllByNameOrDescContaining(pageable, name,desc);
+        return roleRepository.findAllByNameOrDescContaining(pageable, name,desc);
     }
 
 
@@ -91,7 +91,7 @@ public class AuthorityServiceImpl implements AuthorityService{
     @Transactional(readOnly = true)
     public Role findOne(Long id) {
         log.debug("Request to get Role : {}", id);
-        return authorityRepository.findOne(id);
+        return roleRepository.findOne(id);
     }
 
     /**
@@ -102,6 +102,6 @@ public class AuthorityServiceImpl implements AuthorityService{
     @Override
     public void delete(Long id) {
         log.debug("Request to delete Role : {}", id);
-        authorityRepository.delete(id);
+        roleRepository.delete(id);
     }
 }

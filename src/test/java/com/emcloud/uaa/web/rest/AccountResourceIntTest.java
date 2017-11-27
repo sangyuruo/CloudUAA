@@ -4,7 +4,7 @@ import com.emcloud.uaa.EmCloudUaaApp;
 import com.emcloud.uaa.config.Constants;
 import com.emcloud.uaa.domain.Role;
 import com.emcloud.uaa.domain.User;
-import com.emcloud.uaa.repository.AuthorityRepository;
+import com.emcloud.uaa.repository.RoleRepository;
 import com.emcloud.uaa.repository.UserRepository;
 import com.emcloud.uaa.security.AuthoritiesConstants;
 import com.emcloud.uaa.service.MailService;
@@ -57,7 +57,7 @@ public class AccountResourceIntTest {
     private UserRepository userRepository;
 
     @Autowired
-    private AuthorityRepository authorityRepository;
+    private RoleRepository roleRepository;
 
     @Autowired
     private UserService userService;
@@ -425,7 +425,7 @@ public class AccountResourceIntTest {
         Optional<User> userDup = userRepository.findOneByLogin("badguy");
         assertThat(userDup.isPresent()).isTrue();
         assertThat(userDup.get().getRoles()).hasSize(1)
-            .containsExactly(authorityRepository.findOneByName(AuthoritiesConstants.USER));
+            .containsExactly(roleRepository.findOneByName(AuthoritiesConstants.USER));
     }
 
     @Test
