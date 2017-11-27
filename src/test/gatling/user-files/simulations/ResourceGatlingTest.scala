@@ -77,7 +77,7 @@ class ResourceGatlingTest extends Simulation {
             .headers(headers_http_authenticated)
             .check(status.is(200)))
             .pause(10 seconds, 20 seconds)
-            .exec(http("Create new resource")
+            .exec(http("Create new resources")
             .post("/api/resources")
             .headers(headers_http_authenticated)
             .body(StringBody("""{"id":null, "resourceCode":"SAMPLE_TEXT", "resourceName":"SAMPLE_TEXT", "resourceType":"SAMPLE_TEXT", "resourceUrl":"SAMPLE_TEXT", "enable":null, "createdBy":"SAMPLE_TEXT", "createTime":"2020-01-01T00:00:00.000Z", "updatedBy":"SAMPLE_TEXT", "updateTime":"2020-01-01T00:00:00.000Z"}""")).asJSON
@@ -85,12 +85,12 @@ class ResourceGatlingTest extends Simulation {
             .check(headerRegex("Location", "(.*)").saveAs("new_resource_url"))).exitHereIfFailed
             .pause(10)
             .repeat(5) {
-                exec(http("Get created resource")
+                exec(http("Get created resources")
                 .get("${new_resource_url}")
                 .headers(headers_http_authenticated))
                 .pause(10)
             }
-            .exec(http("Delete created resource")
+            .exec(http("Delete created resources")
             .delete("${new_resource_url}")
             .headers(headers_http_authenticated))
             .pause(10)

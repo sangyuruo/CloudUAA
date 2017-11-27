@@ -15,7 +15,7 @@ import org.springframework.data.jpa.repository.*;
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
     /**
-     * 通过id或name查找
+     * 通过name或desc查找
      *
      * */
     Page<Role> findAllByNameOrDescContaining(Pageable pageable, String name, String desc);

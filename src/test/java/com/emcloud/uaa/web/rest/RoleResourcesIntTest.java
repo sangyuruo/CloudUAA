@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = EmCloudUaaApp.class)
-public class RoleResourceIntTest {
+public class RoleResourcesIntTest {
 
     private static final String DEFAULT_NAME = "ROLE_OU";
     private static final String UPDATED_NAME = "ROLE_OU";

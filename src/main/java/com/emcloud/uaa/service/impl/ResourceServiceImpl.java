@@ -1,8 +1,8 @@
 package com.emcloud.uaa.service.impl;
 
+import com.emcloud.uaa.domain.Resources;
 import com.emcloud.uaa.security.SecurityUtils;
 import com.emcloud.uaa.service.ResourceService;
-import com.emcloud.uaa.domain.Resource;
 import com.emcloud.uaa.repository.ResourceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +14,7 @@ import java.time.Instant;
 
 
 /**
- * Service Implementation for managing Resource.
+ * Service Implementation for managing Resources.
  */
 @Service
 @Transactional
@@ -29,33 +29,33 @@ public class ResourceServiceImpl implements ResourceService{
     }
 
     /**
-     * Save a resource.
+     * Save a resources.
      *
-     * @param resource the entity to save
+     * @param resources the entity to save
      * @return the persisted entity
      */
     @Override
-    public Resource save(Resource resource) {
-        log.debug("Request to save Resource : {}", resource);
-        resource.setCreatedBy(SecurityUtils.getCurrentUserLogin());
-        resource.setCreateTime(Instant.now());
-        resource.setUpdatedBy(SecurityUtils.getCurrentUserLogin());
-        resource.setUpdateTime(Instant.now());
-        return resourceRepository.save(resource);
+    public Resources save(Resources resources) {
+        log.debug("Request to save Resources : {}", resources);
+        resources.setCreatedBy(SecurityUtils.getCurrentUserLogin());
+        resources.setCreateTime(Instant.now());
+        resources.setUpdatedBy(SecurityUtils.getCurrentUserLogin());
+        resources.setUpdateTime(Instant.now());
+        return resourceRepository.save(resources);
     }
 
     /**
-     * update a resource.
+     * update a resources.
      *
-     * @param resource the entity to update
+     * @param resources the entity to update
      * @return the persisted entity
      */
     @Override
-    public Resource update(Resource resource) {
-        log.debug("Request to save Company : {}", resource);
-        resource.setUpdatedBy(SecurityUtils.getCurrentUserLogin());
-        resource.setUpdateTime(Instant.now());
-        return resourceRepository.save(resource);
+    public Resources update(Resources resources) {
+        log.debug("Request to save Company : {}", resources);
+        resources.setUpdatedBy(SecurityUtils.getCurrentUserLogin());
+        resources.setUpdateTime(Instant.now());
+        return resourceRepository.save(resources);
     }
 
     /**
@@ -66,7 +66,7 @@ public class ResourceServiceImpl implements ResourceService{
      */
     @Override
     @Transactional(readOnly = true)
-    public Page<Resource> findAll(Pageable pageable) {
+    public Page<Resources> findAll(Pageable pageable) {
         log.debug("Request to get all Resources");
         return resourceRepository.findAll(pageable);
     }
@@ -79,21 +79,21 @@ public class ResourceServiceImpl implements ResourceService{
      */
     @Override
     @Transactional(readOnly = true)
-    public Resource findOne(Long id) {
-        log.debug("Request to get Resource : {}", id);
+    public Resources findOne(Long id) {
+        log.debug("Request to get Resources : {}", id);
         return resourceRepository.findOne(id);
     }
 
     /**
-     *  Get all the Resource by resourceName .
+     *  Get all the Resources by resourceName .
      *
      *  @param pageable the pagination information
      *  @return the list of entities
      */
     @Override
     @Transactional(readOnly = true)
-    public Page<Resource> findByResourceName(Pageable pageable,String resourceName) {
-        log.debug("Request to get all Resource by resourceName");
+    public Page<Resources> findByResourceName(Pageable pageable, String resourceName) {
+        log.debug("Request to get all Resources by resourceName");
         return resourceRepository.findAllByResourceNameContaining(pageable,resourceName);
     }
 
@@ -104,7 +104,7 @@ public class ResourceServiceImpl implements ResourceService{
      */
     @Override
     public void delete(Long id) {
-        log.debug("Request to delete Resource : {}", id);
+        log.debug("Request to delete Resources : {}", id);
         resourceRepository.delete(id);
     }
 

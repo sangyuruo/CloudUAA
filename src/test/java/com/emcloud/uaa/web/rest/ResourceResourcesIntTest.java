@@ -2,9 +2,7 @@ package com.emcloud.uaa.web.rest;
 
 import com.emcloud.uaa.EmCloudUaaApp;
 
-import com.emcloud.uaa.config.SecurityBeanOverrideConfiguration;
-
-import com.emcloud.uaa.domain.Resource;
+import com.emcloud.uaa.domain.Resources;
 import com.emcloud.uaa.repository.ResourceRepository;
 import com.emcloud.uaa.service.ResourceService;
 import com.emcloud.uaa.web.rest.errors.ExceptionTranslator;
@@ -41,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = EmCloudUaaApp.class)
-public class ResourceResourceIntTest {
+public class ResourceResourcesIntTest {
 
     private static final String DEFAULT_RESOURCE_CODE = "AAAAAAAAAA";
     private static final String UPDATED_RESOURCE_CODE = "BBBBBBBBBB";
@@ -90,7 +88,7 @@ public class ResourceResourceIntTest {
 
     private MockMvc restResourceMockMvc;
 
-    private Resource resource;
+    private Resources resources;
 
     @Before
     public void setup() {
@@ -109,8 +107,8 @@ public class ResourceResourceIntTest {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Resource createEntity(EntityManager em) {
-        Resource resource = new Resource()
+    public static Resources createEntity(EntityManager em) {
+        Resources resources = new Resources()
             .resourceCode(DEFAULT_RESOURCE_CODE)
             .resourceName(DEFAULT_RESOURCE_NAME)
             .resourceType(DEFAULT_RESOURCE_TYPE)
@@ -120,12 +118,12 @@ public class ResourceResourceIntTest {
             .createTime(DEFAULT_CREATE_TIME)
             .updatedBy(DEFAULT_UPDATED_BY)
             .updateTime(DEFAULT_UPDATE_TIME);
-        return resource;
+        return resources;
     }
 
     @Before
     public void initTest() {
-        resource = createEntity(em);
+        resources = createEntity(em);
     }
 
     @Test
@@ -133,25 +131,25 @@ public class ResourceResourceIntTest {
     public void createResource() throws Exception {
         int databaseSizeBeforeCreate = resourceRepository.findAll().size();
 
-        // Create the Resource
+        // Create the Resources
         restResourceMockMvc.perform(post("/api/resources")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(resource)))
+            .content(TestUtil.convertObjectToJsonBytes(resources)))
             .andExpect(status().isCreated());
 
-        // Validate the Resource in the database
-        List<Resource> resourceList = resourceRepository.findAll();
-        assertThat(resourceList).hasSize(databaseSizeBeforeCreate + 1);
-        Resource testResource = resourceList.get(resourceList.size() - 1);
-        assertThat(testResource.getResourceCode()).isEqualTo(DEFAULT_RESOURCE_CODE);
-        assertThat(testResource.getResourceName()).isEqualTo(DEFAULT_RESOURCE_NAME);
-        assertThat(testResource.getResourceType()).isEqualTo(DEFAULT_RESOURCE_TYPE);
-        assertThat(testResource.getResourceUrl()).isEqualTo(DEFAULT_RESOURCE_URL);
-        assertThat(testResource.isEnable()).isEqualTo(DEFAULT_ENABLE);
-        assertThat(testResource.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
-        assertThat(testResource.getCreateTime()).isEqualTo(DEFAULT_CREATE_TIME);
-        assertThat(testResource.getUpdatedBy()).isEqualTo(DEFAULT_UPDATED_BY);
-        assertThat(testResource.getUpdateTime()).isEqualTo(DEFAULT_UPDATE_TIME);
+        // Validate the Resources in the database
+        List<Resources> resourcesList = resourceRepository.findAll();
+        assertThat(resourcesList).hasSize(databaseSizeBeforeCreate + 1);
+        Resources testResources = resourcesList.get(resourcesList.size() - 1);
+        assertThat(testResources.getResourceCode()).isEqualTo(DEFAULT_RESOURCE_CODE);
+        assertThat(testResources.getResourceName()).isEqualTo(DEFAULT_RESOURCE_NAME);
+        assertThat(testResources.getResourceType()).isEqualTo(DEFAULT_RESOURCE_TYPE);
+        assertThat(testResources.getResourceUrl()).isEqualTo(DEFAULT_RESOURCE_URL);
+        assertThat(testResources.isEnable()).isEqualTo(DEFAULT_ENABLE);
+        assertThat(testResources.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertThat(testResources.getCreateTime()).isEqualTo(DEFAULT_CREATE_TIME);
+        assertThat(testResources.getUpdatedBy()).isEqualTo(DEFAULT_UPDATED_BY);
+        assertThat(testResources.getUpdateTime()).isEqualTo(DEFAULT_UPDATE_TIME);
     }
 
     @Test
@@ -159,18 +157,18 @@ public class ResourceResourceIntTest {
     public void createResourceWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = resourceRepository.findAll().size();
 
-        // Create the Resource with an existing ID
-        resource.setId(1L);
+        // Create the Resources with an existing ID
+        resources.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restResourceMockMvc.perform(post("/api/resources")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(resource)))
+            .content(TestUtil.convertObjectToJsonBytes(resources)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Resource in the database
-        List<Resource> resourceList = resourceRepository.findAll();
-        assertThat(resourceList).hasSize(databaseSizeBeforeCreate);
+        // Validate the Resources in the database
+        List<Resources> resourcesList = resourceRepository.findAll();
+        assertThat(resourcesList).hasSize(databaseSizeBeforeCreate);
     }
 
     @Test
@@ -178,17 +176,17 @@ public class ResourceResourceIntTest {
     public void checkResourceCodeIsRequired() throws Exception {
         int databaseSizeBeforeTest = resourceRepository.findAll().size();
         // set the field null
-        resource.setResourceCode(null);
+        resources.setResourceCode(null);
 
-        // Create the Resource, which fails.
+        // Create the Resources, which fails.
 
         restResourceMockMvc.perform(post("/api/resources")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(resource)))
+            .content(TestUtil.convertObjectToJsonBytes(resources)))
             .andExpect(status().isBadRequest());
 
-        List<Resource> resourceList = resourceRepository.findAll();
-        assertThat(resourceList).hasSize(databaseSizeBeforeTest);
+        List<Resources> resourcesList = resourceRepository.findAll();
+        assertThat(resourcesList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -196,17 +194,17 @@ public class ResourceResourceIntTest {
     public void checkResourceNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = resourceRepository.findAll().size();
         // set the field null
-        resource.setResourceName(null);
+        resources.setResourceName(null);
 
-        // Create the Resource, which fails.
+        // Create the Resources, which fails.
 
         restResourceMockMvc.perform(post("/api/resources")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(resource)))
+            .content(TestUtil.convertObjectToJsonBytes(resources)))
             .andExpect(status().isBadRequest());
 
-        List<Resource> resourceList = resourceRepository.findAll();
-        assertThat(resourceList).hasSize(databaseSizeBeforeTest);
+        List<Resources> resourcesList = resourceRepository.findAll();
+        assertThat(resourcesList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -214,17 +212,17 @@ public class ResourceResourceIntTest {
     public void checkResourceTypeIsRequired() throws Exception {
         int databaseSizeBeforeTest = resourceRepository.findAll().size();
         // set the field null
-        resource.setResourceType(null);
+        resources.setResourceType(null);
 
-        // Create the Resource, which fails.
+        // Create the Resources, which fails.
 
         restResourceMockMvc.perform(post("/api/resources")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(resource)))
+            .content(TestUtil.convertObjectToJsonBytes(resources)))
             .andExpect(status().isBadRequest());
 
-        List<Resource> resourceList = resourceRepository.findAll();
-        assertThat(resourceList).hasSize(databaseSizeBeforeTest);
+        List<Resources> resourcesList = resourceRepository.findAll();
+        assertThat(resourcesList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -232,17 +230,17 @@ public class ResourceResourceIntTest {
     public void checkResourceUrlIsRequired() throws Exception {
         int databaseSizeBeforeTest = resourceRepository.findAll().size();
         // set the field null
-        resource.setResourceUrl(null);
+        resources.setResourceUrl(null);
 
-        // Create the Resource, which fails.
+        // Create the Resources, which fails.
 
         restResourceMockMvc.perform(post("/api/resources")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(resource)))
+            .content(TestUtil.convertObjectToJsonBytes(resources)))
             .andExpect(status().isBadRequest());
 
-        List<Resource> resourceList = resourceRepository.findAll();
-        assertThat(resourceList).hasSize(databaseSizeBeforeTest);
+        List<Resources> resourcesList = resourceRepository.findAll();
+        assertThat(resourcesList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -250,17 +248,17 @@ public class ResourceResourceIntTest {
     public void checkEnableIsRequired() throws Exception {
         int databaseSizeBeforeTest = resourceRepository.findAll().size();
         // set the field null
-        resource.setEnable(null);
+        resources.setEnable(null);
 
-        // Create the Resource, which fails.
+        // Create the Resources, which fails.
 
         restResourceMockMvc.perform(post("/api/resources")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(resource)))
+            .content(TestUtil.convertObjectToJsonBytes(resources)))
             .andExpect(status().isBadRequest());
 
-        List<Resource> resourceList = resourceRepository.findAll();
-        assertThat(resourceList).hasSize(databaseSizeBeforeTest);
+        List<Resources> resourcesList = resourceRepository.findAll();
+        assertThat(resourcesList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -268,17 +266,17 @@ public class ResourceResourceIntTest {
     public void checkCreatedByIsRequired() throws Exception {
         int databaseSizeBeforeTest = resourceRepository.findAll().size();
         // set the field null
-        resource.setCreatedBy(null);
+        resources.setCreatedBy(null);
 
-        // Create the Resource, which fails.
+        // Create the Resources, which fails.
 
         restResourceMockMvc.perform(post("/api/resources")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(resource)))
+            .content(TestUtil.convertObjectToJsonBytes(resources)))
             .andExpect(status().isBadRequest());
 
-        List<Resource> resourceList = resourceRepository.findAll();
-        assertThat(resourceList).hasSize(databaseSizeBeforeTest);
+        List<Resources> resourcesList = resourceRepository.findAll();
+        assertThat(resourcesList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -286,17 +284,17 @@ public class ResourceResourceIntTest {
     public void checkCreateTimeIsRequired() throws Exception {
         int databaseSizeBeforeTest = resourceRepository.findAll().size();
         // set the field null
-        resource.setCreateTime(null);
+        resources.setCreateTime(null);
 
-        // Create the Resource, which fails.
+        // Create the Resources, which fails.
 
         restResourceMockMvc.perform(post("/api/resources")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(resource)))
+            .content(TestUtil.convertObjectToJsonBytes(resources)))
             .andExpect(status().isBadRequest());
 
-        List<Resource> resourceList = resourceRepository.findAll();
-        assertThat(resourceList).hasSize(databaseSizeBeforeTest);
+        List<Resources> resourcesList = resourceRepository.findAll();
+        assertThat(resourcesList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -304,17 +302,17 @@ public class ResourceResourceIntTest {
     public void checkUpdatedByIsRequired() throws Exception {
         int databaseSizeBeforeTest = resourceRepository.findAll().size();
         // set the field null
-        resource.setUpdatedBy(null);
+        resources.setUpdatedBy(null);
 
-        // Create the Resource, which fails.
+        // Create the Resources, which fails.
 
         restResourceMockMvc.perform(post("/api/resources")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(resource)))
+            .content(TestUtil.convertObjectToJsonBytes(resources)))
             .andExpect(status().isBadRequest());
 
-        List<Resource> resourceList = resourceRepository.findAll();
-        assertThat(resourceList).hasSize(databaseSizeBeforeTest);
+        List<Resources> resourcesList = resourceRepository.findAll();
+        assertThat(resourcesList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -322,30 +320,30 @@ public class ResourceResourceIntTest {
     public void checkUpdateTimeIsRequired() throws Exception {
         int databaseSizeBeforeTest = resourceRepository.findAll().size();
         // set the field null
-        resource.setUpdateTime(null);
+        resources.setUpdateTime(null);
 
-        // Create the Resource, which fails.
+        // Create the Resources, which fails.
 
         restResourceMockMvc.perform(post("/api/resources")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(resource)))
+            .content(TestUtil.convertObjectToJsonBytes(resources)))
             .andExpect(status().isBadRequest());
 
-        List<Resource> resourceList = resourceRepository.findAll();
-        assertThat(resourceList).hasSize(databaseSizeBeforeTest);
+        List<Resources> resourcesList = resourceRepository.findAll();
+        assertThat(resourcesList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     public void getAllResources() throws Exception {
         // Initialize the database
-        resourceRepository.saveAndFlush(resource);
+        resourceRepository.saveAndFlush(resources);
 
         // Get all the resourceList
         restResourceMockMvc.perform(get("/api/resources?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(resource.getId().intValue())))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(resources.getId().intValue())))
             .andExpect(jsonPath("$.[*].resourceCode").value(hasItem(DEFAULT_RESOURCE_CODE.toString())))
             .andExpect(jsonPath("$.[*].resourceName").value(hasItem(DEFAULT_RESOURCE_NAME.toString())))
             .andExpect(jsonPath("$.[*].resourceType").value(hasItem(DEFAULT_RESOURCE_TYPE.toString())))
@@ -361,13 +359,13 @@ public class ResourceResourceIntTest {
     @Transactional
     public void getResource() throws Exception {
         // Initialize the database
-        resourceRepository.saveAndFlush(resource);
+        resourceRepository.saveAndFlush(resources);
 
-        // Get the resource
-        restResourceMockMvc.perform(get("/api/resources/{id}", resource.getId()))
+        // Get the resources
+        restResourceMockMvc.perform(get("/api/resources/{id}", resources.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-            .andExpect(jsonPath("$.id").value(resource.getId().intValue()))
+            .andExpect(jsonPath("$.id").value(resources.getId().intValue()))
             .andExpect(jsonPath("$.resourceCode").value(DEFAULT_RESOURCE_CODE.toString()))
             .andExpect(jsonPath("$.resourceName").value(DEFAULT_RESOURCE_NAME.toString()))
             .andExpect(jsonPath("$.resourceType").value(DEFAULT_RESOURCE_TYPE.toString()))
@@ -382,7 +380,7 @@ public class ResourceResourceIntTest {
     @Test
     @Transactional
     public void getNonExistingResource() throws Exception {
-        // Get the resource
+        // Get the resources
         restResourceMockMvc.perform(get("/api/resources/{id}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
     }
@@ -391,13 +389,13 @@ public class ResourceResourceIntTest {
     @Transactional
     public void updateResource() throws Exception {
         // Initialize the database
-        resourceService.save(resource);
+        resourceService.save(resources);
 
         int databaseSizeBeforeUpdate = resourceRepository.findAll().size();
 
-        // Update the resource
-        Resource updatedResource = resourceRepository.findOne(resource.getId());
-        updatedResource
+        // Update the resources
+        Resources updatedResources = resourceRepository.findOne(resources.getId());
+        updatedResources
             .resourceCode(UPDATED_RESOURCE_CODE)
             .resourceName(UPDATED_RESOURCE_NAME)
             .resourceType(UPDATED_RESOURCE_TYPE)
@@ -410,22 +408,22 @@ public class ResourceResourceIntTest {
 
         restResourceMockMvc.perform(put("/api/resources")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedResource)))
+            .content(TestUtil.convertObjectToJsonBytes(updatedResources)))
             .andExpect(status().isOk());
 
-        // Validate the Resource in the database
-        List<Resource> resourceList = resourceRepository.findAll();
-        assertThat(resourceList).hasSize(databaseSizeBeforeUpdate);
-        Resource testResource = resourceList.get(resourceList.size() - 1);
-        assertThat(testResource.getResourceCode()).isEqualTo(UPDATED_RESOURCE_CODE);
-        assertThat(testResource.getResourceName()).isEqualTo(UPDATED_RESOURCE_NAME);
-        assertThat(testResource.getResourceType()).isEqualTo(UPDATED_RESOURCE_TYPE);
-        assertThat(testResource.getResourceUrl()).isEqualTo(UPDATED_RESOURCE_URL);
-        assertThat(testResource.isEnable()).isEqualTo(UPDATED_ENABLE);
-        assertThat(testResource.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
-        assertThat(testResource.getCreateTime()).isEqualTo(UPDATED_CREATE_TIME);
-        assertThat(testResource.getUpdatedBy()).isEqualTo(UPDATED_UPDATED_BY);
-        assertThat(testResource.getUpdateTime()).isEqualTo(UPDATED_UPDATE_TIME);
+        // Validate the Resources in the database
+        List<Resources> resourcesList = resourceRepository.findAll();
+        assertThat(resourcesList).hasSize(databaseSizeBeforeUpdate);
+        Resources testResources = resourcesList.get(resourcesList.size() - 1);
+        assertThat(testResources.getResourceCode()).isEqualTo(UPDATED_RESOURCE_CODE);
+        assertThat(testResources.getResourceName()).isEqualTo(UPDATED_RESOURCE_NAME);
+        assertThat(testResources.getResourceType()).isEqualTo(UPDATED_RESOURCE_TYPE);
+        assertThat(testResources.getResourceUrl()).isEqualTo(UPDATED_RESOURCE_URL);
+        assertThat(testResources.isEnable()).isEqualTo(UPDATED_ENABLE);
+        assertThat(testResources.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testResources.getCreateTime()).isEqualTo(UPDATED_CREATE_TIME);
+        assertThat(testResources.getUpdatedBy()).isEqualTo(UPDATED_UPDATED_BY);
+        assertThat(testResources.getUpdateTime()).isEqualTo(UPDATED_UPDATE_TIME);
     }
 
     @Test
@@ -433,49 +431,49 @@ public class ResourceResourceIntTest {
     public void updateNonExistingResource() throws Exception {
         int databaseSizeBeforeUpdate = resourceRepository.findAll().size();
 
-        // Create the Resource
+        // Create the Resources
 
         // If the entity doesn't have an ID, it will be created instead of just being updated
         restResourceMockMvc.perform(put("/api/resources")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(resource)))
+            .content(TestUtil.convertObjectToJsonBytes(resources)))
             .andExpect(status().isCreated());
 
-        // Validate the Resource in the database
-        List<Resource> resourceList = resourceRepository.findAll();
-        assertThat(resourceList).hasSize(databaseSizeBeforeUpdate + 1);
+        // Validate the Resources in the database
+        List<Resources> resourcesList = resourceRepository.findAll();
+        assertThat(resourcesList).hasSize(databaseSizeBeforeUpdate + 1);
     }
 
     @Test
     @Transactional
     public void deleteResource() throws Exception {
         // Initialize the database
-        resourceService.save(resource);
+        resourceService.save(resources);
 
         int databaseSizeBeforeDelete = resourceRepository.findAll().size();
 
-        // Get the resource
-        restResourceMockMvc.perform(delete("/api/resources/{id}", resource.getId())
+        // Get the resources
+        restResourceMockMvc.perform(delete("/api/resources/{id}", resources.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
 
         // Validate the database is empty
-        List<Resource> resourceList = resourceRepository.findAll();
-        assertThat(resourceList).hasSize(databaseSizeBeforeDelete - 1);
+        List<Resources> resourcesList = resourceRepository.findAll();
+        assertThat(resourcesList).hasSize(databaseSizeBeforeDelete - 1);
     }
 
     @Test
     @Transactional
     public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(Resource.class);
-        Resource resource1 = new Resource();
-        resource1.setId(1L);
-        Resource resource2 = new Resource();
-        resource2.setId(resource1.getId());
-        assertThat(resource1).isEqualTo(resource2);
-        resource2.setId(2L);
-        assertThat(resource1).isNotEqualTo(resource2);
-        resource1.setId(null);
-        assertThat(resource1).isNotEqualTo(resource2);
+        TestUtil.equalsVerifier(Resources.class);
+        Resources resources1 = new Resources();
+        resources1.setId(1L);
+        Resources resources2 = new Resources();
+        resources2.setId(resources1.getId());
+        assertThat(resources1).isEqualTo(resources2);
+        resources2.setId(2L);
+        assertThat(resources1).isNotEqualTo(resources2);
+        resources1.setId(null);
+        assertThat(resources1).isNotEqualTo(resources2);
     }
 }

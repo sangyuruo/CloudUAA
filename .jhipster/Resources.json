@@ -88,7 +88,7 @@
         }
     ],
     "changelogDate": "20171125025846",
-    "entityTableName": "resource",
+    "entityTableName": "resources",
     "dto": "no",
     "pagination": "pager",
     "service": "serviceImpl",

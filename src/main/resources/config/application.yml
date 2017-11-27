@@ -67,7 +67,7 @@ security:
     basic:
         enabled: false
     oauth2:
-        resource:
+        resources:
             filter-order: 3
 
 server:

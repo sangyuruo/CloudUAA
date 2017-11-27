@@ -15,10 +15,10 @@
     <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
 
     <!--
-        Added the entity Resource.
+        Added the entity Resources.
     -->
     <changeSet id="20171125025846-1" author="jhipster">
-        <createTable tableName="resource">
+        <createTable tableName="resources">
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -60,8 +60,8 @@
 
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
-        <dropDefaultValue tableName="resource" columnName="create_time" columnDataType="datetime"/>
-        <dropDefaultValue tableName="resource" columnName="update_time" columnDataType="datetime"/>
+        <dropDefaultValue tableName="resources" columnName="create_time" columnDataType="datetime"/>
+        <dropDefaultValue tableName="resources" columnName="update_time" columnDataType="datetime"/>
 
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->

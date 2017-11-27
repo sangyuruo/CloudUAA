@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Resource to return information about the currently running Spring profiles.
+ * Resources to return information about the currently running Spring profiles.
  */
 @RestController
 @RequestMapping("/api")

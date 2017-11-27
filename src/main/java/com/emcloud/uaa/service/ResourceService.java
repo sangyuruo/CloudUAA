@@ -1,36 +1,36 @@
 package com.emcloud.uaa.service;
 
-import com.emcloud.uaa.domain.Resource;
+import com.emcloud.uaa.domain.Resources;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 /**
- * Service Interface for managing Resource.
+ * Service Interface for managing Resources.
  */
 public interface ResourceService {
 
     /**
-     * Save a resource.
+     * Save a resources.
      *
-     * @param resource the entity to save
+     * @param resources the entity to save
      * @return the persisted entity
      */
-    Resource save(Resource resource);
+    Resources save(Resources resources);
 
     /**
-     * update a resource.
+     * update a resources.
      *
-     * @param resource the entity to update
+     * @param resources the entity to update
      * @return the persisted entity
      */
-    Resource update(Resource resource);
+    Resources update(Resources resources);
     /**
      *  Get all the resources.
      *
      *  @param pageable the pagination information
      *  @return the list of entities
      */
-    Page<Resource> findAll(Pageable pageable);
+    Page<Resources> findAll(Pageable pageable);
 
     /**
      *  Get the "id" resource.
@@ -38,15 +38,15 @@ public interface ResourceService {
      *  @param id the id of the entity
      *  @return the entity
      */
-    Resource findOne(Long id);
+    Resources findOne(Long id);
 
     /**
-     *  Get the "resourceName" Resource.
+     *  Get the "resourceName" Resources.
      *
      *  @param resourceName the id of the entity
      *  @return the entity
      */
-    Page<Resource> findByResourceName(Pageable pageable,String resourceName);
+    Page<Resources> findByResourceName(Pageable pageable, String resourceName);
 
     /**
      *  Delete the "id" resource.

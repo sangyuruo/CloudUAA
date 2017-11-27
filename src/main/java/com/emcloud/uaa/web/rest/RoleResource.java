@@ -115,8 +115,6 @@ public class RoleResource {
 
 
 
-
-
     /**
      * GET  /authorities/:id : get the "id" authority.
      *

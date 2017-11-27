@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  **/
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = EmCloudUaaApp.class)
-public class ProfileInfoResourceIntTest {
+public class ProfileInfoResourcesIntTest {
 
     @Mock
     private Environment environment;

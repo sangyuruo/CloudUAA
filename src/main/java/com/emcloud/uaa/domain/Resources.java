@@ -9,14 +9,13 @@ import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
-
 /**
- * A Resource.
+ * A Resources.
  */
 @Entity
 @Table(name = "resource")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Resource implements Serializable {
+public class Resources implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -107,15 +106,15 @@ public class Resource implements Serializable {
         this.id = id;
     }
 
-    public String getResourceCode() {
-        return resourceCode;
-    }
 
-    public Resource resourceCode(String resourceCode) {
+    public Resources resourceCode(String resourceCode) {
         this.resourceCode = resourceCode;
         return this;
     }
 
+    public String getResourceCode() {
+        return resourceCode;
+    }
     public void setResourceCode(String resourceCode) {
         this.resourceCode = resourceCode;
     }
@@ -124,7 +123,7 @@ public class Resource implements Serializable {
         return resourceName;
     }
 
-    public Resource resourceName(String resourceName) {
+    public Resources resourceName(String resourceName) {
         this.resourceName = resourceName;
         return this;
     }
@@ -137,7 +136,7 @@ public class Resource implements Serializable {
         return resourceType;
     }
 
-    public Resource resourceType(String resourceType) {
+    public Resources resourceType(String resourceType) {
         this.resourceType = resourceType;
         return this;
     }
@@ -150,7 +149,7 @@ public class Resource implements Serializable {
         return resourceUrl;
     }
 
-    public Resource resourceUrl(String resourceUrl) {
+    public Resources resourceUrl(String resourceUrl) {
         this.resourceUrl = resourceUrl;
         return this;
     }
@@ -163,7 +162,7 @@ public class Resource implements Serializable {
         return enable;
     }
 
-    public Resource enable(Boolean enable) {
+    public Resources enable(Boolean enable) {
         this.enable = enable;
         return this;
     }
@@ -176,7 +175,7 @@ public class Resource implements Serializable {
         return createdBy;
     }
 
-    public Resource createdBy(String createdBy) {
+    public Resources createdBy(String createdBy) {
         this.createdBy = createdBy;
         return this;
     }
@@ -189,7 +188,7 @@ public class Resource implements Serializable {
         return createTime;
     }
 
-    public Resource createTime(Instant createTime) {
+    public Resources createTime(Instant createTime) {
         this.createTime = createTime;
         return this;
     }
@@ -202,7 +201,7 @@ public class Resource implements Serializable {
         return updatedBy;
     }
 
-    public Resource updatedBy(String updatedBy) {
+    public Resources updatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
         return this;
     }
@@ -215,7 +214,7 @@ public class Resource implements Serializable {
         return updateTime;
     }
 
-    public Resource updateTime(Instant updateTime) {
+    public Resources updateTime(Instant updateTime) {
         this.updateTime = updateTime;
         return this;
     }
@@ -233,11 +232,11 @@ public class Resource implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Resource resource = (Resource) o;
-        if (resource.getId() == null || getId() == null) {
+        Resources resources = (Resources) o;
+        if (resources.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(getId(), resource.getId());
+        return Objects.equals(getId(), resources.getId());
     }
 
     @Override
@@ -247,7 +246,7 @@ public class Resource implements Serializable {
 
     @Override
     public String toString() {
-        return "Resource{" +
+        return "Resources{" +
             "id=" + getId() +
             ", resourceCode='" + getResourceCode() + "'" +
             ", resourceName='" + getResourceName() + "'" +

@@ -52,25 +52,6 @@ public class UserService {
         this.cacheManager = cacheManager;
     }
 
-    public void saveUserRole(String loginName,Long authorityid){
-
-        userRepository.findOneByLogin(loginName);//拿到用户
-
-
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public Optional<User> activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);
@@ -147,8 +128,8 @@ public class UserService {
         } else {
             user.setLangKey(userDTO.getLangKey());
         }
-        if (userDTO.getAuthorities() != null) {
-            Set<Role> authorities = userDTO.getAuthorities().stream()
+        if (userDTO.getroles() != null) {
+            Set<Role> authorities = userDTO.getroles().stream()
                 .map(roleRepository::findOneByName)
                 .collect(Collectors.toSet());
             user.setRoles(authorities);
@@ -203,7 +184,7 @@ public class UserService {
                 user.setLangKey(userDTO.getLangKey());
                 Set<Role> managedAuthorities = user.getRoles();
                 managedAuthorities.clear();
-                userDTO.getAuthorities().stream()
+                userDTO.getroles().stream()
                     .map(roleRepository::findOneByName)
                     .forEach(managedAuthorities::add);
                 cacheManager.getCache(USERS_CACHE).evict(user.getLogin());

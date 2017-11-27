@@ -48,7 +48,7 @@ public class UserMapper {
             user.setImageUrl(userDTO.getImageUrl());
             user.setActivated(userDTO.isActivated());
             user.setLangKey(userDTO.getLangKey());
-            Set<Role> authorities = this.authoritiesFromStrings(userDTO.getAuthorities());
+            Set<Role> authorities = this.authoritiesFromStrings(userDTO.getroles());
             if(authorities != null) {
                 user.setRoles(authorities);
             }

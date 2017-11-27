@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * A DTO representing a user, with his authorities.
+ * A DTO representing a user, with his roles.
  */
 public class UserDTO {
 
@@ -59,7 +59,7 @@ public class UserDTO {
 
     private Instant lastModifiedDate;
 
-    private Set<String> authorities;
+    private Set<String> roles;
 
     public UserDTO() {
         // Empty constructor needed for Jackson.
@@ -76,7 +76,7 @@ public class UserDTO {
     public UserDTO(Long id, String login, String firstName, String lastName,
         String email, boolean activated, String imageUrl, String langKey,
         String createdBy, Instant createdDate, String lastModifiedBy, Instant lastModifiedDate,
-        Set<String> authorities) {
+        Set<String> roles) {
 
         this.id = id;
         this.login = login;
@@ -90,7 +90,7 @@ public class UserDTO {
         this.createdDate = createdDate;
         this.lastModifiedBy = lastModifiedBy;
         this.lastModifiedDate = lastModifiedDate;
-        this.authorities = authorities;
+        this.roles = roles;
     }
 
     public Long getId() {
@@ -153,8 +153,8 @@ public class UserDTO {
         this.lastModifiedDate = lastModifiedDate;
     }
 
-    public Set<String> getAuthorities() {
-        return authorities;
+    public Set<String> getroles() {
+        return roles;
     }
 
     @Override
@@ -171,7 +171,7 @@ public class UserDTO {
             ", createdDate=" + createdDate +
             ", lastModifiedBy='" + lastModifiedBy + '\'' +
             ", lastModifiedDate=" + lastModifiedDate +
-            ", authorities=" + authorities +
+            ", roles=" + roles +
             "}";
     }
 }

@@ -48,6 +48,7 @@ public class Role implements Serializable {
     @Column(name = "desc", length = 500)
     private String desc;
 
+    private Set<Resources> resources = new HashSet<>();
 
     @JsonIgnore
     @ManyToMany
@@ -58,7 +59,6 @@ public class Role implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @BatchSize(size = 20)
 
-    private Set<Role> roles = new HashSet<>();
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -76,6 +76,7 @@ public class Role implements Serializable {
         this.name = name;
         return this;
     }
+
 
     public void setName(String name) {
         this.name = name;
@@ -122,5 +123,13 @@ public class Role implements Serializable {
             ", name='" + getName() + "'" +
             ", desc='" + getDesc() + "'" +
             "}";
+    }
+
+    public Set<Resources> getResources() {
+        return resources;
+    }
+
+    public void setResources(Set<Resources> resources) {
+        this.resources = resources;
     }
 }

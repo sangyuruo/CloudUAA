@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = EmCloudUaaApp.class)
-public class LogsResourceIntTest {
+public class LogsResourcesIntTest {
 
     private MockMvc restLogsMockMvc;
 

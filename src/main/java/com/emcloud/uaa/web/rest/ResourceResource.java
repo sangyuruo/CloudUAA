@@ -1,7 +1,7 @@
 package com.emcloud.uaa.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.emcloud.uaa.domain.Resource;
+import com.emcloud.uaa.domain.Resources;
 import com.emcloud.uaa.service.ResourceService;
 import com.emcloud.uaa.web.rest.errors.BadRequestAlertException;
 import com.emcloud.uaa.web.rest.util.HeaderUtil;
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * REST controller for managing Resource.
+ * REST controller for managing Resources.
  */
 @RestController
 @RequestMapping("/api")
@@ -43,44 +43,44 @@ public class ResourceResource {
     }
 
     /**
-     * POST  /resources : Create a new resource.
+     * POST  /resources : Create a new resources.
      *
-     * @param resource the resource to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new resource, or with status 400 (Bad Request) if the resource has already an ID
+     * @param resources the resources to create
+     * @return the ResponseEntity with status 201 (Created) and with body the new resources, or with status 400 (Bad Request) if the resources has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/resources")
     @Timed
-    public ResponseEntity<Resource> createResource(@Valid @RequestBody Resource resource) throws URISyntaxException {
-        log.debug("REST request to save Resource : {}", resource);
-        if (resource.getId() != null) {
-            throw new BadRequestAlertException("A new resource cannot already have an ID", ENTITY_NAME, "idexists");
+    public ResponseEntity<Resources> createResource(@Valid @RequestBody Resources resources) throws URISyntaxException {
+        log.debug("REST request to save Resources : {}", resources);
+        if (resources.getId() != null) {
+            throw new BadRequestAlertException("A new resources cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Resource result = resourceService.save(resource);
+        Resources result = resourceService.save(resources);
         return ResponseEntity.created(new URI("/api/resources/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * PUT  /resources : Updates an existing resource.
+     * PUT  /resources : Updates an existing resources.
      *
-     * @param resource the resource to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated resource,
-     * or with status 400 (Bad Request) if the resource is not valid,
-     * or with status 500 (Internal Server Error) if the resource couldn't be updated
+     * @param resources the resources to update
+     * @return the ResponseEntity with status 200 (OK) and with body the updated resources,
+     * or with status 400 (Bad Request) if the resources is not valid,
+     * or with status 500 (Internal Server Error) if the resources couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/resources")
     @Timed
-    public ResponseEntity<Resource> updateResource(@Valid @RequestBody Resource resource) throws URISyntaxException {
-        log.debug("REST request to update Resource : {}", resource);
-        if (resource.getId() == null) {
-            return createResource(resource);
+    public ResponseEntity<Resources> updateResource(@Valid @RequestBody Resources resources) throws URISyntaxException {
+        log.debug("REST request to update Resources : {}", resources);
+        if (resources.getId() == null) {
+            return createResource(resources);
         }
-        Resource result = resourceService.update(resource);
+        Resources result = resourceService.update(resources);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, resource.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, resources.getId().toString()))
             .body(result);
     }
 
@@ -92,10 +92,10 @@ public class ResourceResource {
      */
     @GetMapping("/resource-administrations/")
     @Timed
-    public ResponseEntity<List<Resource>> getAllResource
+    public ResponseEntity<List<Resources>> getAllResource
     (@RequestParam(value = "query",required = false) String resourceName , @ApiParam Pageable pageable) {
         log.debug("REST request to get a page of Resources");
-        Page<Resource> page;
+        Page<Resources> page;
         if(StringUtils.isBlank(resourceName)){
             page = resourceService.findAll(pageable);
         }else{
@@ -114,10 +114,10 @@ public class ResourceResource {
      */
     @GetMapping("/resources/{id}")
     @Timed
-    public ResponseEntity<Resource> getResource(@PathVariable Long id) {
-        log.debug("REST request to get Resource : {}", id);
-        Resource resource = resourceService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(resource));
+    public ResponseEntity<Resources> getResource(@PathVariable Long id) {
+        log.debug("REST request to get Resources : {}", id);
+        Resources resources = resourceService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(resources));
     }
 
     /**
@@ -129,7 +129,7 @@ public class ResourceResource {
     @DeleteMapping("/resources/{id}")
     @Timed
     public ResponseEntity<Void> deleteResource(@PathVariable Long id) {
-        log.debug("REST request to delete Resource : {}", id);
+        log.debug("REST request to delete Resources : {}", id);
         resourceService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }

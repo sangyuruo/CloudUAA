@@ -1,14 +1,19 @@
 package com.emcloud.uaa.service.impl;
 
 import com.emcloud.uaa.domain.Role;
-import com.emcloud.uaa.service.RoleService;
+import com.emcloud.uaa.repository.ResourceRepository;
 import com.emcloud.uaa.repository.RoleRepository;
+import com.emcloud.uaa.service.RoleService;
+import com.emcloud.uaa.service.dto.RoleDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 /**
@@ -20,10 +25,29 @@ public class RoleServiceImpl implements RoleService {
 
     private final Logger log = LoggerFactory.getLogger(RoleServiceImpl.class);
 
+    private final ResourceRepository resourceRepository;
+
     private final RoleRepository roleRepository;
 
-    public RoleServiceImpl(RoleRepository roleRepository) {
+    public RoleServiceImpl(ResourceRepository resourceRepository, RoleRepository roleRepository) {
+        this.resourceRepository = resourceRepository;
         this.roleRepository = roleRepository;
+    }
+
+    //阿紫======================阿紫============================阿紫=======================阿紫========================阿紫
+    public Role createRole(RoleDTO roleDTO) {
+        Role role = new Role();
+        role.setName(roleDTO.getName());
+        role.setDesc(roleDTO.getDesc());
+        if (roleDTO.getResources() != null) {
+            Set resourcesSet =
+            roleDTO.getResources().stream()
+                .map(resourceRepository::findOneByResourceCode).collect(Collectors.toSet());
+            role.setResources(resourcesSet);
+        }
+        roleRepository.save(role);
+        log.debug("Created Information for role: {}", role);
+        return role;
     }
 
     /**
@@ -104,4 +128,6 @@ public class RoleServiceImpl implements RoleService {
         log.debug("Request to delete Role : {}", id);
         roleRepository.delete(id);
     }
+
+
 }
