@@ -1,6 +1,6 @@
 package com.emcloud.uaa.config;
 
-import com.emcloud.uaa.security.AuthoritiesConstants;
+import com.emcloud.uaa.security.RolesConstants;
 import io.github.jhipster.config.JHipsterProperties;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,10 +90,10 @@ public class UaaConfiguration extends AuthorizationServerConfigurerAdapter imple
                 .antMatchers("/api/profile-info").permitAll()
                 .antMatchers("/api/**").authenticated()
                 .antMatchers("/management/health").permitAll()
-                .antMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
+                .antMatchers("/management/**").hasAuthority(RolesConstants.ADMIN)
                 .antMatchers("/v2/api-docs/**").permitAll()
                 .antMatchers("/swagger-resources/configuration/ui").permitAll()
-                .antMatchers("/swagger-ui/index.html").hasAuthority(AuthoritiesConstants.ADMIN);
+                .antMatchers("/swagger-ui/index.html").hasAuthority(RolesConstants.ADMIN);
         }
 
         @Override

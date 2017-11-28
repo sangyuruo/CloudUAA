@@ -81,7 +81,7 @@ public class UserServiceIntTest {
     @Test
     @Transactional
     public void testUpdateUser(){
-        userService.getUserWithAuthoritiesByLogin("demo").ifPresent( user-> {
+        userService.getUserWithRolesByLogin("demo").ifPresent( user-> {
             UserDTO dto = new UserDTO( user );
             dto.setLastName("demo");
             dto.setLastModifiedDate(Instant.now());

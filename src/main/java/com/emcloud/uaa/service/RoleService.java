@@ -38,7 +38,7 @@ public interface RoleService {
     Page<Role> findAll(Pageable pageable);
 
     /**
-     *  Get the "id" authority.
+     *  Get the "id" role.
      *
      *  @param id the id of the entity
      *  @return the entity
@@ -46,7 +46,7 @@ public interface RoleService {
     Role findOne(Long id);
 
     /**
-     *  Delete the "id" authority.
+     *  Delete the "id" role.
      *
      *  @param id the id of the entity
      */

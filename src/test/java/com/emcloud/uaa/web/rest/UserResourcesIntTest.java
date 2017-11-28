@@ -4,7 +4,7 @@ import com.emcloud.uaa.EmCloudUaaApp;
 import com.emcloud.uaa.domain.Role;
 import com.emcloud.uaa.domain.User;
 import com.emcloud.uaa.repository.UserRepository;
-import com.emcloud.uaa.security.AuthoritiesConstants;
+import com.emcloud.uaa.security.RolesConstants;
 import com.emcloud.uaa.service.MailService;
 import com.emcloud.uaa.service.UserService;
 import com.emcloud.uaa.service.dto.UserDTO;
@@ -143,7 +143,7 @@ public class UserResourcesIntTest {
 
         // Create the User
         Set<String> authorities = new HashSet<>();
-        authorities.add(AuthoritiesConstants.USER);
+        authorities.add(RolesConstants.USER);
         ManagedUserVM managedUserVM = new ManagedUserVM(
             null,
             DEFAULT_LOGIN,
@@ -183,7 +183,7 @@ public class UserResourcesIntTest {
         int databaseSizeBeforeCreate = userRepository.findAll().size();
 
         Set<String> authorities = new HashSet<>();
-        authorities.add(AuthoritiesConstants.USER);
+        authorities.add(RolesConstants.USER);
         ManagedUserVM managedUserVM = new ManagedUserVM(
             1L,
             DEFAULT_LOGIN,
@@ -219,7 +219,7 @@ public class UserResourcesIntTest {
         int databaseSizeBeforeCreate = userRepository.findAll().size();
 
         Set<String> authorities = new HashSet<>();
-        authorities.add(AuthoritiesConstants.USER);
+        authorities.add(RolesConstants.USER);
         ManagedUserVM managedUserVM = new ManagedUserVM(
             null,
             DEFAULT_LOGIN, // this login should already be used
@@ -255,7 +255,7 @@ public class UserResourcesIntTest {
         int databaseSizeBeforeCreate = userRepository.findAll().size();
 
         Set<String> authorities = new HashSet<>();
-        authorities.add(AuthoritiesConstants.USER);
+        authorities.add(RolesConstants.USER);
         ManagedUserVM managedUserVM = new ManagedUserVM(
             null,
             "anotherlogin",
@@ -338,7 +338,7 @@ public class UserResourcesIntTest {
         User updatedUser = userRepository.findOne(user.getId());
 
         Set<String> authorities = new HashSet<>();
-        authorities.add(AuthoritiesConstants.USER);
+        authorities.add(RolesConstants.USER);
         ManagedUserVM managedUserVM = new ManagedUserVM(
             updatedUser.getId(),
             updatedUser.getLogin(),
@@ -382,7 +382,7 @@ public class UserResourcesIntTest {
         User updatedUser = userRepository.findOne(user.getId());
 
         Set<String> authorities = new HashSet<>();
-        authorities.add(AuthoritiesConstants.USER);
+        authorities.add(RolesConstants.USER);
         ManagedUserVM managedUserVM = new ManagedUserVM(
             updatedUser.getId(),
             UPDATED_LOGIN,
@@ -437,7 +437,7 @@ public class UserResourcesIntTest {
         User updatedUser = userRepository.findOne(user.getId());
 
         Set<String> authorities = new HashSet<>();
-        authorities.add(AuthoritiesConstants.USER);
+        authorities.add(RolesConstants.USER);
         ManagedUserVM managedUserVM = new ManagedUserVM(
             updatedUser.getId(),
             updatedUser.getLogin(),
@@ -481,7 +481,7 @@ public class UserResourcesIntTest {
         User updatedUser = userRepository.findOne(user.getId());
 
         Set<String> authorities = new HashSet<>();
-        authorities.add(AuthoritiesConstants.USER);
+        authorities.add(RolesConstants.USER);
         ManagedUserVM managedUserVM = new ManagedUserVM(
             updatedUser.getId(),
             "jhipster", // this login should already be used by anotherUser
@@ -530,7 +530,7 @@ public class UserResourcesIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$").isArray())
-            .andExpect(jsonPath("$").value(containsInAnyOrder(AuthoritiesConstants.USER, AuthoritiesConstants.ADMIN)));
+            .andExpect(jsonPath("$").value(containsInAnyOrder(RolesConstants.USER, RolesConstants.ADMIN)));
     }
 
     @Test
@@ -569,7 +569,7 @@ public class UserResourcesIntTest {
             null,
             DEFAULT_LOGIN,
             null,
-            Stream.of(AuthoritiesConstants.USER).collect(Collectors.toSet()));
+            Stream.of(RolesConstants.USER).collect(Collectors.toSet()));
         User user = userMapper.userDTOToUser(userDTO);
         assertThat(user.getId()).isEqualTo(DEFAULT_ID);
         assertThat(user.getLogin()).isEqualTo(DEFAULT_LOGIN);
@@ -583,7 +583,7 @@ public class UserResourcesIntTest {
         assertThat(user.getCreatedDate()).isNotNull();
         assertThat(user.getLastModifiedBy()).isNull();
         assertThat(user.getLastModifiedDate()).isNotNull();
-        assertThat(user.getRoles()).extracting("name").containsExactly(AuthoritiesConstants.USER);
+        assertThat(user.getRoles()).extracting("name").containsExactly(RolesConstants.USER);
     }
 
     @Test
@@ -596,7 +596,7 @@ public class UserResourcesIntTest {
 
         Set<Role> roles = new HashSet<>();
         Role role = new Role();
-        role.setName(AuthoritiesConstants.USER);
+        role.setName(RolesConstants.USER);
         roles.add(role);
         user.setRoles(roles);
 
@@ -614,7 +614,7 @@ public class UserResourcesIntTest {
         assertThat(userDTO.getCreatedDate()).isEqualTo(user.getCreatedDate());
         assertThat(userDTO.getLastModifiedBy()).isEqualTo(DEFAULT_LOGIN);
         assertThat(userDTO.getLastModifiedDate()).isEqualTo(user.getLastModifiedDate());
-        assertThat(userDTO.getroles()).containsExactly(AuthoritiesConstants.USER);
+        assertThat(userDTO.getroles()).containsExactly(RolesConstants.USER);
         assertThat(userDTO.toString()).isNotNull();
     }
 
@@ -630,13 +630,13 @@ public class UserResourcesIntTest {
         Role roleB = new Role();
         assertThat(roleA).isEqualTo(roleB);
 
-        roleB.setName(AuthoritiesConstants.ADMIN);
+        roleB.setName(RolesConstants.ADMIN);
         assertThat(roleA).isNotEqualTo(roleB);
 
-        roleA.setName(AuthoritiesConstants.USER);
+        roleA.setName(RolesConstants.USER);
         assertThat(roleA).isNotEqualTo(roleB);
 
-        roleB.setName(AuthoritiesConstants.USER);
+        roleB.setName(RolesConstants.USER);
         assertThat(roleA).isEqualTo(roleB);
         assertThat(roleA.hashCode()).isEqualTo(roleB.hashCode());
     }

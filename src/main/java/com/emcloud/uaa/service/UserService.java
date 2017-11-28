@@ -5,7 +5,7 @@ import com.emcloud.uaa.domain.User;
 import com.emcloud.uaa.repository.RoleRepository;
 import com.emcloud.uaa.config.Constants;
 import com.emcloud.uaa.repository.UserRepository;
-import com.emcloud.uaa.security.AuthoritiesConstants;
+import com.emcloud.uaa.security.RolesConstants;
 import com.emcloud.uaa.security.SecurityUtils;
 import com.emcloud.uaa.service.util.RandomUtil;
 import com.emcloud.uaa.service.dto.UserDTO;
@@ -94,8 +94,8 @@ public class UserService {
     public User registerUser(ManagedUserVM userDTO) {
 
         User newUser = new User();
-        Role role = roleRepository.findOneByName(AuthoritiesConstants.USER);
-        Set<Role> authorities = new HashSet<>();
+        Role role = roleRepository.findOneByName(RolesConstants.USER);
+        Set<Role> roles = new HashSet<>();
         String encryptedPassword = passwordEncoder.encode(userDTO.getPassword());
         newUser.setLogin(userDTO.getLogin());
         // new user gets initially a generated password
@@ -109,8 +109,8 @@ public class UserService {
         newUser.setActivated(false);
         // new user gets registration key
         newUser.setActivationKey(RandomUtil.generateActivationKey());
-        authorities.add(role);
-        newUser.setRoles(authorities);
+        roles.add(role);
+        newUser.setRoles(roles);
         userRepository.save(newUser);
         log.debug("Created Information for User: {}", newUser);
         return newUser;
@@ -129,10 +129,10 @@ public class UserService {
             user.setLangKey(userDTO.getLangKey());
         }
         if (userDTO.getroles() != null) {
-            Set<Role> authorities = userDTO.getroles().stream()
+            Set<Role> roles = userDTO.getroles().stream()
                 .map(roleRepository::findOneByName)
                 .collect(Collectors.toSet());
-            user.setRoles(authorities);
+            user.setRoles(roles);
         }
         String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
         user.setPassword(encryptedPassword);
@@ -217,17 +217,17 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<User> getUserWithAuthoritiesByLogin(String login) {
+    public Optional<User> getUserWithRolesByLogin(String login) {
         return userRepository.findOneWithRolesByLogin(login);
     }
 
     @Transactional(readOnly = true)
-    public User getUserWithAuthorities(Long id) {
+    public User getUserWithRoles(Long id) {
         return userRepository.findOneWithRolesById(id);
     }
 
     @Transactional(readOnly = true)
-    public User getUserWithAuthorities() {
+    public User getUserWithRoles() {
         return userRepository.findOneWithRolesByLogin(SecurityUtils.getCurrentUserLogin()).orElse(null);
     }
 
@@ -247,9 +247,9 @@ public class UserService {
     }
 
     /**
-     * @return a list of all the authorities
+     * @return a list of all the roles
      */
-    public List<String> getAuthorities() {
+    public List<String> getRoles() {
         return roleRepository.findAll().stream().map(Role::getName).collect(Collectors.toList());
     }
 }

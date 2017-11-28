@@ -33,7 +33,7 @@ public class RoleResource {
 
     private final Logger log = LoggerFactory.getLogger(RoleResource.class);
 
-    private static final String ENTITY_NAME = "authority";
+    private static final String ENTITY_NAME = "roles";
 
     private final RoleService roleService;
 
@@ -42,27 +42,27 @@ public class RoleResource {
     }
 
     /**
-     * POST  /authorities : Create a new role.
+     * POST  /roles : Create a new role.
      *
      * @param role the role to create
      * @return the ResponseEntity with status 201 (Created) and with body the new role, or with status 400 (Bad Request) if the role has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PostMapping("/authorities")
+    @PostMapping("/roles")
     @Timed
-    public ResponseEntity<Role> createAuthority(@Valid @RequestBody Role role) throws URISyntaxException {
+    public ResponseEntity<Role> createRole(@Valid @RequestBody Role role) throws URISyntaxException {
         log.debug("REST request to save Role : {}", role);
         if (role.getId() != null) {
             throw new BadRequestAlertException("A new role cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Role result = roleService.save(role);
-        return ResponseEntity.created(new URI("/api/authorities/" + result.getId()))
+        return ResponseEntity.created(new URI("/api/roles/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * PUT  /authorities : Updates an existing role.
+     * PUT  /roles : Updates an existing role.
      *
      * @param role the role to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated role,
@@ -70,12 +70,12 @@ public class RoleResource {
      * or with status 500 (Internal Server Error) if the role couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PutMapping("/authorities")
+    @PutMapping("/roles")
     @Timed
-    public ResponseEntity<Role> updateAuthority(@Valid @RequestBody Role role) throws URISyntaxException {
+    public ResponseEntity<Role> updaterole(@Valid @RequestBody Role role) throws URISyntaxException {
         log.debug("REST request to update Role : {}", role);
         if (role.getId() == null) {
-            return createAuthority(role);
+            return createRole(role);
         }
         Role result = roleService.update(role);
         return ResponseEntity.ok()
@@ -84,60 +84,60 @@ public class RoleResource {
     }
 
     /**
-     * GET  /authorities : get all the authorities.
+     * GET  /roles : get all the roles.
      *
      * @param pageable the pagination information
-     * @return the ResponseEntity with status 200 (OK) and the list of authorities in body
+     * @return the ResponseEntity with status 200 (OK) and the list of roles in body
      */
-    @GetMapping("/authorities")
+    @GetMapping("/roles")
     @Timed
-    public ResponseEntity<List<Role>> getAllAuthorities(@ApiParam Pageable pageable) {
-        log.debug("REST request to get a page of Authorities");
+    public ResponseEntity<List<Role>> getAllRoles(@ApiParam Pageable pageable) {
+        log.debug("REST request to get a page of Roles");
         Page<Role> page = roleService.findAll(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/authorities");
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/roles");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
     /**
-     * GET  /authorities : get all the authorities by id or name.
+     * GET  /roles : get all the roles by id or name.
      *
      * @param pageable the pagination information
-     * @return the ResponseEntity with status 200 (OK) and the list of authorities in body
+     * @return the ResponseEntity with status 200 (OK) and the list of roles in body
      */
-    @GetMapping("/authorities/{name}or{desc}")
+    @GetMapping("/roles/{name}or{desc}")
     @Timed
-    public ResponseEntity<List<Role>> getAllAuthoritiesByNameOrDesc(@PathVariable String name, @PathVariable String desc, @ApiParam Pageable pageable) {
-        log.debug("REST request to get a page of Authorities");
+    public ResponseEntity<List<Role>> getAllRolesByNameOrDesc(@PathVariable String name, @PathVariable String desc, @ApiParam Pageable pageable) {
+        log.debug("REST request to get a page of roles");
         Page<Role> page = roleService.findAllByNameOrDesc(name,desc,pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/authorities/{name}or{desc}");
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/roles/{name}or{desc}");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
 
 
     /**
-     * GET  /authorities/:id : get the "id" authority.
+     * GET  /roles/:id : get the "id" roles.
      *
-     * @param id the id of the authority to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the authority, or with status 404 (Not Found)
+     * @param id the id of the roles to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the role, or with status 404 (Not Found)
      */
-    @GetMapping("/authorities/{id}")
+    @GetMapping("/roles/{id}")
     @Timed
-    public ResponseEntity<Role> getAuthority(@PathVariable Long id) {
+    public ResponseEntity<Role> getRole(@PathVariable Long id) {
         log.debug("REST request to get Role : {}", id);
         Role role = roleService.findOne(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(role));
     }
 
     /**
-     * DELETE  /authorities/:id : delete the "id" authority.
+     * DELETE  /roles/:id : delete the "id" roles.
      *
-     * @param id the id of the authority to delete
+     * @param id the id of the role to delete
      * @return the ResponseEntity with status 200 (OK)
      */
-    @DeleteMapping("/authorities/{id}")
+    @DeleteMapping("/roles/{id}")
     @Timed
-    public ResponseEntity<Void> deleteAuthority(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteRole(@PathVariable Long id) {
         log.debug("REST request to delete Role : {}", id);
         roleService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();

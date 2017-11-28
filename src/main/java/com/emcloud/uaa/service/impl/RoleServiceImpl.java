@@ -102,9 +102,6 @@ public class RoleServiceImpl implements RoleService {
         return roleRepository.findAllByNameOrDescContaining(pageable, name,desc);
     }
 
-
-
-
     /**
      *  Get one authority by id.
      *

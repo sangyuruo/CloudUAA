@@ -4,7 +4,7 @@ import com.emcloud.uaa.config.Constants;
 import com.codahale.metrics.annotation.Timed;
 import com.emcloud.uaa.domain.User;
 import com.emcloud.uaa.repository.UserRepository;
-import com.emcloud.uaa.security.AuthoritiesConstants;
+import com.emcloud.uaa.security.RolesConstants;
 import com.emcloud.uaa.service.MailService;
 import com.emcloud.uaa.service.UserService;
 import com.emcloud.uaa.service.dto.UserDTO;
@@ -43,13 +43,13 @@ import java.util.*;
  * <p>
  * We use a View Model and a DTO for 3 reasons:
  * <ul>
- * <li>We want to keep a lazy association between the user and the authorities, because people will
- * quite often do relationships with the user, and we don't want them to get the authorities all
+ * <li>We want to keep a lazy association between the user and the roles, because people will
+ * quite often do relationships with the user, and we don't want them to get the roles all
  * the time for nothing (for performance reasons). This is the #1 goal: we should not impact our users'
  * application because of this use-case.</li>
  * <li> Not having an outer join causes n+1 requests to the database. This is not a real issue as
  * we have by default a second-level cache. This means on the first HTTP call we do the n+1 requests,
- * but then all authorities come from the cache, so in fact it's much better than doing an outer join
+ * but then all roles come from the cache, so in fact it's much better than doing an outer join
  * (which will get lots of data from the database, for each HTTP call).</li>
  * <li> As this manages users, for security reasons, we'd rather have a DTO layer.</li>
  * </ul>
@@ -89,7 +89,7 @@ public class UserResource {
      */
     @PostMapping("/users")
     @Timed
-    @Secured(AuthoritiesConstants.ADMIN)
+    @Secured(RolesConstants.ADMIN)
     public ResponseEntity<User> createUser(@Valid @RequestBody ManagedUserVM managedUserVM) throws URISyntaxException {
         log.debug("REST request to save User : {}", managedUserVM);
 
@@ -119,7 +119,7 @@ public class UserResource {
      */
     @PutMapping("/users")
     @Timed
-    @Secured(AuthoritiesConstants.ADMIN)
+    @Secured(RolesConstants.ADMIN)
     public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody ManagedUserVM managedUserVM) {
         log.debug("REST request to update User : {}", managedUserVM);
         Optional<User> existingUser = userRepository.findOneByEmailIgnoreCase(managedUserVM.getEmail());
@@ -153,11 +153,11 @@ public class UserResource {
     /**
      * @return a string list of the all of the roles
      */
-    @GetMapping("/users/authorities")
+    @GetMapping("/users/roles")
     @Timed
-    @Secured(AuthoritiesConstants.ADMIN)
-    public List<String> getAuthorities() {
-        return userService.getAuthorities();
+    @Secured(RolesConstants.ADMIN)
+    public List<String> getRoles() {
+        return userService.getRoles();
     }
 
     /**
@@ -171,7 +171,7 @@ public class UserResource {
     public ResponseEntity<UserDTO> getUser(@PathVariable String login) {
         log.debug("REST request to get User : {}", login);
         return ResponseUtil.wrapOrNotFound(
-            userService.getUserWithAuthoritiesByLogin(login)
+            userService.getUserWithRolesByLogin(login)
                 .map(UserDTO::new));
     }
 
@@ -183,7 +183,7 @@ public class UserResource {
      */
     @DeleteMapping("/users/{login:" + Constants.LOGIN_REGEX + "}")
     @Timed
-    @Secured(AuthoritiesConstants.ADMIN)
+    @Secured(RolesConstants.ADMIN)
     public ResponseEntity<Void> deleteUser(@PathVariable String login) {
         log.debug("REST request to delete User: {}", login);
         userService.deleteUser(login);

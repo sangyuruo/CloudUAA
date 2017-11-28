@@ -6,7 +6,7 @@ import com.emcloud.uaa.domain.Role;
 import com.emcloud.uaa.domain.User;
 import com.emcloud.uaa.repository.RoleRepository;
 import com.emcloud.uaa.repository.UserRepository;
-import com.emcloud.uaa.security.AuthoritiesConstants;
+import com.emcloud.uaa.security.RolesConstants;
 import com.emcloud.uaa.service.MailService;
 import com.emcloud.uaa.service.UserService;
 import com.emcloud.uaa.service.dto.UserDTO;
@@ -123,7 +123,7 @@ public class AccountResourcesIntTest {
     public void testGetExistingAccount() throws Exception {
         Set<Role> authorities = new HashSet<>();
         Role role = new Role();
-        role.setName(AuthoritiesConstants.ADMIN);
+        role.setName(RolesConstants.ADMIN);
         authorities.add(role);
 
         User user = new User();
@@ -134,7 +134,7 @@ public class AccountResourcesIntTest {
         user.setImageUrl("http://placehold.it/50x50");
         user.setLangKey("en");
         user.setRoles(authorities);
-        when(mockUserService.getUserWithAuthorities()).thenReturn(user);
+        when(mockUserService.getUserWithRoles()).thenReturn(user);
 
         restUserMockMvc.perform(get("/api/account")
             .accept(MediaType.APPLICATION_JSON))
@@ -146,12 +146,12 @@ public class AccountResourcesIntTest {
             .andExpect(jsonPath("$.email").value("john.doe@jhipster.com"))
             .andExpect(jsonPath("$.imageUrl").value("http://placehold.it/50x50"))
             .andExpect(jsonPath("$.langKey").value("en"))
-            .andExpect(jsonPath("$.authorities").value(AuthoritiesConstants.ADMIN));
+            .andExpect(jsonPath("$.authorities").value(RolesConstants.ADMIN));
     }
 
     @Test
     public void testGetUnknownAccount() throws Exception {
-        when(mockUserService.getUserWithAuthorities()).thenReturn(null);
+        when(mockUserService.getUserWithRoles()).thenReturn(null);
 
         restUserMockMvc.perform(get("/api/account")
             .accept(MediaType.APPLICATION_JSON))
@@ -175,7 +175,7 @@ public class AccountResourcesIntTest {
             null,                   // createdDate
             null,                   // lastModifiedBy
             null,                   // lastModifiedDate
-            new HashSet<>(Collections.singletonList(AuthoritiesConstants.USER)));
+            new HashSet<>(Collections.singletonList(RolesConstants.USER)));
 
         restMvc.perform(
             post("/api/register")
@@ -204,7 +204,7 @@ public class AccountResourcesIntTest {
             null,                   // createdDate
             null,                   // lastModifiedBy
             null,                   // lastModifiedDate
-            new HashSet<>(Collections.singletonList(AuthoritiesConstants.USER)));
+            new HashSet<>(Collections.singletonList(RolesConstants.USER)));
 
         restUserMockMvc.perform(
             post("/api/register")
@@ -233,7 +233,7 @@ public class AccountResourcesIntTest {
             null,                   // createdDate
             null,                   // lastModifiedBy
             null,                   // lastModifiedDate
-            new HashSet<>(Collections.singletonList(AuthoritiesConstants.USER)));
+            new HashSet<>(Collections.singletonList(RolesConstants.USER)));
 
         restUserMockMvc.perform(
             post("/api/register")
@@ -262,7 +262,7 @@ public class AccountResourcesIntTest {
             null,                   // createdDate
             null,                   // lastModifiedBy
             null,                   // lastModifiedDate
-            new HashSet<>(Collections.singletonList(AuthoritiesConstants.USER)));
+            new HashSet<>(Collections.singletonList(RolesConstants.USER)));
 
         restUserMockMvc.perform(
             post("/api/register")
@@ -291,7 +291,7 @@ public class AccountResourcesIntTest {
             null,                   // createdDate
             null,                   // lastModifiedBy
             null,                   // lastModifiedDate
-            new HashSet<>(Collections.singletonList(AuthoritiesConstants.USER)));
+            new HashSet<>(Collections.singletonList(RolesConstants.USER)));
 
         restUserMockMvc.perform(
             post("/api/register")
@@ -321,7 +321,7 @@ public class AccountResourcesIntTest {
             null,                   // createdDate
             null,                   // lastModifiedBy
             null,                   // lastModifiedDate
-            new HashSet<>(Collections.singletonList(AuthoritiesConstants.USER)));
+            new HashSet<>(Collections.singletonList(RolesConstants.USER)));
 
         // Duplicate login, different email
         ManagedUserVM duplicatedUser = new ManagedUserVM(validUser.getId(), validUser.getLogin(), validUser.getPassword(), validUser.getFirstName(), validUser.getLastName(),
@@ -363,7 +363,7 @@ public class AccountResourcesIntTest {
             null,                   // createdDate
             null,                   // lastModifiedBy
             null,                   // lastModifiedDate
-            new HashSet<>(Collections.singletonList(AuthoritiesConstants.USER)));
+            new HashSet<>(Collections.singletonList(RolesConstants.USER)));
 
         // Duplicate email, different login
         ManagedUserVM duplicatedUser = new ManagedUserVM(validUser.getId(), "johnjr", validUser.getPassword(), validUser.getLogin(), validUser.getLastName(),
@@ -414,7 +414,7 @@ public class AccountResourcesIntTest {
             null,                   // createdDate
             null,                   // lastModifiedBy
             null,                   // lastModifiedDate
-            new HashSet<>(Collections.singletonList(AuthoritiesConstants.ADMIN)));
+            new HashSet<>(Collections.singletonList(RolesConstants.ADMIN)));
 
         restMvc.perform(
             post("/api/register")
@@ -425,7 +425,7 @@ public class AccountResourcesIntTest {
         Optional<User> userDup = userRepository.findOneByLogin("badguy");
         assertThat(userDup.isPresent()).isTrue();
         assertThat(userDup.get().getRoles()).hasSize(1)
-            .containsExactly(roleRepository.findOneByName(AuthoritiesConstants.USER));
+            .containsExactly(roleRepository.findOneByName(RolesConstants.USER));
     }
 
     @Test
@@ -480,7 +480,7 @@ public class AccountResourcesIntTest {
             null,                   // createdDate
             null,                   // lastModifiedBy
             null,                   // lastModifiedDate
-            new HashSet<>(Collections.singletonList(AuthoritiesConstants.ADMIN))
+            new HashSet<>(Collections.singletonList(RolesConstants.ADMIN))
         );
 
         restMvc.perform(
@@ -525,7 +525,7 @@ public class AccountResourcesIntTest {
             null,                   // createdDate
             null,                   // lastModifiedBy
             null,                   // lastModifiedDate
-            new HashSet<>(Collections.singletonList(AuthoritiesConstants.ADMIN))
+            new HashSet<>(Collections.singletonList(RolesConstants.ADMIN))
         );
 
         restMvc.perform(
@@ -570,7 +570,7 @@ public class AccountResourcesIntTest {
             null,                   // createdDate
             null,                   // lastModifiedBy
             null,                   // lastModifiedDate
-            new HashSet<>(Collections.singletonList(AuthoritiesConstants.ADMIN))
+            new HashSet<>(Collections.singletonList(RolesConstants.ADMIN))
         );
 
         restMvc.perform(
@@ -608,7 +608,7 @@ public class AccountResourcesIntTest {
             null,                   // createdDate
             null,                   // lastModifiedBy
             null,                   // lastModifiedDate
-            new HashSet<>(Collections.singletonList(AuthoritiesConstants.ADMIN))
+            new HashSet<>(Collections.singletonList(RolesConstants.ADMIN))
         );
 
         restMvc.perform(
