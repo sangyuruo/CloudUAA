@@ -1,5 +1,6 @@
 package com.emcloud.uaa.service.impl;
 
+import com.emcloud.uaa.domain.Resources;
 import com.emcloud.uaa.domain.Role;
 import com.emcloud.uaa.repository.ResourceRepository;
 import com.emcloud.uaa.repository.RoleRepository;
@@ -12,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,22 +36,22 @@ public class RoleServiceImpl implements RoleService {
         this.resourceRepository = resourceRepository;
         this.roleRepository = roleRepository;
     }
-
-    //阿紫======================阿紫============================阿紫=======================阿紫========================阿紫
-    public Role createRole(RoleDTO roleDTO) {
-        Role role = new Role();
-        role.setName(roleDTO.getName());
-        role.setDesc(roleDTO.getDesc());
-        if (roleDTO.getResources() != null) {
-            Set resourcesSet =
-            roleDTO.getResources().stream()
-                .map(resourceRepository::findOneByResourceCode).collect(Collectors.toSet());
-            role.setResources(resourcesSet);
-        }
-        roleRepository.save(role);
-        log.debug("Created Information for role: {}", role);
-        return role;
-    }
+//
+//    //阿紫======================阿紫============================阿紫=======================阿紫========================阿紫
+//    public Role createRole(RoleDTO roleDTO) {
+//        Role role = new Role();
+//        role.setName(roleDTO.getName());
+//        role.setDesc(roleDTO.getDesc());
+//        if (roleDTO.getResources() != null) {
+//            Set resourcesSet =
+//            roleDTO.getResources().stream()
+//                .map(resourceRepository::findOneByResourceCode).collect(Collectors.toSet());
+//            role.setResources(resourcesSet);
+//        }
+//        roleRepository.save(role);
+//        log.debug("Created Information for role: {}", role);
+//        return role;
+//    }
 
     /**
      * Save a role.
@@ -73,11 +76,12 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Role update(Role role) {
         log.debug("Request to save Role : {}", role);
+
         return roleRepository.save(role);
     }
 
     /**
-     *  Get all the authorities.
+     *  Get all the roles.
      *
      *  @param pageable the pagination information
      *  @return the list of entities
@@ -85,12 +89,12 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional(readOnly = true)
     public Page<Role> findAll(Pageable pageable) {
-        log.debug("Request to get all Authorities");
+        log.debug("Request to get all roles");
         return roleRepository.findAll(pageable);
     }
 
     /**
-     *  Get all the authorities by id or name.
+     *  Get all the roles by id or name.
      *
      *  @param pageable the pagination information
      *  @return the list of entities
@@ -98,12 +102,12 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional(readOnly = true)
     public Page<Role> findAllByNameOrDesc(String name, String desc, Pageable pageable){
-        log.debug("Request to get all Authorities by id or name");
+        log.debug("Request to get all roles by id or name");
         return roleRepository.findAllByNameOrDescContaining(pageable, name,desc);
     }
 
     /**
-     *  Get one authority by id.
+     *  Get one role by id.
      *
      *  @param id the id of the entity
      *  @return the entity
@@ -116,7 +120,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     /**
-     *  Delete the  authority by id.
+     *  Delete the  role by id.
      *
      *  @param id the id of the entity
      */
@@ -125,6 +129,30 @@ public class RoleServiceImpl implements RoleService {
         log.debug("Request to delete Role : {}", id);
         roleRepository.delete(id);
     }
+//阿紫============================阿紫 ============================阿紫==================================================
+    public Optional<RoleDTO> updateRole(RoleDTO roleDTO) {
+        return Optional.of(roleRepository
+            .findOneByName(roleDTO.getName()))
+            .map(role -> {
+                role.setName(roleDTO.getName());
+                role.setDesc(roleDTO.getDesc());
+                Set<Resources> managedResources = role.getResources();
+                managedResources.clear();
+                roleDTO.getResources().stream()
+                    .map(resourceRepository::findOneByResourceCode)
+                    .forEach(managedResources::add);
+               // cacheManager.getCache(USERS_CACHE).evict(user.getLogin());
+                log.debug("Changed Information for Role: {}", role);
+                return role;
+            })
+            .map(RoleDTO::new);
+    }
 
+    /**
+     * @return a list of all the resources
+     */
+    public List<String> getResources() {
+        return resourceRepository.findAll().stream().map(Resources::getResourceCode).collect(Collectors.toList());
 
+    }
 }

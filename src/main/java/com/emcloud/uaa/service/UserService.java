@@ -182,11 +182,11 @@ public class UserService {
                 user.setImageUrl(userDTO.getImageUrl());
                 user.setActivated(userDTO.isActivated());
                 user.setLangKey(userDTO.getLangKey());
-                Set<Role> managedAuthorities = user.getRoles();
-                managedAuthorities.clear();
+                Set<Role> managedRoles = user.getRoles();
+                managedRoles.clear();
                 userDTO.getroles().stream()
                     .map(roleRepository::findOneByName)
-                    .forEach(managedAuthorities::add);
+                    .forEach(managedRoles::add);
                 cacheManager.getCache(USERS_CACHE).evict(user.getLogin());
                 log.debug("Changed Information for User: {}", user);
                 return user;

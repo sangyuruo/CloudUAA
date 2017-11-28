@@ -1,3 +1,7 @@
+/**
+ * 资源管理
+ * @author youhong
+ */
 entity Resource{
   /** 资源编号*/
   resourceCode String maxlength(64)  required,

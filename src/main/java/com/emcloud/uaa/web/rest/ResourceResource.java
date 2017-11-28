@@ -85,12 +85,12 @@ public class ResourceResource {
     }
 
     /**
-     * GET  /resource-administrations : get all the Resources.
+     * GET  /resources : get all the Resources.
      *
      * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of Resources in body
      */
-    @GetMapping("/resource-administrations/")
+    @GetMapping("/resources")
     @Timed
     public ResponseEntity<List<Resources>> getAllResource
     (@RequestParam(value = "query",required = false) String resourceName , @ApiParam Pageable pageable) {
@@ -101,7 +101,7 @@ public class ResourceResource {
         }else{
             page = resourceService.findByResourceName(pageable,resourceName);
         }
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/resource-administrations");
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/resources");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 

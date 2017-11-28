@@ -72,7 +72,7 @@ public class RoleResource {
      */
     @PutMapping("/roles")
     @Timed
-    public ResponseEntity<Role> updaterole(@Valid @RequestBody Role role) throws URISyntaxException {
+    public ResponseEntity<Role> updateRole(@Valid @RequestBody Role role) throws URISyntaxException {
         log.debug("REST request to update Role : {}", role);
         if (role.getId() == null) {
             return createRole(role);
