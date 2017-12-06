@@ -32,7 +32,7 @@ public class Role implements Serializable {
     private Long id;
 
     /**
-     * 角色名  表对应的是这个东西？
+     * 角色名
      */
     @NotNull
     @Size(max = 40)
