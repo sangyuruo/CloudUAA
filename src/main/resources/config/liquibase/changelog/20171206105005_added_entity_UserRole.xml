@@ -22,7 +22,7 @@
             <column name="user_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
-            <column name="role_name" type="varchar(50)">
+            <column name="role_name" type="varchar(40)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
