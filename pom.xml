@@ -552,22 +552,22 @@
                                 <delimiter>#</delimiter>
                             </delimiters>
                             <resources>
-                                <resources>
+                                <resource>
                                     <directory>src/main/resources/</directory>
                                     <filtering>true</filtering>
                                     <includes>
                                         <include>**/*.xml</include>
                                         <include>**/*.yml</include>
                                     </includes>
-                                </resources>
-                                <resources>
+                                </resource>
+                                <resource>
                                     <directory>src/main/resources/</directory>
                                     <filtering>false</filtering>
                                     <excludes>
                                         <exclude>**/*.xml</exclude>
                                         <exclude>**/*.yml</exclude>
                                     </excludes>
-                                </resources>
+                                </resource>
                             </resources>
                         </configuration>
                     </execution>
@@ -580,13 +580,13 @@
                         <configuration>
                             <outputDirectory>target/</outputDirectory>
                             <resources>
-                                <resources>
+                                <resource>
                                     <directory>src/main/docker/</directory>
                                     <filtering>false</filtering>
                                     <excludes>
                                         <exclude>**/*.yml</exclude>
                                     </excludes>
-                                </resources>
+                                </resource>
                             </resources>
                         </configuration>
                     </execution>
