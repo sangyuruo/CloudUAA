@@ -38,11 +38,11 @@ public class UserService {
     private static final String USERS_CACHE = "users";
 
     private final UserRepository userRepository;
-
+//密码转换器
     private final PasswordEncoder passwordEncoder;
 
     private final RoleRepository roleRepository;
-
+//缓存管理器
     private final CacheManager cacheManager;
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, CacheManager cacheManager) {
@@ -52,7 +52,7 @@ public class UserService {
         this.cacheManager = cacheManager;
     }
 
-
+//激活注册
     public Optional<User> activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);
         return userRepository.findOneByActivationKey(key)
@@ -65,7 +65,7 @@ public class UserService {
                 return user;
             });
     }
-
+//完成密码重置
     public Optional<User> completePasswordReset(String newPassword, String key) {
        log.debug("Reset user password for reset key {}", key);
 
@@ -79,7 +79,7 @@ public class UserService {
                 return user;
            });
     }
-
+//请求重置密码
     public Optional<User> requestPasswordReset(String mail) {
         return userRepository.findOneByEmailIgnoreCase(mail)
             .filter(User::getActivated)
@@ -90,7 +90,7 @@ public class UserService {
                 return user;
             });
     }
-
+//注册
     public User registerUser(ManagedUserVM userDTO) {
 
         User newUser = new User();
@@ -201,7 +201,7 @@ public class UserService {
             log.debug("Deleted User: {}", user);
         });
     }
-
+//修改密码
     public void changePassword(String password) {
         userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).ifPresent(user -> {
             String encryptedPassword = passwordEncoder.encode(password);
@@ -237,6 +237,7 @@ public class UserService {
      * This is scheduled to get fired everyday, at 01:00 (am).
      */
     @Scheduled(cron = "0 0 1 * * ?")
+    //删除未激活用户
     public void removeNotActivatedUsers() {
         List<User> users = userRepository.findAllByActivatedIsFalseAndCreatedDateBefore(Instant.now().minus(3, ChronoUnit.DAYS));
         for (User user : users) {

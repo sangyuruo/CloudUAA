@@ -32,7 +32,7 @@ public class Role implements Serializable {
     private Long id;
 
     /**
-     * 角色名  表对应的是这个东西？
+     * 角色名
      */
     @NotNull
     @Size(max = 40)
@@ -48,7 +48,6 @@ public class Role implements Serializable {
     @Column(name = "desc", length = 500)
     private String desc;
 
-    private Set<Resources> resources = new HashSet<>();
 
     @JsonIgnore
     @ManyToMany
@@ -58,6 +57,7 @@ public class Role implements Serializable {
         inverseJoinColumns = {@JoinColumn(name = "resource_code", referencedColumnName = "resource_code")})
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @BatchSize(size = 20)
+    private Set<Resources> resources = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
