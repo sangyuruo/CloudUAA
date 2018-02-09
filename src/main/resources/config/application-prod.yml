@@ -12,13 +12,14 @@
 # Full reference is available at:
 # http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 # ===================================================================
-
+version: 1
 eureka:
     instance:
         prefer-ip-address: true
     client:
         service-url:
-            defaultZone: http://admin:${jhipster.registry.password}@register.emcloud.com:8761/eureka/
+            defaultZone: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE}
+#            http://admin:${jhipster.registry.password}@register.emcloud.com:8761/eureka/
 
 spring:
     devtools:
@@ -28,9 +29,10 @@ spring:
             enabled: false
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:mysql://mysql.emcloud.com:3306/EmCloudUAA?useUnicode=true&characterEncoding=utf8&useSSL=false
-        username: hxxndev
-        password: 123456
+        url: ${SPRING_DATASOURCE_URL}
+#        url: jdbc:mysql://mysql.emcloud.com:3306/EmCloudUAA?useUnicode=true&characterEncoding=utf8&useSSL=false
+        username: root
+        password:
         hikari:
             data-source-properties:
                 cachePrepStmts: true
