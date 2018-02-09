@@ -4,6 +4,8 @@ import com.emcloud.uaa.config.DefaultProfileUtil;
 
 import io.github.jhipster.config.JHipsterProperties;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +16,7 @@ import java.util.List;
 /**
  * Resources to return information about the currently running Spring profiles.
  */
+@RefreshScope
 @RestController
 @RequestMapping("/api")
 public class ProfileInfoResource {
@@ -25,6 +28,14 @@ public class ProfileInfoResource {
     public ProfileInfoResource(Environment env, JHipsterProperties jHipsterProperties) {
         this.env = env;
         this.jHipsterProperties = jHipsterProperties;
+    }
+
+    @Value("${version}")
+    private String version;
+
+    @GetMapping("/version")
+    public String getVersion() {
+        return version;
     }
 
     @GetMapping("/profile-info")
