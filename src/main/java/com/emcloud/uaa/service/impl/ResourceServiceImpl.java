@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
+import java.util.List;
 
 
 /**
@@ -56,6 +57,20 @@ public class ResourceServiceImpl implements ResourceService{
         resources.setUpdatedBy(SecurityUtils.getCurrentUserLogin());
         resources.setUpdateTime(Instant.now());
         return resourceRepository.save(resources);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Resources> findByParentCode(String parentCode) {
+        log.debug("Request to get all Resources by parentCode");
+        return resourceRepository.findAllByParentCode(parentCode);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Resources> findByRoleIdentify(String roleIdentify){
+        log.debug("Request to get all Resources by parentCode");
+        return resourceRepository.findAllByRoleIdentify(roleIdentify);
     }
 
     /**

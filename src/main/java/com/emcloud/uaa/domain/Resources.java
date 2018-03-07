@@ -60,6 +60,41 @@ public class Resources implements Serializable {
     private String resourceUrl;
 
     /**
+     * 上级代码
+     */
+    @Size(max = 64)
+    @Column(name = "parent_code", length = 100, nullable = false)
+    @ApiModelProperty(value = "上级代码", required = true)
+    private String parentCode;
+
+    /**
+     * 上级名
+     */
+    @NotNull
+    @Size(max = 100)
+    @Column(name = "parent_name", length = 100, nullable = false)
+    @ApiModelProperty(value = "上级名", required = true)
+    private String parentName;
+
+    /**
+     * 排序
+     */
+    @NotNull
+    @Size(max = 100)
+    @Column(name = "sort", length = 100, nullable = false)
+    @ApiModelProperty(value = "排序", required = true)
+    private String sort;
+
+    /**
+     * 权限标识
+     */
+    @NotNull
+    @Size(max = 100)
+    @Column(name = "role_identify", length = 100, nullable = false)
+    @ApiModelProperty(value = "权限标识", required = true)
+    private String roleIdentify;
+
+    /**
      * 是否有效
      */
     @NotNull
@@ -158,6 +193,62 @@ public class Resources implements Serializable {
         this.resourceUrl = resourceUrl;
     }
 
+    public String getParentCode() {
+        return parentCode;
+    }
+
+    public Resources parentCode(String parentCode) {
+        this.parentCode = parentCode;
+        return this;
+    }
+
+    public void setParentCode(String parentCode) {
+        this.parentCode = parentCode;
+    }
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public Resources parentName(String parentName) {
+        this.parentName = parentName;
+        return this;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
+
+    public String getSort() {
+        return sort;
+    }
+
+    public Resources sort(String sort) {
+        this.sort = sort;
+        return this;
+    }
+
+    public void setSort(String sort) {
+        this.sort = sort;
+    }
+
+    public String getRoleIdentify() {
+        return roleIdentify;
+    }
+
+    public Resources roleIdentify(String roleIdentify) {
+        this.roleIdentify = roleIdentify;
+        return this;
+    }
+
+    public void setRoleIdentify(String roleIdentify) {
+        this.roleIdentify = roleIdentify;
+    }
+
+    public Boolean getEnable() {
+        return enable;
+    }
+
     public Boolean isEnable() {
         return enable;
     }
@@ -252,6 +343,10 @@ public class Resources implements Serializable {
             ", resourceName='" + getResourceName() + "'" +
             ", resourceType='" + getResourceType() + "'" +
             ", resourceUrl='" + getResourceUrl() + "'" +
+            ", parentCode='" + getParentCode() + "'" +
+            ", parentName='" + getParentName() + "'" +
+            ", sort='" + getSort() + "'" +
+            ", roleIdentify='" + getRoleIdentify() + "'" +
             ", enable='" + isEnable() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", createTime='" + getCreateTime() + "'" +

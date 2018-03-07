@@ -43,6 +43,46 @@
             "fieldValidateRulesMaxlength": 100
         },
         {
+            "fieldName": "parentCode",
+            "javadoc": "上级代码",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength",
+                "required"
+            ],
+            "fieldValidateRulesMaxlength": 100
+        },
+        {
+            "fieldName": "parentName",
+            "javadoc": "上级名称",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength",
+                "required"
+            ],
+            "fieldValidateRulesMaxlength": 100
+        },
+        {
+            "fieldName": "sort",
+            "javadoc": "排序",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength",
+                "required"
+            ],
+            "fieldValidateRulesMaxlength": 100
+        },
+        {
+            "fieldName": "roleIdentify",
+            "javadoc": "权限标识",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength",
+                "required"
+            ],
+            "fieldValidateRulesMaxlength": 100
+        },
+        {
             "fieldName": "enable",
             "javadoc": "是否有效",
             "fieldType": "Boolean",

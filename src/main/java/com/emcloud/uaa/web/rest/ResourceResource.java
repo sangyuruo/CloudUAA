@@ -85,6 +85,138 @@ public class ResourceResource {
     }
 
     /**
+     * GET  /resource : get all the .Resource
+     *
+     * @return the ResponseEntity with status 200 (OK) and the list of Resources in body
+     */
+
+    @GetMapping("/resources/tree")
+    @Timed
+    public StringBuilder getRoots() {
+
+        int lastLevelNum = 0; // 上一次的层次
+        int curLevelNum = 0; // 本次对象的层次
+
+        List<Resources> roots = resourceService.findByParentCode("0");
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        try {//查询所有菜单
+
+            Resources preNav = null;
+            for (Resources nav : roots) {
+                curLevelNum = getLevelNum(nav);
+                if (null != preNav) {
+                    if (lastLevelNum == curLevelNum) { // 同一层次的
+                        sb.append("}, \n");
+                    } else if (lastLevelNum > curLevelNum) { // 这次的层次比上次高一层，也即跳到上一层
+                        sb.append("} \n");
+
+                        for (int j = curLevelNum; j < lastLevelNum; j++) {
+                            sb.append("]} \n");
+                            if (j == lastLevelNum - 1) {
+                                sb.append(", \n");
+                            }
+
+                        }
+                    }
+                }
+                sb.append("{ \n");
+                sb.append("\"title\"").append(":\"").append(nav.getResourceName()).append("\",");
+                sb.append("\"id\"").append(":").append(nav.getId()).append(",");
+                List<Resources> nav2roots = resourceService.findByParentCode(nav.getResourceCode());
+                if (nav2roots.size() != 0) {
+//                    sb.append(",\"leaf\"").append(":").append(false);
+//                    sb.append(",\"expandedIcon\"").append(":\"").append("fa-folder-open" + "\",");
+//                    sb.append("\"collapsedIcon\"").append(":\"").append("fa-folder" + "\"");
+                    sb.append(",\"children\" :[ \n");
+                    sb.append("] \n");
+                }
+                lastLevelNum = curLevelNum;
+                preNav = nav;
+            }
+            sb.append("} \n");
+            for (int j = 1; j < curLevelNum; j++) {
+                sb.append("]} \n");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        sb.append("]");
+        return sb;
+    }
+
+    private static int getLevelNum(Resources org) {
+        return org.getResourceCode().length() / 2;
+    }
+
+
+
+
+    @GetMapping("/resources/nextTree")
+    public StringBuilder getNextTree(@RequestParam(value = "parentCode") String parentCode) {
+
+        int lastLevelNum = 0; // 上一次的层次
+        int curLevelNum = 0; // 本次对象的层次
+
+        List<Resources> roots = resourceService.findByParentCode(parentCode);
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        try {//查询所有菜单
+            Resources preNav = null;
+            for (Resources nav : roots) {
+                curLevelNum = getLevelNum(nav);
+                if (null != preNav) {
+                    if (lastLevelNum == curLevelNum) { // 同一层次的
+                        sb.append("}, \n");
+                    } else if (lastLevelNum > curLevelNum) { // 这次的层次比上次高一层，也即跳到上一层
+                        sb.append("} \n");
+
+                        for (int j = curLevelNum; j < lastLevelNum; j++) {
+                            sb.append("]} \n");
+                            if (j == lastLevelNum - 1) {
+                                sb.append(", \n");
+                            }
+
+                        }
+                    }
+                }
+                sb.append("{ \n");
+                sb.append("\"title\"").append(":\"").append(nav.getResourceName()).append("\",");
+                sb.append("\"id\"").append(":").append(nav.getId()).append(",");
+                List<Resources> nav2roots = resourceService.findByParentCode(nav.getResourceCode());
+                if (nav2roots.size() != 0) {
+//                    sb.append(",\"leaf\"").append(":").append(false);
+//                    sb.append(",\"expandedIcon\"").append(":\"").append("fa-folder-open" + "\",");
+//                    sb.append("\"collapsedIcon\"").append(":\"").append("fa-folder" + "\"");
+                    sb.append(",\"children\" :[ \n");
+                    sb.append("] \n");
+                }
+                lastLevelNum = curLevelNum;
+                preNav = nav;
+            }
+            sb.append("} \n");
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        sb.append("]");
+        return sb;
+    }
+
+    @GetMapping("/resources/{roleIdentify}")
+    @Timed
+    public List<Resources> getAllResourceRoleIdentify
+        (@PathVariable(value = "roleIdentify", required = false) String roleIdentify) {
+        log.debug("REST roleIdentify to get a page of Resources");
+        List<Resources> list = resourceService.findByRoleIdentify(roleIdentify);
+        return list;
+    }
+
+
+    /**
      * GET  /resources : get all the Resources.
      *
      * @param pageable the pagination information
