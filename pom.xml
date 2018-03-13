@@ -441,6 +441,17 @@
             <scope>test</scope>
         </dependency>
         <!-- jhipster-needle-maven-add-dependency -->
+
+
+        <dependency>
+            <groupId>json</groupId>
+            <artifactId>json</artifactId>
+            <version>0.7.1</version>
+            <systemPath>{basedir}\src\main\lib\json-lib-0.7.1.jar</systemPath>
+            <scope>system</scope>
+    </dependency>
+
+
     </dependencies>
     <build>
         <defaultGoal>spring-boot:run</defaultGoal>

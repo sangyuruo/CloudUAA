@@ -22,6 +22,7 @@ import io.swagger.annotations.ApiParam;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -69,8 +70,8 @@ public class UserResource {
 
     private final UserService userService;
 
+    @Autowired
     private ResourceService resourceService;
-
 
     private final MailService mailService;
 
@@ -205,7 +206,21 @@ public class UserResource {
             }
             return resourceName;
 
+       /* Set<Role> roles = user.get().getRoles();
+        System.out.println(roles);
+        String roleStr=null;
+        String resr=null;
+        List<String> resourceName =new ArrayList<>();
+        for(Role role1 : roles){
+            roleStr= role1.getName();
+        }
+        System.out.println(roleStr);
 
+
+        List<Resources> resource = resourceService.findByRoleIdentify(roleStr);
+        JSONArray array=JSONArray.fromObject(resource);
+        resourceName.add(resr);
+        return null;*/
     }
 
     /**
