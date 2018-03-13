@@ -2,10 +2,13 @@ package com.emcloud.uaa.web.rest;
 
 import com.emcloud.uaa.config.Constants;
 import com.codahale.metrics.annotation.Timed;
+import com.emcloud.uaa.domain.Resources;
+import com.emcloud.uaa.domain.Role;
 import com.emcloud.uaa.domain.User;
 import com.emcloud.uaa.repository.UserRepository;
 import com.emcloud.uaa.security.RolesConstants;
 import com.emcloud.uaa.service.MailService;
+import com.emcloud.uaa.service.ResourceService;
 import com.emcloud.uaa.service.UserService;
 import com.emcloud.uaa.service.dto.UserDTO;
 import com.emcloud.uaa.web.rest.errors.BadRequestAlertException;
@@ -65,6 +68,9 @@ public class UserResource {
     private final UserRepository userRepository;
 
     private final UserService userService;
+
+    private ResourceService resourceService;
+
 
     private final MailService mailService;
 
@@ -173,6 +179,27 @@ public class UserResource {
         return ResponseUtil.wrapOrNotFound(
             userService.getUserWithRolesByLogin(login)
                 .map(UserDTO::new));
+    }
+
+    @GetMapping("/users/bylogin/{login}")
+    @Timed
+    public List<String> getResource(@PathVariable String login) {
+        log.debug("REST request to get User : {}", login);
+        Optional<User> user = userRepository.findOneByLogin(login);
+        Set<Role> roles = user.get().getRoles();
+        System.out.println(roles);
+        String roleStr=null;
+        String resr=null;
+        List<String> resourceName =new ArrayList<>();
+        for(Role role1 : roles){
+            roleStr= role1.getName();
+        }
+        List<Resources> resources = resourceService.findByRoleIdentify(roleStr);
+        for(Resources res : resources){
+            resr= res.getResourceName();
+            resourceName.add(resr);
+        }
+        return resourceName;
     }
 
     /**
