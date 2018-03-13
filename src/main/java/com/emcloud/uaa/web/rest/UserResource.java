@@ -186,20 +186,26 @@ public class UserResource {
     public List<String> getResource(@PathVariable String login) {
         log.debug("REST request to get User : {}", login);
         Optional<User> user = userRepository.findOneByLogin(login);
-        Set<Role> roles = user.get().getRoles();
-        System.out.println(roles);
-        String roleStr=null;
-        String resr=null;
-        List<String> resourceName =new ArrayList<>();
-        for(Role role1 : roles){
-            roleStr= role1.getName();
-        }
-        List<Resources> resources = resourceService.findByRoleIdentify(roleStr);
-        for(Resources res : resources){
-            resr= res.getResourceName();
-            resourceName.add(resr);
-        }
-        return resourceName;
+        System.out.println(user.get().getFirstName());
+            Set<Role> roles = user.get().getRoles();
+            System.out.println(roles);
+            String roleStr=null;
+            String resr=null;
+            List<String> resourceName =new ArrayList<>();
+            for(Role role1 : roles){
+                roleStr= role1.getName();
+            }
+            System.out.println(roleStr);
+
+
+        List<Resources> resource = resourceService.findByRoleIdentify(roleStr);
+            for(Resources res : resource){
+                resr= res.getResourceName();
+                resourceName.add(resr);
+            }
+            return resourceName;
+
+
     }
 
     /**

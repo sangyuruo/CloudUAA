@@ -84,9 +84,9 @@ public class User extends AbstractAuditingEntity implements Serializable {
     private String resetKey;
 
     @Column(name = "reset_date")
-    private Instant resetDate = null;
+    private Instant resetDate ;
     @JsonIgnore
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER )
     @JoinTable(
         name = "user_role",
         joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
@@ -94,7 +94,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @BatchSize(size = 20)
     private Set<Role> roles = new HashSet<>();
-    //用到这个东西的service在哪
+
     public Long getId() {
         return id;
     }
