@@ -73,6 +73,9 @@ public class UserResource {
     @Autowired
     private ResourceService resourceService;
 
+    @Autowired
+    private ResourceResource resourceResource;
+
     private final MailService mailService;
 
     public UserResource(UserRepository userRepository, UserService userService, MailService mailService) {
@@ -184,27 +187,87 @@ public class UserResource {
 
     @GetMapping("/users/bylogin/{login}")
     @Timed
-    public List<String> getResource(@PathVariable String login) {
+    public StringBuilder getResource(@PathVariable String login) {
         log.debug("REST request to get User : {}", login);
         Optional<User> user = userRepository.findOneByLogin(login);
-        System.out.println(user.get().getFirstName());
+        //System.out.println(user.get().getFirstName());
             Set<Role> roles = user.get().getRoles();
-            System.out.println(roles);
+          //  System.out.println(roles);
             String roleStr=null;
             String resr=null;
-            List<String> resourceName =new ArrayList<>();
+            List<String> parentCode =new ArrayList<>();
             for(Role role1 : roles){
                 roleStr= role1.getName();
             }
-            System.out.println(roleStr);
-
-
+            //System.out.println(roleStr);
         List<Resources> resource = resourceService.findByRoleIdentify(roleStr);
-            for(Resources res : resource){
+          // resourceResource.getRoots();
+
+
+        int lastLevelNum = 0; // 上一次的层次
+        int curLevelNum = 0; // 本次对象的层次
+        for(Resources res : resource){
+            resr= res.getParentCode();
+           // parentCode.add(resr);
+        }
+        //List<String> parentCode;
+        List<Resources> roots = resourceService.findByParentCode(resr);
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        try {//查询所有菜单
+
+            Resources preNav = null;
+            for (Resources nav : roots) {
+                curLevelNum = getLevelNum(nav);
+                if (null != preNav) {
+                    if (lastLevelNum == curLevelNum) { // 同一层次的
+                        sb.append("}, \n");
+                    } else if (lastLevelNum > curLevelNum) { // 这次的层次比上次高一层，也即跳到上一层
+                        sb.append("} \n");
+
+                        for (int j = curLevelNum; j < lastLevelNum; j++) {
+                            sb.append("]} \n");
+                            if (j == lastLevelNum - 1) {
+                                sb.append(", \n");
+                            }
+
+                        }
+                    }
+                }
+                sb.append("{ \n");
+                sb.append("\"title\"").append(":\"").append(nav.getResourceName()).append("\",");
+                //sb.append("\"id\"").append(":").append(nav.getId()).append(",");
+                List<Resources> nav2roots = resourceService.findByParentCode(nav.getResourceCode());
+                if (nav2roots.size() != 0) {
+//                    sb.append(",\"leaf\"").append(":").append(false);
+//                    sb.append(",\"expandedIcon\"").append(":\"").append("fa-folder-open" + "\",");
+//                    sb.append("\"collapsedIcon\"").append(":\"").append("fa-folder" + "\"");
+                    sb.append("\"children\" :[ \n");
+                    sb.append("] \n");
+                }
+                lastLevelNum = curLevelNum;
+                preNav = nav;
+            }
+            sb.append("} \n");
+            for (int j = 1; j < curLevelNum; j++) {
+                sb.append("]} \n");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        sb.append("]");
+        return sb;
+
+
+           /* for(Resources res : resource){
                 resr= res.getResourceName();
                 resourceName.add(resr);
-            }
-            return resourceName;
+            }*/
+
+
+
+            //return resourceName;
 
        /* Set<Role> roles = user.get().getRoles();
         System.out.println(roles);
@@ -222,6 +285,11 @@ public class UserResource {
         resourceName.add(resr);
         return null;*/
     }
+    private static int getLevelNum(Resources org) {
+        return org.getResourceCode().length() / 2;
+    }
+
+
 
     /**
      * DELETE /users/:login : delete the "login" User.
