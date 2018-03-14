@@ -206,7 +206,7 @@ public class ResourceResource {
         return sb;
     }
 
-    @GetMapping("/resources/{roleIdentify}")
+   /* @GetMapping("/resources/{roleIdentify}")
     @Timed
     public List<Resources> getAllResourceRoleIdentify
         (@PathVariable(value = "roleIdentify", required = false) String roleIdentify) {
@@ -214,7 +214,7 @@ public class ResourceResource {
         List<Resources> list = resourceService.findByRoleIdentify(roleIdentify);
         return list;
     }
-
+*/
 
     /**
      * GET  /resources : get all the Resources.

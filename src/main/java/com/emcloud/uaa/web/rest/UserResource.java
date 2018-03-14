@@ -5,10 +5,12 @@ import com.codahale.metrics.annotation.Timed;
 import com.emcloud.uaa.domain.Resources;
 import com.emcloud.uaa.domain.Role;
 import com.emcloud.uaa.domain.User;
+import com.emcloud.uaa.repository.RoleRepository;
 import com.emcloud.uaa.repository.UserRepository;
 import com.emcloud.uaa.security.RolesConstants;
 import com.emcloud.uaa.service.MailService;
 import com.emcloud.uaa.service.ResourceService;
+import com.emcloud.uaa.service.RoleService;
 import com.emcloud.uaa.service.UserService;
 import com.emcloud.uaa.service.dto.UserDTO;
 import com.emcloud.uaa.web.rest.errors.BadRequestAlertException;
@@ -71,7 +73,13 @@ public class UserResource {
     private final UserService userService;
 
     @Autowired
+    private  RoleRepository roleRepository;
+
+    @Autowired
     private ResourceService resourceService;
+
+    @Autowired
+    private RoleService roleService;
 
     @Autowired
     private ResourceResource resourceResource;
@@ -193,25 +201,36 @@ public class UserResource {
         //System.out.println(user.get().getFirstName());
             Set<Role> roles = user.get().getRoles();
           //  System.out.println(roles);
+
+
             String roleStr=null;
-            String resr=null;
-            List<String> parentCode =new ArrayList<>();
+            String resourcesStr=null;
+       /* List<String> roleName =new ArrayList<>();
+            List<String> parentCode =new ArrayList<>();*/
             for(Role role1 : roles){
                 roleStr= role1.getName();
+                //roleName.add(roleStr);
             }
-            //System.out.println(roleStr);
-        List<Resources> resource = resourceService.findByRoleIdentify(roleStr);
-          // resourceResource.getRoots();
+
+        Optional<Role> role =roleRepository.findAllByName(roleStr);
+        Set<Resources> resources = role.get().getResources();
+        for(Resources resources1 : resources){
+            resourcesStr= resources1.getResourceName();
+
+        }
+
+        List<Resources> roots = resourceService.findByResourceCode(resourcesStr);
+
 
 
         int lastLevelNum = 0; // 上一次的层次
         int curLevelNum = 0; // 本次对象的层次
-        for(Resources res : resource){
+       /* for(Resources res : resource){
             resr= res.getParentCode();
-           // parentCode.add(resr);
-        }
+            parentCode.get(2);
+        }*/
         //List<String> parentCode;
-        List<Resources> roots = resourceService.findByParentCode(resr);
+        /*List<Resources> roots = resourceService.findByParentCode("0");*/
         StringBuilder sb = new StringBuilder();
         sb.append("[");
         try {//查询所有菜单
@@ -235,15 +254,12 @@ public class UserResource {
                     }
                 }
                 sb.append("{ \n");
-                sb.append("\"title\"").append(":\"").append(nav.getResourceName()).append("\",");
-                //sb.append("\"id\"").append(":").append(nav.getId()).append(",");
+                sb.append("\"title\"").append(":\"").append(nav.getResourceName()).append("\"");
+                //sb.append(" \n icon: 'nb-bar-chart'\n");
                 List<Resources> nav2roots = resourceService.findByParentCode(nav.getResourceCode());
                 if (nav2roots.size() != 0) {
-//                    sb.append(",\"leaf\"").append(":").append(false);
-//                    sb.append(",\"expandedIcon\"").append(":\"").append("fa-folder-open" + "\",");
-//                    sb.append("\"collapsedIcon\"").append(":\"").append("fa-folder" + "\"");
-                    sb.append("\"children\" :[ \n");
-                    sb.append("] \n");
+                  /*  sb.append("children:[ \n");
+                    sb.append("] \n");*/
                 }
                 lastLevelNum = curLevelNum;
                 preNav = nav;
@@ -258,32 +274,6 @@ public class UserResource {
         }
         sb.append("]");
         return sb;
-
-
-           /* for(Resources res : resource){
-                resr= res.getResourceName();
-                resourceName.add(resr);
-            }*/
-
-
-
-            //return resourceName;
-
-       /* Set<Role> roles = user.get().getRoles();
-        System.out.println(roles);
-        String roleStr=null;
-        String resr=null;
-        List<String> resourceName =new ArrayList<>();
-        for(Role role1 : roles){
-            roleStr= role1.getName();
-        }
-        System.out.println(roleStr);
-
-
-        List<Resources> resource = resourceService.findByRoleIdentify(roleStr);
-        JSONArray array=JSONArray.fromObject(resource);
-        resourceName.add(resr);
-        return null;*/
     }
     private static int getLevelNum(Resources org) {
         return org.getResourceCode().length() / 2;

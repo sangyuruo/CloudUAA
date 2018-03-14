@@ -68,9 +68,9 @@ public class ResourceServiceImpl implements ResourceService{
 
     @Override
     @Transactional(readOnly = true)
-    public List<Resources> findByRoleIdentify(String roleIdentify){
+    public List<Resources> findByResourceCode(String resourceCode){
         log.debug("Request to get all Resources by roleIdentify");
-        return resourceRepository.findAllByRoleIdentify(roleIdentify);
+        return resourceRepository.findAllByResourceCode(resourceCode);
     }
 
     /**
