@@ -197,29 +197,7 @@ public class UserResource {
     @Timed
     public StringBuilder getResource(@PathVariable String login) {
         log.debug("REST request to get User : {}", login);
-        Optional<User> user = userRepository.findOneByLogin(login);
-        //System.out.println(user.get().getFirstName());
-            Set<Role> roles = user.get().getRoles();
-          //  System.out.println(roles);
-
-
-            String roleStr=null;
-            String resourcesStr=null;
-       /* List<String> roleName =new ArrayList<>();
-            List<String> parentCode =new ArrayList<>();*/
-            for(Role role1 : roles){
-                roleStr= role1.getName();
-                //roleName.add(roleStr);
-            }
-
-        Optional<Role> role =roleRepository.findAllByName(roleStr);
-        Set<Resources> resources = role.get().getResources();
-        for(Resources resources1 : resources){
-            resourcesStr= resources1.getResourceName();
-
-        }
-
-        List<Resources> roots = resourceService.findByResourceCode(resourcesStr);
+        List<Resources> roots = userService.findOneByLogin(login);
 
 
 
@@ -255,7 +233,9 @@ public class UserResource {
                 }
                 sb.append("{ \n");
                 sb.append("\"title\"").append(":\"").append(nav.getResourceName()).append("\"");
-                //sb.append(" \n icon: 'nb-bar-chart'\n");
+                //sb.append("\n");
+                //sb.append(" \" icon\"").append(":\"").append(" 'nb-bar-chart'").append("\"");
+                sb.append("\n");
                 List<Resources> nav2roots = resourceService.findByParentCode(nav.getResourceCode());
                 if (nav2roots.size() != 0) {
                   /*  sb.append("children:[ \n");

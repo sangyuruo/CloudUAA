@@ -29,7 +29,7 @@ public interface ResourceService {
 
     List<Resources> findByParentCode(String parentCode);
 
-    List<Resources> findByResourceCode(String resourceCode);
+    Resources findByResourceCode(String resourceCode);
 
     /**
      *  Get all the resources.

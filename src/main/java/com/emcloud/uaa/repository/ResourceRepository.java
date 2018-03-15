@@ -18,5 +18,5 @@ public interface ResourceRepository extends JpaRepository<Resources, Long> {
     Page<Resources> findAllByResourceNameContaining(Pageable pageable, String resourceName);
     Resources findOneByResourceCode(String code);
     List<Resources> findAllByParentCode(String parentCode);
-    List<Resources> findAllByResourceCode(String resourceCode);
+    Resources  findAllByResourceCode(String resourceCode);
 }
