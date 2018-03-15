@@ -270,9 +270,7 @@ public class UserService {
         List<Resources> roots = new ArrayList<>();
         for(Role role1 : roles){
              role =roleService.findByName( role1.getName()).get();
-
             Set<Resources> resources = role.getResources();
-
             Resources r =null;
             List<String> resourcesStr= new ArrayList<>();
             for(Resources resources1 : resources){
@@ -280,20 +278,13 @@ public class UserService {
                 for(String str : resourcesStr) {
                     r =  resourceService.findByResourceCode(str);
                 }
-
                 if (roots.contains(r)){
                     continue;
                 }else{
                     roots.add(r);
-
                 }
             }
         }
-
-
         return roots;
     }
-
-
-
 }

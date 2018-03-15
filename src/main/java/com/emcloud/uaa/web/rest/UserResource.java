@@ -199,22 +199,15 @@ public class UserResource {
         log.debug("REST request to get User : {}", login);
         List<Resources> roots = userService.findOneByLogin(login);
 
-
-
         int lastLevelNum = 0; // 上一次的层次
         int curLevelNum = 0; // 本次对象的层次
-       /* for(Resources res : resource){
-            resr= res.getParentCode();
-            parentCode.get(2);
-        }*/
-        //List<String> parentCode;
-        /*List<Resources> roots = resourceService.findByParentCode("0");*/
         StringBuilder sb = new StringBuilder();
         sb.append("[");
         try {//查询所有菜单
 
             Resources preNav = null;
             for (Resources nav : roots) {
+                String resourceCode = nav.getResourceCode();
                 curLevelNum = getLevelNum(nav);
                 if (null != preNav) {
                     if (lastLevelNum == curLevelNum) { // 同一层次的
@@ -227,19 +220,54 @@ public class UserResource {
                             if (j == lastLevelNum - 1) {
                                 sb.append(", \n");
                             }
-
                         }
                     }
                 }
                 sb.append("{ \n");
-                sb.append("\"title\"").append(":\"").append(nav.getResourceName()).append("\"");
-                //sb.append("\n");
-                //sb.append(" \" icon\"").append(":\"").append(" 'nb-bar-chart'").append("\"");
+                sb.append("\"title\"").append(":\"").append(nav.getResourceName()).append("\",");
+                sb.append("\n");
+                sb.append("\"icon\"").append(":\"").append("nb-bar-chart").append("\",");
                 sb.append("\n");
                 List<Resources> nav2roots = resourceService.findByParentCode(nav.getResourceCode());
                 if (nav2roots.size() != 0) {
-                  /*  sb.append("children:[ \n");
-                    sb.append("] \n");*/
+                    sb.append("\"children\"").append(":").append("[");
+
+                    sb.append("\n");
+                    int lastLevelNum2 = 0; // 上一次的层次
+                    int curLevelNum2 = 0; // 本次对象的层次
+                    List<Resources> roots2 = resourceService.findByParentCode(resourceCode);
+                    // sb.append("[");
+                    try {//查询所有菜单
+                        Resources preNav2 = null;
+                        for (Resources nav2 : roots2) {
+                            curLevelNum2 = getLevelNum(nav2);//2=2
+                            if (null != preNav2) {
+                                if (lastLevelNum2 == curLevelNum2) { // 同一层次的
+                                    sb.append("}, \n");
+                                } else if (lastLevelNum2 > curLevelNum2) { // 这次的层次比上次高一层，也即跳到上一层
+                                    sb.append("} \n");
+
+                                    for (int j = curLevelNum2; j < lastLevelNum2; j++) {
+                                        sb.append("]} \n");
+                                        if (j == lastLevelNum2 - 1) {
+                                            sb.append(", \n");
+                                        }
+                                    }
+                                }
+                            }
+                            sb.append("{ \n");
+                            sb.append("\"title\"").append(":\"").append(nav2.getResourceName()).append("\"");
+                            lastLevelNum2 = curLevelNum2;
+                            preNav2 = nav;
+                        }
+                        sb.append("}\n");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    // sb.append("]");
+
+
+                    sb.append("] \n");
                 }
                 lastLevelNum = curLevelNum;
                 preNav = nav;
@@ -258,7 +286,6 @@ public class UserResource {
     private static int getLevelNum(Resources org) {
         return org.getResourceCode().length() / 2;
     }
-
 
 
     /**
