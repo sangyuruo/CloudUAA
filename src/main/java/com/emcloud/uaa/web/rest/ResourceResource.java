@@ -123,7 +123,7 @@ public class ResourceResource {
                 }
                 sb.append("{ \n");
                 sb.append("\"title\"").append(":\"").append(nav.getResourceName()).append("\",");
-                sb.append("\"id\"").append(":").append(nav.getId()).append(",");
+                //sb.append("\"id\"").append(":").append(nav.getId()).append(",");
                 List<Resources> nav2roots = resourceService.findByParentCode(nav.getResourceCode());
                 if (nav2roots.size() != 0) {
 //                    sb.append(",\"leaf\"").append(":").append(false);
@@ -206,14 +206,14 @@ public class ResourceResource {
         return sb;
     }
 
-    @GetMapping("/resources/{roleIdentify}")
+ /*   @GetMapping("/resources/{roleIdentify}")
     @Timed
     public List<Resources> getAllResourceRoleIdentify
         (@PathVariable(value = "roleIdentify", required = false) String roleIdentify) {
         log.debug("REST roleIdentify to get a page of Resources");
         List<Resources> list = resourceService.findByRoleIdentify(roleIdentify);
         return list;
-    }
+    }*/
 
 
     /**

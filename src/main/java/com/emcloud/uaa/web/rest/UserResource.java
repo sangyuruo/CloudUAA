@@ -2,10 +2,15 @@ package com.emcloud.uaa.web.rest;
 
 import com.emcloud.uaa.config.Constants;
 import com.codahale.metrics.annotation.Timed;
+import com.emcloud.uaa.domain.Resources;
+import com.emcloud.uaa.domain.Role;
 import com.emcloud.uaa.domain.User;
+import com.emcloud.uaa.repository.RoleRepository;
 import com.emcloud.uaa.repository.UserRepository;
 import com.emcloud.uaa.security.RolesConstants;
 import com.emcloud.uaa.service.MailService;
+import com.emcloud.uaa.service.ResourceService;
+import com.emcloud.uaa.service.RoleService;
 import com.emcloud.uaa.service.UserService;
 import com.emcloud.uaa.service.dto.UserDTO;
 import com.emcloud.uaa.web.rest.errors.BadRequestAlertException;
@@ -19,6 +24,7 @@ import io.swagger.annotations.ApiParam;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -65,6 +71,18 @@ public class UserResource {
     private final UserRepository userRepository;
 
     private final UserService userService;
+
+    @Autowired
+    private  RoleRepository roleRepository;
+
+    @Autowired
+    private ResourceService resourceService;
+
+    @Autowired
+    private RoleService roleService;
+
+    @Autowired
+    private ResourceResource resourceResource;
 
     private final MailService mailService;
 
@@ -174,6 +192,103 @@ public class UserResource {
             userService.getUserWithRolesByLogin(login)
                 .map(UserDTO::new));
     }
+
+    @GetMapping("/users/bylogin/{login}")
+    @Timed
+    public StringBuilder getResource(@PathVariable String login) {
+        log.debug("REST request to get User : {}", login);
+        List<Resources> roots = userService.findOneByLogin(login);
+
+        int lastLevelNum = 0; // 上一次的层次
+        int curLevelNum = 0; // 本次对象的层次
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        try {//查询所有菜单
+
+            Resources preNav = null;
+            for (Resources nav : roots) {
+                String resourceCode = nav.getResourceCode();
+                curLevelNum = getLevelNum(nav);
+                if (null != preNav) {
+                    if (lastLevelNum == curLevelNum) { // 同一层次的
+                        sb.append("}, \n");
+                    } else if (lastLevelNum > curLevelNum) { // 这次的层次比上次高一层，也即跳到上一层
+                        sb.append("} \n");
+
+                        for (int j = curLevelNum; j < lastLevelNum; j++) {
+                            sb.append("]} \n");
+                            if (j == lastLevelNum - 1) {
+                                sb.append(", \n");
+                            }
+                        }
+                    }
+                }
+                sb.append("{ \n");
+                sb.append("\"title\"").append(":\"").append(nav.getResourceName()).append("\",");
+                sb.append("\n");
+                sb.append("\"icon\"").append(":\"").append("nb-bar-chart").append("\",");
+                sb.append("\n");
+                List<Resources> nav2roots = resourceService.findByParentCode(nav.getResourceCode());
+                if (nav2roots.size() != 0) {
+                    sb.append("\"children\"").append(":").append("[");
+                    Resources preNav2 = null;
+                    sb.append("\n");
+                    int lastLevelNum2 = 0; // 上一次的层次
+                    int curLevelNum2 = 0; // 本次对象的层次
+                    List<Resources> roots2 = resourceService.findByParentCode(resourceCode);
+                    // sb.append("[");
+                    try {//查询所有菜单
+
+                        for (Resources nav2 : roots2) {
+                            curLevelNum2 = getLevelNum(nav2);//2=2
+                            if (null != preNav2) {
+                                if (lastLevelNum2 == curLevelNum2) { // 同一层次的
+                                    sb.append("}, \n");
+                                } else if (lastLevelNum2 > curLevelNum2) { // 这次的层次比上次高一层，也即跳到上一层
+                                    sb.append("} \n");
+
+                                    for (int j = curLevelNum2; j < lastLevelNum2; j++) {
+                                        sb.append("]} \n");
+                                        if (j == lastLevelNum2 - 1) {
+                                            sb.append(", \n");
+                                        }
+                                    }
+                                }
+                            }
+                            sb.append("{ \n");
+                            sb.append("\"title\"").append(":\"").append(nav2.getResourceName()).append("\",");
+                            sb.append("\"link\"").append(":\"").append(nav2.getResourceUrl()).append("\"");
+                            lastLevelNum2 = curLevelNum2;
+                            preNav2 = nav;
+                        }
+                        sb.append("}\n");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    // sb.append("]");
+
+
+
+                    sb.append("] \n");
+                }
+                lastLevelNum = curLevelNum;
+                preNav = nav;
+            }
+            sb.append("} \n");
+            for (int j = 1; j < curLevelNum; j++) {
+                sb.append("]} \n");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        sb.append("]");
+        return sb;
+    }
+    private static int getLevelNum(Resources org) {
+        return org.getResourceCode().length() / 2;
+    }
+
 
     /**
      * DELETE /users/:login : delete the "login" User.

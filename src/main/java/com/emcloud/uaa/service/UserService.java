@@ -1,5 +1,6 @@
 package com.emcloud.uaa.service;
 
+import com.emcloud.uaa.domain.Resources;
 import com.emcloud.uaa.domain.Role;
 import com.emcloud.uaa.domain.User;
 import com.emcloud.uaa.repository.RoleRepository;
@@ -13,6 +14,7 @@ import com.emcloud.uaa.web.rest.vm.ManagedUserVM;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,6 +46,12 @@ public class UserService {
     private final RoleRepository roleRepository;
 //缓存管理器
     private final CacheManager cacheManager;
+
+    @Autowired
+    private ResourceService resourceService;
+
+    @Autowired
+    private RoleService roleService;
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, CacheManager cacheManager) {
         this.userRepository = userRepository;
@@ -252,5 +260,31 @@ public class UserService {
      */
     public List<String> getRoles() {
         return roleRepository.findAll().stream().map(Role::getName).collect(Collectors.toList());
+    }
+
+    public List<Resources> findOneByLogin(String login){
+        Optional<User> user = userRepository.findOneByLogin(login);
+
+        Set<Role> roles = user.get().getRoles();
+        Role role =null;
+        List<Resources> roots = new ArrayList<>();
+        for(Role role1 : roles){
+             role =roleService.findByName( role1.getName()).get();
+            Set<Resources> resources = role.getResources();
+            Resources r =null;
+            List<String> resourcesStr= new ArrayList<>();
+            for(Resources resources1 : resources){
+                resourcesStr.add(resources1.getResourceCode());
+                for(String str : resourcesStr) {
+                    r =  resourceService.findByResourceCode(str);
+                }
+                if (roots.contains(r)){
+                    continue;
+                }else{
+                    roots.add(r);
+                }
+            }
+        }
+        return roots;
     }
 }

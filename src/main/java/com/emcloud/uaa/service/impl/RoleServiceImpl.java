@@ -93,6 +93,12 @@ public class RoleServiceImpl implements RoleService {
         return roleRepository.findAll(pageable);
     }
 
+    public Optional<Role> findByName(String name){
+        log.debug("Request to get name");
+        return roleRepository.findAllByName(name);
+    }
+
+
     /**
      *  Get all the roles by id or name.
      *
