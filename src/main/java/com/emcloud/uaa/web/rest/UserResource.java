@@ -193,9 +193,9 @@ public class UserResource {
                 .map(UserDTO::new));
     }
 
-    @GetMapping("/users/bylogin/{login}")
+    @GetMapping("/users/bylogin")
     @Timed
-    public StringBuilder getResource(@PathVariable String login) {
+    public StringBuilder getResource(@RequestParam(value = "login") String login) {
         log.debug("REST request to get User : {}", login);
         List<Resources> roots = userService.findOneByLogin(login);
 
