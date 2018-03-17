@@ -214,8 +214,6 @@ public class ResourceResource {
         List<Resources> list = resourceService.findByRoleIdentify(roleIdentify);
         return list;
     }*/
-
-
     /**
      * GET  /resources : get all the Resources.
      *
@@ -224,7 +222,22 @@ public class ResourceResource {
      */
     @GetMapping("/resources")
     @Timed
-    public ResponseEntity<List<Resources>> getAllResource
+    public ResponseEntity<List<Resources>> getAllResource(@ApiParam Pageable pageable) {
+        log.debug("REST request to get a page of Resources");
+        Page<Resources> page = resourceService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/resources");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    /**
+     * GET  /resources : get all the Resources.
+     *
+     * @param pageable the pagination information
+     * @return the ResponseEntity with status 200 (OK) and the list of Resources in body
+     */
+    @GetMapping("/resources/{resourceName}")
+    @Timed
+    public ResponseEntity<List<Resources>> getAllResourceByResourceName
     (@RequestParam(value = "query",required = false) String resourceName , @ApiParam Pageable pageable) {
         log.debug("REST request to get a page of Resources");
         Page<Resources> page;
