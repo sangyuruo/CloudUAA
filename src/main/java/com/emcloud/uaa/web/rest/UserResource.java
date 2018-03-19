@@ -195,7 +195,7 @@ public class UserResource {
 
     @GetMapping("/users/bylogin")
     @Timed
-    public StringBuilder getResource(@PathVariable(value = "login") String login) {
+    public StringBuilder getResource(@RequestParam(value = "login") String login) {
         log.debug("REST request to get User : {}", login);
         List<Resources> roots = userService.findOneByLogin(login);
 
