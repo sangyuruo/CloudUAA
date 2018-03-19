@@ -95,6 +95,15 @@ public class Resources implements Serializable {
     private String roleIdentify;
 
     /**
+     * 级别
+     */
+    @NotNull
+    @Size(max = 100)
+    @Column(name = "level", nullable = false)
+    @ApiModelProperty(value = "级别", required = true)
+    private String level;
+
+    /**
      * 是否有效
      */
     @NotNull
@@ -245,6 +254,19 @@ public class Resources implements Serializable {
         this.roleIdentify = roleIdentify;
     }
 
+    public String getLevel() {
+        return level;
+    }
+
+    public Resources level(String level) {
+        this.level = level;
+        return this;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
     public Boolean getEnable() {
         return enable;
     }
@@ -347,6 +369,7 @@ public class Resources implements Serializable {
             ", parentName='" + getParentName() + "'" +
             ", sort='" + getSort() + "'" +
             ", roleIdentify='" + getRoleIdentify() + "'" +
+            ", level='" + getLevel() + "'" +
             ", enable='" + isEnable() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", createTime='" + getCreateTime() + "'" +

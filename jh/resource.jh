@@ -19,6 +19,8 @@ entity Resource{
   sort String maxlength(100)  required,
   /** 权限标识*/
   roleIdentify String maxlength(100)  required,
+  /** 级别*/
+  level Integer required,
   /** 是否有效 */
   enable Boolean required,
    /** 创建人*/
