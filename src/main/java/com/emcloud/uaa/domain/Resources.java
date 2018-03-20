@@ -101,7 +101,7 @@ public class Resources implements Serializable {
     @Size(max = 100)
     @Column(name = "level", nullable = false)
     @ApiModelProperty(value = "级别", required = true)
-    private String level;
+    private Integer level;
 
     /**
      * 是否有效
@@ -254,16 +254,16 @@ public class Resources implements Serializable {
         this.roleIdentify = roleIdentify;
     }
 
-    public String getLevel() {
+    public Integer getLevel() {
         return level;
     }
 
-    public Resources level(String level) {
+    public Resources level(Integer level) {
         this.level = level;
         return this;
     }
 
-    public void setLevel(String level) {
+    public void setLevel(Integer level) {
         this.level = level;
     }
 
