@@ -102,9 +102,10 @@ public class ResourceResource {
         StringBuilder sb = new StringBuilder();
         sb.append("[");
         try {//查询所有菜单
-
+            String resourceCode = null;
             Resources preNav = null;
             for (Resources nav : roots) {
+                resourceCode = nav.getResourceCode();
                 curLevelNum = getLevelNum(nav);
                 if (null != preNav) {
                     if (lastLevelNum == curLevelNum) { // 同一层次的
@@ -122,14 +123,63 @@ public class ResourceResource {
                     }
                 }
                 sb.append("{ \n");
-                sb.append("\"title\"").append(":\"").append(nav.getResourceName()).append("\",");
-                //sb.append("\"id\"").append(":").append(nav.getId()).append(",");
+                sb.append("\"label\"").append(":\"").append(nav.getResourceName()).append("\",");
                 List<Resources> nav2roots = resourceService.findByParentCode(nav.getResourceCode());
                 if (nav2roots.size() != 0) {
-//                    sb.append(",\"leaf\"").append(":").append(false);
-//                    sb.append(",\"expandedIcon\"").append(":\"").append("fa-folder-open" + "\",");
-//                    sb.append("\"collapsedIcon\"").append(":\"").append("fa-folder" + "\"");
+                    sb.append("\"leaf\"").append(":").append(false);
+                    sb.append(",\"expandedIcon\"").append(":\"").append("fa-folder-open" + "\",");
+                    sb.append("\"collapsedIcon\"").append(":\"").append("fa-folder" + "\"");
                     sb.append(",\"children\" :[ \n");
+
+
+
+                    int lastLevelNum2 = 0; // 上一次的层次
+                    int curLevelNum2 = 0; // 本次对象的层次
+
+                    List<Resources> roots2 = resourceService.findByParentCode(resourceCode);
+                    //StringBuilder sb = new StringBuilder();
+                    try {//查询所有菜单
+
+                        Resources preNav2 = null;
+                        for (Resources nav2 : roots2) {
+                            curLevelNum2 = getLevelNum(nav2);
+                            if (null != preNav2) {
+                                if (lastLevelNum2 == curLevelNum2) { // 同一层次的
+                                    sb.append("}, \n");
+                                } else if (lastLevelNum2 > curLevelNum2) { // 这次的层次比上次高一层，也即跳到上一层
+                                    sb.append("} \n");
+
+                                    for (int j = curLevelNum2; j < lastLevelNum2; j++) {
+                                        sb.append("}] \n");
+                                        if (j == lastLevelNum2 - 1) {
+                                            sb.append(", \n");
+                                        }
+
+                                    }
+                                }
+                            }
+                            sb.append("{ \n");
+                            sb.append("\"label\"").append(":\"").append(nav2.getResourceName()).append("\",");
+                            sb.append("\"icon\"").append(":\"").append("fa-file-image-o").append("\"");
+                            List<Resources> nav2roots2 = resourceService.findByParentCode(nav2.getResourceCode());
+                            if (nav2roots2.size() != 0) {
+                    sb.append(",\"leaf\"").append(":").append(false);
+                    sb.append(",\"expandedIcon\"").append(":\"").append("fa-folder-open" + "\"");
+                    sb.append("\"collapsedIcon\"").append(":\"").append("fa-folder" + "\"");
+                               /* sb.append(",\"children\" :[ \n");
+                                sb.append("] \n");*/
+                            }
+                            lastLevelNum2 = curLevelNum2;
+                            preNav2 = nav2;
+                        }
+                        sb.append("} \n");
+
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
                     sb.append("] \n");
                 }
                 lastLevelNum = curLevelNum;
