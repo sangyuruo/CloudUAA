@@ -122,8 +122,12 @@ public class ResourceResource {
                         }
                     }
                 }
+                lastLevelNum = curLevelNum;
+                preNav = nav;
+
                 sb.append("{ \n");
                 sb.append("\"label\"").append(":\"").append(nav.getResourceName()).append("\",");
+                sb.append("\"resourceCode\"").append(":\"").append(nav.getResourceCode()).append("\",");
                 List<Resources> nav2roots = resourceService.findByParentCode(nav.getResourceCode());
                 if (nav2roots.size() != 0) {
                     sb.append("\"leaf\"").append(":").append(false);
@@ -160,6 +164,7 @@ public class ResourceResource {
                             }
                             sb.append("{ \n");
                             sb.append("\"label\"").append(":\"").append(nav2.getResourceName()).append("\",");
+                            sb.append("\"resourceCode\"").append(":\"").append(nav2.getResourceCode()).append("\",");
                             sb.append("\"icon\"").append(":\"").append("fa-file-image-o").append("\"");
                             List<Resources> nav2roots2 = resourceService.findByParentCode(nav2.getResourceCode());
                             if (nav2roots2.size() != 0) {
@@ -234,6 +239,7 @@ public class ResourceResource {
                 }
                 sb.append("{ \n");
                 sb.append("\"title\"").append(":\"").append(nav.getResourceName()).append("\",");
+                sb.append("\"resourceCode\"").append(":\"").append(nav.getResourceCode()).append("\",");
                 sb.append("\"id\"").append(":").append(nav.getId()).append(",");
                 List<Resources> nav2roots = resourceService.findByParentCode(nav.getResourceCode());
                 if (nav2roots.size() != 0) {
