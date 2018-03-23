@@ -1,6 +1,7 @@
 package com.emcloud.uaa.service.impl;
 
 import com.emcloud.uaa.domain.Resources;
+import com.emcloud.uaa.domain.Role;
 import com.emcloud.uaa.security.SecurityUtils;
 import com.emcloud.uaa.service.ResourceService;
 import com.emcloud.uaa.repository.ResourceRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -70,7 +72,7 @@ public class ResourceServiceImpl implements ResourceService{
     @Transactional(readOnly = true)
     public Resources findByResourceCode(String resourceCode){
         log.debug("Request to get all Resources by roleIdentify");
-        return resourceRepository.findAllByResourceCode(resourceCode);
+        return resourceRepository.findByResourceCode(resourceCode);
     }
 
     /**
@@ -84,6 +86,11 @@ public class ResourceServiceImpl implements ResourceService{
     public Page<Resources> findAll(Pageable pageable) {
         log.debug("Request to get all Resources");
         return resourceRepository.findAll(pageable);
+    }
+
+    @Override
+    public List<Resources> findAll() {
+        return resourceRepository.findAll();
     }
 
     /**
@@ -111,6 +118,14 @@ public class ResourceServiceImpl implements ResourceService{
         log.debug("Request to get all Resources by resourceName");
         return resourceRepository.findAllByResourceNameContaining(pageable,resourceName);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Resources> findAllByParentCodeAndRoles(String parentCode, Set<Role> Roles){
+        //log.debug("Request to get all Resources by parentCode , Roles");
+        return resourceRepository.findAllByParentCodeAndRoles(parentCode,Roles);
+    }
+
 
     /**
      *  Delete the  resource by id.

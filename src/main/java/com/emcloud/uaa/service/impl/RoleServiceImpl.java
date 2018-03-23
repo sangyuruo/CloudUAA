@@ -93,10 +93,10 @@ public class RoleServiceImpl implements RoleService {
         return roleRepository.findAll(pageable);
     }
 
-    public Optional<Role> findByName(String name){
-        log.debug("Request to get name");
-        return roleRepository.findAllByName(name);
-    }
+//    public Optional<Role> findByName(String name){
+//        log.debug("Request to get name");
+//        return roleRepository.findAllByName(name);
+//    }
 
 
     /**
@@ -135,8 +135,7 @@ public class RoleServiceImpl implements RoleService {
         log.debug("Request to delete Role : {}", id);
         roleRepository.delete(id);
     }
-//阿紫============================阿紫 ============================阿紫=================================================
-    public Optional<RoleDTO> updateRole(RoleDTO roleDTO) {
+  public Optional<RoleDTO> updateRole(RoleDTO roleDTO) {
         return Optional.of(roleRepository
             .findOneByName(roleDTO.getName()))
             .map(role -> {
@@ -145,7 +144,7 @@ public class RoleServiceImpl implements RoleService {
                 Set<Resources> managedResources = role.getResources();
                 managedResources.clear();
                 roleDTO.getResources().stream()
-                    .map(resourceRepository::findOneByResourceCode)
+                    .map(resourceRepository::findByResourceCode)
                     .forEach(managedResources::add);
                // cacheManager.getCache(USERS_CACHE).evict(user.getLogin());
                 log.debug("Changed Information for Role: {}", role);

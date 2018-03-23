@@ -41,7 +41,7 @@ public interface RoleService {
     Page<Role> findAll(Pageable pageable);
 
 
-    Optional<Role> findByName(String name);
+  //  Optional<Role> findByName(String name);
 
     /**
      *  Get the "id" role.

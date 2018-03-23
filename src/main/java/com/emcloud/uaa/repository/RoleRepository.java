@@ -24,5 +24,5 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
     Page<Role> findAllByNameOrDescContaining(Pageable pageable, String name, String desc);
 
     Role findOneByName(String name);
-    Optional<Role> findAllByName(String name);
+//    Optional<Role> findAllByName(String name);
 }

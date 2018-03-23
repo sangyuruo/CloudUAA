@@ -1,6 +1,8 @@
 package com.emcloud.uaa.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -8,7 +10,10 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+
 /**
  * A Resources.
  */
@@ -101,7 +106,7 @@ public class Resources implements Serializable {
     @Size(max = 100)
     @Column(name = "level", nullable = false)
     @ApiModelProperty(value = "级别", required = true)
-    private String level;
+    private Integer level;
 
     /**
      * 是否有效
@@ -140,6 +145,16 @@ public class Resources implements Serializable {
     @ApiModelProperty(value = "修改时间", required = true)
     @Column(name = "update_time", nullable = false)
     private Instant updateTime;
+
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+        name = "role_resource",
+        joinColumns = {@JoinColumn(name = "resource_code", referencedColumnName = "resource_code")},
+        inverseJoinColumns = {@JoinColumn(name = "role_name", referencedColumnName = "name")})
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @BatchSize(size = 20)
+    private Set<Role> roles;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -254,16 +269,16 @@ public class Resources implements Serializable {
         this.roleIdentify = roleIdentify;
     }
 
-    public String getLevel() {
+    public Integer getLevel() {
         return level;
     }
 
-    public Resources level(String level) {
+    public Resources level(Integer level) {
         this.level = level;
         return this;
     }
 
-    public void setLevel(String level) {
+    public void setLevel(Integer level) {
         this.level = level;
     }
 
@@ -335,6 +350,15 @@ public class Resources implements Serializable {
     public void setUpdateTime(Instant updateTime) {
         this.updateTime = updateTime;
     }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override

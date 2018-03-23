@@ -73,7 +73,7 @@ public class UserResource {
     private final UserService userService;
 
     @Autowired
-    private  RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
     @Autowired
     private ResourceService resourceService;
@@ -102,7 +102,7 @@ public class UserResource {
      *
      * @param managedUserVM the user to create
      * @return the ResponseEntity with status 201 (Created) and with body the new user, or with status 400 (Bad Request) if the login or email is already in use
-     * @throws URISyntaxException if the Location URI syntax is incorrect
+     * @throws URISyntaxException       if the Location URI syntax is incorrect
      * @throws BadRequestAlertException 400 (Bad Request) if the login or email is already in use
      */
     @PostMapping("/users")
@@ -113,7 +113,7 @@ public class UserResource {
 
         if (managedUserVM.getId() != null) {
             throw new BadRequestAlertException("A new user cannot already have an ID", "userManagement", "idexists");
-        // Lowercase the user login before comparing with database
+            // Lowercase the user login before comparing with database
         } else if (userRepository.findOneByLogin(managedUserVM.getLogin().toLowerCase()).isPresent()) {
             throw new LoginAlreadyUsedException();
         } else if (userRepository.findOneByEmailIgnoreCase(managedUserVM.getEmail()).isPresent()) {
@@ -122,7 +122,7 @@ public class UserResource {
             User newUser = userService.createUser(managedUserVM);
             mailService.sendCreationEmail(newUser);
             return ResponseEntity.created(new URI("/api/users/" + newUser.getLogin()))
-                .headers(HeaderUtil.createAlert( "userManagement.created", newUser.getLogin()))
+                .headers(HeaderUtil.createAlert("userManagement.created", newUser.getLogin()))
                 .body(newUser);
         }
     }
@@ -198,94 +198,210 @@ public class UserResource {
     public StringBuilder getResource(@RequestParam(value = "login") String login) {
         log.debug("REST request to get User : {}", login);
         List<Resources> roots = userService.findOneByLogin(login);
-
         int lastLevelNum = 0; // 上一次的层次
         int curLevelNum = 0; // 本次对象的层次
         StringBuilder sb = new StringBuilder();
         sb.append("[");
-        try {//查询所有菜单
-
+        try {
             Resources preNav = null;
             for (Resources nav : roots) {
                 String resourceCode = nav.getResourceCode();
                 curLevelNum = getLevelNum(nav);
-                if (null != preNav) {
-                    if (lastLevelNum == curLevelNum) { // 同一层次的
-                        sb.append("}, \n");
-                    } else if (lastLevelNum > curLevelNum) { // 这次的层次比上次高一层，也即跳到上一层
-                        sb.append("} \n");
+                if (curLevelNum == 1) {
+                    if (null != preNav) {
+                        if (lastLevelNum == curLevelNum) { // 同一层次的
+                            sb.append("}, \n");
+                        } else if (lastLevelNum > curLevelNum) { // 这次的层次比上次高一层，也即跳到上一层
+                            sb.append("} \n");
 
-                        for (int j = curLevelNum; j < lastLevelNum; j++) {
-                            sb.append("]} \n");
-                            if (j == lastLevelNum - 1) {
-                                sb.append(", \n");
+                            for (int j = curLevelNum; j < lastLevelNum; j++) {
+                                sb.append("]} \n");
+                                if (j == lastLevelNum - 1) {
+                                    sb.append(", \n");
+                                }
+
                             }
                         }
                     }
-                }
-                sb.append("{ \n");
-                sb.append("\"title\"").append(":\"").append(nav.getResourceName()).append("\",");
-                sb.append("\n");
-                sb.append("\"icon\"").append(":\"").append("nb-bar-chart").append("\",");
-                sb.append("\n");
-                List<Resources> nav2roots = resourceService.findByParentCode(nav.getResourceCode());
-                if (nav2roots.size() != 0) {
-                    sb.append("\"children\"").append(":").append("[");
-                    Resources preNav2 = null;
+                    sb.append("{ \n");
+                    sb.append("\"title\"").append(":\"").append(nav.getResourceName()).append("\",");
                     sb.append("\n");
-                    int lastLevelNum2 = 0; // 上一次的层次
-                    int curLevelNum2 = 0; // 本次对象的层次
-                    List<Resources> roots2 = resourceService.findByParentCode(resourceCode);
-                    // sb.append("[");
-                    try {//查询所有菜单
+                    sb.append("\"icon\"").append(":\"").append("nb-bar-chart").append("\",");
+                    sb.append("\n");
+                    lastLevelNum = curLevelNum;
+                    preNav = nav;
 
-                        for (Resources nav2 : roots2) {
-                            curLevelNum2 = getLevelNum(nav2);//2=2
-                            if (null != preNav2) {
-                                if (lastLevelNum2 == curLevelNum2) { // 同一层次的
-                                    sb.append("}, \n");
-                                } else if (lastLevelNum2 > curLevelNum2) { // 这次的层次比上次高一层，也即跳到上一层
-                                    sb.append("} \n");
 
-                                    for (int j = curLevelNum2; j < lastLevelNum2; j++) {
-                                        sb.append("]} \n");
-                                        if (j == lastLevelNum2 - 1) {
-                                            sb.append(", \n");
-                                        }
+                sb.append("\"children\"").append(":").append("[");
+
+                int lastLevelNum2 = 0; // 上一次的层次
+                int curLevelNum2 = 0; // 本次对象的层次
+                Resources preNav2 = null;
+                for (Resources nav2 : roots) {
+                    //String resourceCode2 = nav.getResourceCode();
+                    curLevelNum2 = getLevelNum(nav2);
+                    if (curLevelNum2 == 2) {
+                    if (nav2.getResourceCode().substring(0, 2).equals(nav.getResourceCode().substring(0, 2))){
+
+                        if (null != preNav2) {
+                            if (lastLevelNum2 == curLevelNum2) { // 同一层次的
+                                sb.append("}, \n");
+                            } else if (lastLevelNum2 > curLevelNum2) { // 这次的层次比上次高一层，也即跳到上一层
+                                sb.append("} \n");
+
+                                for (int j = curLevelNum2; j < lastLevelNum2; j++) {
+                                    sb.append("]} \n");
+                                    if (j == lastLevelNum2 - 1) {
+                                        sb.append(", \n");
                                     }
                                 }
                             }
-                            sb.append("{ \n");
-                            sb.append("\"title\"").append(":\"").append(nav2.getResourceName()).append("\",");
-                            sb.append("\"link\"").append(":\"").append(nav2.getResourceUrl()).append("\"");
-                            lastLevelNum2 = curLevelNum2;
-                            preNav2 = nav;
                         }
-                        sb.append("}\n");
-                    } catch (Exception e) {
-                        e.printStackTrace();
+
+                            sb.append("{ \n");
+                            sb.append("\"title\"").append(":\"").append(nav2.getResourceName()).append("\"");
+
+
+
+                        lastLevelNum2 = curLevelNum2;
+                        preNav2 = nav2;
                     }
-                    // sb.append("]");
+                    }
+                    else {
+                        continue;
+                    }
 
 
+                }  sb.append("} \n");
 
                     sb.append("] \n");
                 }
-                lastLevelNum = curLevelNum;
-                preNav = nav;
-            }
-            sb.append("} \n");
-            for (int j = 1; j < curLevelNum; j++) {
-                sb.append("]} \n");
+
+
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+
         }
+        sb.append("} \n");
         sb.append("]");
         return sb;
+
     }
-    private static int getLevelNum(Resources org) { return org.getResourceCode().length() / 2;
+
+    //    public StringBuilder getResource(@RequestParam(value = "login") String login) {
+//        log.debug("REST request to get User : {}", login);
+//        List<Resources> roots = userService.findOneByLogin(login);
+//        //通过login查出的所有的role
+//        List<Resources> roots2 = userService.findLowerByLogin(login);
+//
+//        int lastLevelNum = 0; // 上一次的层次
+//        int curLevelNum = 0; // 本次对象的层次
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("[");
+//        try {//查询所有菜单
+//
+//            Resources preNav = null;
+//            for (Resources nav : roots) {
+//                String resourceCode = nav.getResourceCode();
+//                curLevelNum = getLevelNum(nav);
+//                if (null != preNav) {
+//                    if (lastLevelNum == curLevelNum) { // 同一层次的
+//                        sb.append("}, \n");
+//                    } else if (lastLevelNum > curLevelNum) { // 这次的层次比上次高一层，也即跳到上一层
+//                        sb.append("} \n");
+//
+//                        for (int j = curLevelNum; j < lastLevelNum; j++) {
+//                            sb.append("]} \n");
+//                            if (j == lastLevelNum - 1) {
+//                                sb.append(", \n");
+//                            }
+//                        }
+//                    }
+//                }
+//                sb.append("{ \n");
+//                sb.append("\"title\"").append(":\"").append(nav.getResourceName()).append("\",");
+//                sb.append("\n");
+//                sb.append("\"icon\"").append(":\"").append("nb-bar-chart").append("\",");
+//                sb.append("\n");
+//                List<Resources> nav2roots = resourceService.findByParentCode(nav.getResourceCode());
+//                if (nav2roots.size() != 0) {
+//                    sb.append("\"children\"").append(":").append("[");
+//                    Resources preNav2 = null;
+//                    sb.append("\n");
+//                    int lastLevelNum2 = 0; // 上一次的层次
+//                    int curLevelNum2 = 0; // 本次对象的层次
+//
+//                    String res =null;
+//
+//                    //通过爸爸们的resourceCode拿到Resources列表
+//                       List<Resources> roots3 = resourceService.findByParentCode(resourceCode);
+//                  List<Resources> roots5 = new ArrayList<>();
+//                    Resources root4 = null;
+//                    //迭代Resources列表
+//                    for (Resources resource : roots2){
+//                        //拿到有这些资源的某个角色
+//                        for(Resources r : roots3){
+//                             if (resource.equals(r)) {
+//                                 root4 = resourceService.findByResourceCode(resource.getResourceCode());
+//                                 roots5.add(root4);
+//                             } else {
+//                                 continue;
+//                            }
+//
+//                        }
+//                    }
+//                    // sb.append("[");
+//                    try {//查询所有菜单
+//                        for (Resources nav2 : roots5) {
+//                            curLevelNum2 = getLevelNum(nav2);//2=2
+//                            if (null != preNav2) {
+//                                if (lastLevelNum2 == curLevelNum2) { // 同一层次的
+//                                    sb.append("}, \n");
+//                                } else if (lastLevelNum2 > curLevelNum2) { // 这次的层次比上次高一层，也即跳到上一层
+//                                    sb.append("} \n");
+//
+//                                    for (int j = curLevelNum2; j < lastLevelNum2; j++) {
+//                                        sb.append("]} \n");
+//                                        if (j == lastLevelNum2 - 1) {
+//                                            sb.append(", \n");
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                            sb.append("{ \n");
+//                            sb.append("\"title\"").append(":\"").append(nav2.getResourceName()).append("\",");
+//                            sb.append("\"link\"").append(":\"").append(nav2.getResourceUrl()).append("\"");
+//                            lastLevelNum2 = curLevelNum2;
+//                            preNav2 = nav;
+//
+//                            sb.append("}\n");
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                    // sb.append("]");
+//
+//
+//
+//                    sb.append("] \n");
+//                }
+//                lastLevelNum = curLevelNum;
+//                preNav = nav;
+//            }
+//            sb.append("} \n");
+//            for (int j = 1; j < curLevelNum; j++) {
+//                sb.append("]} \n");
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        sb.append("]");
+//        return sb;
+//    }
+    private static int getLevelNum(Resources org) {
+        return org.getResourceCode().length() / 2;
     }
 
 
@@ -301,6 +417,6 @@ public class UserResource {
     public ResponseEntity<Void> deleteUser(@PathVariable String login) {
         log.debug("REST request to delete User: {}", login);
         userService.deleteUser(login);
-        return ResponseEntity.ok().headers(HeaderUtil.createAlert( "userManagement.deleted", login)).build();
+        return ResponseEntity.ok().headers(HeaderUtil.createAlert("userManagement.deleted", login)).build();
     }
 }

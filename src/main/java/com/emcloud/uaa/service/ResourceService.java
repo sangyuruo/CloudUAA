@@ -1,10 +1,12 @@
 package com.emcloud.uaa.service;
 
 import com.emcloud.uaa.domain.Resources;
+import com.emcloud.uaa.domain.Role;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Service Interface for managing Resources.
@@ -39,6 +41,9 @@ public interface ResourceService {
      */
     Page<Resources> findAll(Pageable pageable);
 
+
+    List<Resources> findAll();
+
     /**
      *  Get the "id" resource.
      *
@@ -55,6 +60,8 @@ public interface ResourceService {
      */
     Page<Resources> findByResourceName(Pageable pageable, String resourceName);
 
+
+    List<Resources> findAllByParentCodeAndRoles(String parentCode, Set<Role> Roles);
     /**
      *  Delete the "id" resource.
      *
