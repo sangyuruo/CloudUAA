@@ -259,7 +259,8 @@ public class UserResource {
                         }
 
                             sb.append("{ \n");
-                            sb.append("\"title\"").append(":\"").append(nav2.getResourceName()).append("\"");
+                            sb.append("\"title\"").append(":\"").append(nav2.getResourceName()).append("\",");
+                            sb.append("\"link\"").append(":\"").append(nav2.getResourceUrl()).append("\"");
 
 
 
