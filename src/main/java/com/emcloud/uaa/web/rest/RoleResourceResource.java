@@ -16,13 +16,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.spring.web.json.Json;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * REST controller for managing RoleResource.
@@ -81,6 +81,30 @@ public class RoleResourceResource {
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, roleResource.getId().toString()))
             .body(result);
+    }
+
+    @PutMapping("/role-resources/update")
+    @Timed
+    public  void   update(@Valid @RequestParam String roleName,@Valid @RequestParam List<String> resourceCodes) throws URISyntaxException {
+        //log.debug("REST request to update RoleResource : {}", roleResource);
+       /* if (roleResource.getId() == null) {
+            return createRoleResource(roleResource);
+        }*/
+
+//        for (int i=0; i<resourceCodes.length;i++){
+        //Map<String, String[]> data = new HashMap<String, String[]>();
+        // 将json字符串转换成jsonObject
+
+
+        //System.out.println(resourceCodes);
+            for(String s : resourceCodes){
+            RoleResource roleResource =new RoleResource();
+            roleResource.setRoleName(roleName);
+            roleResource.setResourceCode(s);
+            roleResourceService.save(roleResource);
+
+        }
+
     }
 
     /**
