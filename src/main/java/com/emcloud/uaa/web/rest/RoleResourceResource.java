@@ -37,6 +37,7 @@ public class RoleResourceResource {
 
     private final RoleResourceService roleResourceService;
 
+
     public RoleResourceResource(RoleResourceService roleResourceService) {
         this.roleResourceService = roleResourceService;
     }
@@ -85,26 +86,15 @@ public class RoleResourceResource {
 
     @PutMapping("/role-resources/update")
     @Timed
-    public  void   update(@Valid @RequestParam String roleName,@Valid @RequestParam List<String> resourceCodes) throws URISyntaxException {
-        //log.debug("REST request to update RoleResource : {}", roleResource);
-       /* if (roleResource.getId() == null) {
-            return createRoleResource(roleResource);
-        }*/
-
-//        for (int i=0; i<resourceCodes.length;i++){
-        //Map<String, String[]> data = new HashMap<String, String[]>();
-        // 将json字符串转换成jsonObject
-
-
-        //System.out.println(resourceCodes);
-            for(String s : resourceCodes){
-            RoleResource roleResource =new RoleResource();
-            roleResource.setRoleName(roleName);
-            roleResource.setResourceCode(s);
-            roleResourceService.save(roleResource);
-
+    public void update(@Valid @RequestBody RoleResource roleResource) throws URISyntaxException {
+        log.debug("REST request to update RoleResource : {}", roleResource);
+        String[] resourceCodes = roleResource.getResourceCode().split(",");
+        for (String s : resourceCodes) {
+            RoleResource roleResource2 = new RoleResource();
+            roleResource2.setRoleName(roleResource.getRoleName());
+            roleResource2.setResourceCode(s);
+            roleResourceService.save(roleResource2);
         }
-
     }
 
     /**
