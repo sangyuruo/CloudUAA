@@ -128,8 +128,8 @@ public class ResourceResource {
                 sb.append("{ \n");
                 sb.append("\"label\"").append(":\"").append(nav.getResourceName()).append("\",");
                 sb.append("\"resourceCode\"").append(":\"").append(nav.getResourceCode()).append("\",");
-                List<Resources> nav2roots = resourceService.findByParentCode(nav.getResourceCode());
-                if (nav2roots.size() != 0) {
+                List<Resources> roots2 = resourceService.findByParentCode(resourceCode);
+                if (roots2.size() != 0) {
                     sb.append("\"leaf\"").append(":").append(false);
                     sb.append(",\"expandedIcon\"").append(":\"").append("fa-folder-open" + "\",");
                     sb.append("\"collapsedIcon\"").append(":\"").append("fa-folder" + "\"");
@@ -140,7 +140,7 @@ public class ResourceResource {
                     int lastLevelNum2 = 0; // 上一次的层次
                     int curLevelNum2 = 0; // 本次对象的层次
 
-                    List<Resources> roots2 = resourceService.findByParentCode(resourceCode);
+//                    List<Resources> roots2 = resourceService.findByParentCode(resourceCode);
                     //StringBuilder sb = new StringBuilder();
                     try {//查询所有菜单
 
