@@ -89,11 +89,37 @@ public class RoleResourceResource {
     public void update(@Valid @RequestBody RoleResource roleResource) throws URISyntaxException {
         log.debug("REST request to update RoleResource : {}", roleResource);
         String[] resourceCodes = roleResource.getResourceCode().split(",");
+        List<RoleResource> roleResource3 = roleResourceService.findByRoleName(roleResource.getRoleName());
+        for (RoleResource roleResource1 : roleResource3){
+            roleResourceService.delete(roleResource1.getId());
+        }
         for (String s : resourceCodes) {
             RoleResource roleResource2 = new RoleResource();
             roleResource2.setRoleName(roleResource.getRoleName());
             roleResource2.setResourceCode(s);
+
+
             roleResourceService.save(roleResource2);
+         /*   for (RoleResource roleResource1 : roleResource3){
+                if(roleResource1.getResourceCode().equals(roleResource2.getResourceCode())
+                    &&
+                    roleResource1.getRoleName().equals(roleResource2.getRoleName())) {
+                    break;
+                }
+                else {
+                    roleResourceService.save(roleResource2);
+                }
+
+            }*/
+           // roleResourceService.save(roleResource2);
+
+
+          /*  if (roleResource3.contains(roleResource2)){
+                break;
+            }
+            else {
+                roleResourceService.save(roleResource2);
+            }*/
         }
     }
 
@@ -112,6 +138,14 @@ public class RoleResourceResource {
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
+
+    @GetMapping("/role-resources/{roleName}")
+    @Timed
+    public List<RoleResource> getAllRoleResources(String roleName) {
+        log.debug("REST request to get a page of RoleResources");
+        List<RoleResource> roleResource = roleResourceService.findByRoleName(roleName);
+        return roleResource;
+    }
     /**
      * GET  /role-resources/:id : get the "id" roleResource.
      *

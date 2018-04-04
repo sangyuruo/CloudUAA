@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 /**
  * Service Implementation for managing RoleResource.
@@ -51,6 +53,11 @@ public class RoleResourceServiceImpl implements RoleResourceService{
         return roleResourceRepository.findAll(pageable);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<RoleResource> findByRoleName(String roleName){
+        return roleResourceRepository.findByRoleName(roleName);
+    }
     /**
      *  Get one roleResource by id.
      *
