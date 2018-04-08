@@ -9,6 +9,7 @@
     <include file="config/liquibase/changelog/20171125025846_added_entity_Resource.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171125105005_added_entity_RoleResource.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20171206105005_added_entity_UserRole.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20180322083512_added_entity_RoleResource.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 </databaseChangeLog>

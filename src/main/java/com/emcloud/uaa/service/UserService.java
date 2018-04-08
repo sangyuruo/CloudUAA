@@ -268,23 +268,76 @@ public class UserService {
         Set<Role> roles = user.get().getRoles();
         Role role =null;
         List<Resources> roots = new ArrayList<>();
-        for(Role role1 : roles){
-             role =roleService.findByName( role1.getName()).get();
-            Set<Resources> resources = role.getResources();
-            Resources r =null;
-            List<String> resourcesStr= new ArrayList<>();
-            for(Resources resources1 : resources){
-                resourcesStr.add(resources1.getResourceCode());
-                for(String str : resourcesStr) {
-                    r =  resourceService.findByResourceCode(str);
-                }
-                if (roots.contains(r)){
-                    continue;
-                }else{
-                    roots.add(r);
+        List<Resources> resources1 = resourceService.findAll();
+        for(Resources  resources2 : resources1) {
+            Set<Role> roleSet = resources2.getRoles();
+            for (Role role1 : roleSet){
+                if (roles.contains(role1)) {
+                    roots.add(resources2);
+                    roots = roots.stream().distinct().collect(Collectors.toList());
                 }
             }
+            //System.out.println(roleSet);
+           /* if (roleSet.contains(roles)) {
+                roots.add(resources2);
+                roots = roots.stream().distinct().collect(Collectors.toList());
+            }*/
         }
+
+
+
+
+
+       /* for(Role role1 : roles){
+             role =roleService.findByName( role1.getName()).get();
+            Set<Resources> resources = role.getResources();
+
+            roots.addAll(resources);
+            roots = roots.stream().distinct().collect(Collectors.toList());
+        }*/
         return roots;
     }
+
+
+
+
+
+//    public List<Resources> findLowerByLogin(String login){
+//        Optional<User> user = userRepository.findOneByLogin(login);
+//        Role role =null;
+//        List<Resources> roots2 = new ArrayList<>();
+//        Set<Role> roles = user.get().getRoles();
+//        for(Role role1 : roles){
+//            role =roleService.findByName( role1.getName()).get();
+//            Set<Resources> resources = role.getResources();
+//            Resources r =null;
+//            List<String> resourcesStr= new ArrayList<>();
+//            for(Resources resources1 : resources){
+//                if(resources1.getLevel()==2) {
+//
+//                        resourcesStr.add(resources1.getResourceCode());
+//                        for(String str : resourcesStr) {
+//                            r =  resourceService.findByResourceCode(str);
+//                        }
+//                        if(r.getLevel()==2) {
+//                            if (roots2.contains(r)) {
+//                                continue;
+//                            } else {
+//                                roots2.add(r);
+//                            }
+//                        }
+//                        else {
+//                            continue;
+//                        }
+//                }
+//                else {
+//                    continue;
+//                }
+//
+//
+//            }
+//        }
+//        return roots2;
+//    }
+
 }
