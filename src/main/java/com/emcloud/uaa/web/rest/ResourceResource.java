@@ -143,7 +143,7 @@ public class ResourceResource {
                 for(RoleResource roleResource1 : roleResource){
                     String reCode = roleResource1.getResourceCode();
                     if(reCode.equals(nav.getResourceCode())){
-                        sb.append("\"checked\"").append(":true").append(",");
+                        sb.append("\"partialSelected\"").append(":\"true\"").append(",");
                     }
                 }
 
@@ -187,7 +187,7 @@ public class ResourceResource {
                             for(RoleResource roleResource1 : roleResource){
                                 String reCode = roleResource1.getResourceCode();
                                 if(reCode.equals(nav2.getResourceCode())){
-                                    sb.append("\"checked\"").append(":true").append(",");
+                                    sb.append("\"partialSelected\"").append(":true").append(",");
                                 }
                             }
                             sb.append("\"resourceCode\"").append(":\"").append(nav2.getResourceCode()).append("\",");
