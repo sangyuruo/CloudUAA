@@ -84,7 +84,26 @@ public class RoleResourceResource {
             .body(result);
     }
 
+
     @PutMapping("/role-resources/update")
+    @Timed
+    public List<RoleResource> update(@Valid @RequestBody RoleResource roleResource) throws URISyntaxException {
+        log.debug("REST request to update RoleResource : {}", roleResource);
+        String[] resourceCodes = roleResource.getResourceCode().split(",");
+        List<RoleResource> roleResource3 = roleResourceService.findByRoleName(roleResource.getRoleName());
+        for (RoleResource roleResource1 : roleResource3){
+            roleResourceService.delete(roleResource1.getId());
+        }
+        for (String s : resourceCodes) {
+            RoleResource roleResource2 = new RoleResource();
+            roleResource2.setRoleName(roleResource.getRoleName());
+            roleResource2.setResourceCode(s);
+            roleResourceService.save(roleResource2);
+        }
+        return roleResource3;
+    }
+
+   /* @PutMapping("/role-resources/update")
     @Timed
     public void update(@Valid @RequestBody RoleResource roleResource) throws URISyntaxException {
         log.debug("REST request to update RoleResource : {}", roleResource);
@@ -100,28 +119,8 @@ public class RoleResourceResource {
 
 
             roleResourceService.save(roleResource2);
-         /*   for (RoleResource roleResource1 : roleResource3){
-                if(roleResource1.getResourceCode().equals(roleResource2.getResourceCode())
-                    &&
-                    roleResource1.getRoleName().equals(roleResource2.getRoleName())) {
-                    break;
-                }
-                else {
-                    roleResourceService.save(roleResource2);
-                }
-
-            }*/
-           // roleResourceService.save(roleResource2);
-
-
-          /*  if (roleResource3.contains(roleResource2)){
-                break;
-            }
-            else {
-                roleResourceService.save(roleResource2);
-            }*/
         }
-    }
+    }*/
 
     /**
      * GET  /role-resources : get all the roleResources.

@@ -37,7 +37,11 @@ public class EmCloudUaaApp {
         this.env = env;
     }
 
-    /**
+    /**192.168.1.15  register.emcloud.com
+     192.168.1.200   mysql.emcloud.com
+     192.168.1.15  register.emcloud.dev.com
+     192.168.1.15  config.emcloud.dev.com
+     192.168.1.200   mysql.emcloud.dev.com
      * Initializes EmCloudUAA.
      * <p>
      * Spring profiles can be configured with a program arguments --spring.profiles.active=your-active-profile

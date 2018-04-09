@@ -2,7 +2,9 @@ package com.emcloud.uaa.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.emcloud.uaa.domain.Resources;
+import com.emcloud.uaa.domain.RoleResource;
 import com.emcloud.uaa.service.ResourceService;
+import com.emcloud.uaa.service.RoleResourceService;
 import com.emcloud.uaa.web.rest.errors.BadRequestAlertException;
 import com.emcloud.uaa.web.rest.util.HeaderUtil;
 import com.emcloud.uaa.web.rest.util.PaginationUtil;
@@ -11,6 +13,7 @@ import io.github.jhipster.web.util.ResponseUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -42,6 +45,12 @@ public class ResourceResource {
         this.resourceService = resourceService;
     }
 
+    @Autowired
+    private  RoleResourceService roleResourceService;
+
+   /* public RoleResourceResource (RoleResourceService roleResourceService){
+        this.roleResourceService = roleResourceService;
+    }*/
     /**
      * POST  /resources : Create a new resources.
      *
@@ -90,15 +99,18 @@ public class ResourceResource {
      * @return the ResponseEntity with status 200 (OK) and the list of Resources in body
      */
 
-    @GetMapping("/resources/tree")
+    @GetMapping("/resources/tree/{roleName}")
     @Timed
-    public StringBuilder getRoots() {
+    public StringBuilder getRoots(@PathVariable String roleName) {
+
+
+
 
         int lastLevelNum = 0; // 上一次的层次
         int curLevelNum = 0; // 本次对象的层次
 
         List<Resources> roots = resourceService.findByParentCode("0");
-
+        List<RoleResource> roleResource = roleResourceService.findByRoleName(roleName);
         StringBuilder sb = new StringBuilder();
         sb.append("[");
         try {//查询所有菜单
@@ -127,9 +139,17 @@ public class ResourceResource {
 
                 sb.append("{ \n");
                 sb.append("\"label\"").append(":\"").append(nav.getResourceName()).append("\",");
-                sb.append("\"resourceCode\"").append(":\"").append(nav.getResourceCode()).append("\",");
-                List<Resources> roots2 = resourceService.findByParentCode(resourceCode);
-                if (roots2.size() != 0) {
+
+                for(RoleResource roleResource1 : roleResource){
+                    String reCode = roleResource1.getResourceCode();
+                    if(reCode.equals(nav.getResourceCode())){
+                        sb.append("\"checked\"").append(":true").append(",");
+                    }
+                }
+
+                //sb.append("\"resourceCode\"").append(":\"").append(nav.getResourceCode()).append("\",");
+                List<Resources> nav1 = resourceService.findByParentCode(resourceCode);
+                if (nav1.size() != 0) {
                     sb.append("\"leaf\"").append(":").append(false);
                     sb.append(",\"expandedIcon\"").append(":\"").append("fa-folder-open" + "\",");
                     sb.append("\"collapsedIcon\"").append(":\"").append("fa-folder" + "\"");
@@ -140,7 +160,7 @@ public class ResourceResource {
                     int lastLevelNum2 = 0; // 上一次的层次
                     int curLevelNum2 = 0; // 本次对象的层次
 
-//                    List<Resources> roots2 = resourceService.findByParentCode(resourceCode);
+                    List<Resources> roots2 = resourceService.findByParentCode(resourceCode);
                     //StringBuilder sb = new StringBuilder();
                     try {//查询所有菜单
 
@@ -164,6 +184,12 @@ public class ResourceResource {
                             }
                             sb.append("{ \n");
                             sb.append("\"label\"").append(":\"").append(nav2.getResourceName()).append("\",");
+                            for(RoleResource roleResource1 : roleResource){
+                                String reCode = roleResource1.getResourceCode();
+                                if(reCode.equals(nav2.getResourceCode())){
+                                    sb.append("\"checked\"").append(":true").append(",");
+                                }
+                            }
                             sb.append("\"resourceCode\"").append(":\"").append(nav2.getResourceCode()).append("\",");
                             sb.append("\"icon\"").append(":\"").append("fa-file-image-o").append("\"");
                             List<Resources> nav2roots2 = resourceService.findByParentCode(nav2.getResourceCode());
@@ -209,7 +235,7 @@ public class ResourceResource {
 
 
 
-    @GetMapping("/resources/nextTree")
+   /* @GetMapping("/resources/nextTree")
     public StringBuilder getNextTree(@RequestParam(value = "parentCode") String parentCode) {
 
         int lastLevelNum = 0; // 上一次的层次
@@ -261,7 +287,7 @@ public class ResourceResource {
         sb.append("]");
         return sb;
     }
-
+*/
  /*   @GetMapping("/resources/{roleIdentify}")
     @Timed
     public List<Resources> getAllResourceRoleIdentify
