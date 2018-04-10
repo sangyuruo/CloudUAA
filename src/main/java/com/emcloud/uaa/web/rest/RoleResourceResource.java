@@ -94,15 +94,18 @@ public class RoleResourceResource {
         for (RoleResource roleResource1 : roleResource3){
             roleResourceService.delete(roleResource1.getId());
         }
+        List<RoleResource> roleResources = new ArrayList<>();
+
         for (String s : resourceCodes) {
             RoleResource roleResource2 = new RoleResource();
             roleResource2.setRoleName(roleResource.getRoleName());
             roleResource2.setResourceCode(s);
-            roleResourceService.save(roleResource2);
+            RoleResource roleResources4 = roleResourceService.save(roleResource2);
+            roleResources.add(roleResources4);
         }
-        return roleResource3;
-    }
 
+        return roleResources;
+    }
    /* @PutMapping("/role-resources/update")
     @Timed
     public void update(@Valid @RequestBody RoleResource roleResource) throws URISyntaxException {

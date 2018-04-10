@@ -147,7 +147,7 @@ public class ResourceResource {
                     }
                 }
 
-                //sb.append("\"resourceCode\"").append(":\"").append(nav.getResourceCode()).append("\",");
+                sb.append("\"resourceCode\"").append(":\"").append(nav.getResourceCode()).append("\",");
                 List<Resources> nav1 = resourceService.findByParentCode(resourceCode);
                 if (nav1.size() != 0) {
                     sb.append("\"leaf\"").append(":").append(false);
