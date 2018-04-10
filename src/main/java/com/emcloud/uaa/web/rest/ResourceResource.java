@@ -315,7 +315,7 @@ public class ResourceResource {
      * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of Resources in body
      */
-    @GetMapping("/resources/{resourceName}")
+    @GetMapping("/resources/resourceName/{resourceName}")
     @Timed
     public ResponseEntity<List<Resources>> getAllResourceByResourceName
     (@RequestParam(value = "query", required = false) String resourceName, @ApiParam Pageable pageable) {
@@ -363,9 +363,9 @@ public class ResourceResource {
     /**
      * 模糊查询
      */
-    @GetMapping("/resources/value/{value}")
+    @GetMapping("/resources/query/{value}")
     @Timed
-    public List<Resources> getAllResourceByValue(@PathVariable(value = "value") String value) {
+    public List<Resources> getAllResourceByValue(@PathVariable(value = "query") String value) {
 
         return resourceService.findByValue(value);
 
@@ -374,9 +374,9 @@ public class ResourceResource {
     /**
      * 模糊查询2
      */
-    @GetMapping("/resources/value2/{value}")
+    @GetMapping("/resources/query2/{value}")
     @Timed
-    public List<String> getAllResourceByValue2(@PathVariable(value = "value") String value) {
+    public List<String> getAllResourceByValue2(@PathVariable(value = "query") String value) {
         log.debug(value);
         return resourceService.findByValue2(value);
 
