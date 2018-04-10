@@ -90,7 +90,8 @@ public class UaaConfiguration extends AuthorizationServerConfigurerAdapter imple
                 .antMatchers("/api/profile-info").permitAll()
                 .antMatchers("/api/**").authenticated()
                 .antMatchers("/management/health").permitAll()
-                .antMatchers("/management/**").hasAuthority(RolesConstants.ADMIN)
+                .antMatchers("/management/**").permitAll()
+//                .antMatchers("/management/**").hasAuthority(RolesConstants.ADMIN)
                 .antMatchers("/v2/api-docs/**").permitAll()
                 .antMatchers("/swagger-resources/configuration/ui").permitAll()
                 .antMatchers("/swagger-ui/index.html").hasAuthority(RolesConstants.ADMIN);
