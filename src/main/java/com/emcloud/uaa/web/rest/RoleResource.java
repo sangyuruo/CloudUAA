@@ -98,6 +98,8 @@ public class RoleResource {
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
+
+
     /**
      * GET  /roles : get all the roles by id or name.
      *
@@ -142,4 +144,8 @@ public class RoleResource {
         roleService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
+
+
+
+
 }
