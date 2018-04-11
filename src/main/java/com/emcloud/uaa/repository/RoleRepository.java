@@ -20,8 +20,8 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
     /**
      * 通过name或desc查找
      */
-    @Query("select r from Role r where r.name = ?1 or r.desc = ?1")
-    Role findAllByNameOrDesc(String name);
+    @Query("select r from Role r where r.name = ?1 or r.description = ?1")
+    Role findAllByNameOrDescription(String name);
 
     Role findOneByName(String name);
 //    Optional<Role> findAllByName(String name);

@@ -102,14 +102,15 @@ public class RoleResource {
 
     /**
      * GET  /roles : get all the roles by id or name.
-     *
+     *2018-04-11 az
      * @return the ResponseEntity with status 200 (OK) and the list of roles in body
      */
+
     @GetMapping("/roles/byNameOrDesc/{name}")
     @Timed
     public  Role  getAllRolesByNameOrDesc(@PathVariable(value = "name") String name ) {
         log.debug("REST request to get a page of roles");
-         return roleService.findAllByNameOrDesc(name );
+         return roleService.findAllByNameOrDescription(name );
     }
 
 

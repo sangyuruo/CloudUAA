@@ -17,7 +17,7 @@ public class RoleDTO {
         private String name;
 
         @Size(max = 500)
-        private String desc;
+        private String description;
 
 
         private Set<String> resources ;
@@ -26,14 +26,14 @@ public class RoleDTO {
         // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
         public RoleDTO(){}
         public RoleDTO(Role role){
-            this( role.getId(),role.getName(),role.getDesc(),role.getResources()
+            this( role.getId(),role.getName(),role.getDescription(),role.getResources()
                 .stream().map(Resources::getResourceCode)
                 .collect(Collectors.toSet()));
         }
-    public RoleDTO(Long id,String name ,String desc,Set<String> resources){
+    public RoleDTO(Long id,String name ,String description,Set<String> resources){
             this.id=id;
             this.name=name;
-            this.desc=desc;
+            this.description=description;
             this.resources=resources;
     }
 
@@ -44,7 +44,7 @@ public class RoleDTO {
             return "Role{" +
                 "id=" + getId() +
                 ", name='" + getName() + "'" +
-                ", desc='" + getDesc() + "'" +
+                ", description='" + getDescription() + "'" +
                 ", resources='" + getResources() + "'" +
                 "}";
         }
@@ -65,19 +65,20 @@ public class RoleDTO {
         this.name = name;
     }
 
-    public String getDesc() {
-        return desc;
-    }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
 
 
     public Set<String> getResources() {
         return resources;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }
 
 

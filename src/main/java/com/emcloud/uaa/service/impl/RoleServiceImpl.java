@@ -106,9 +106,9 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     @Transactional(readOnly = true)
-    public Role  findAllByNameOrDesc(String name){
+    public Role   findAllByNameOrDescription(String name){
         log.debug("Request to get all roles by name");
-        return roleRepository.findAllByNameOrDesc( name);
+        return roleRepository.findAllByNameOrDescription( name);
     }
 
     /**
@@ -139,7 +139,7 @@ public class RoleServiceImpl implements RoleService {
             .findOneByName(roleDTO.getName()))
             .map(role -> {
                 role.setName(roleDTO.getName());
-                role.setDesc(roleDTO.getDesc());
+                role.setDescription(roleDTO.getDescription());
                 Set<Resources> managedResources = role.getResources();
                 managedResources.clear();
                 roleDTO.getResources().stream()

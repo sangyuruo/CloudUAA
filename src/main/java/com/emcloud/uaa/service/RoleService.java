@@ -57,7 +57,8 @@ public interface RoleService {
     void delete(Long id);
 
 
-    Role findAllByNameOrDesc(String name);
+    Role findAllByNameOrDescription(String name);
+
 
 
 }
