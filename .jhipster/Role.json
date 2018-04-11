@@ -13,7 +13,7 @@
             "fieldValidateRulesMaxlength": 40
         },
         {
-            "fieldName": "desc",
+            "fieldName": "descriptionription",
             "javadoc": "角色描述",
             "fieldType": "String",
             "fieldValidateRules": [

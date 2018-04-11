@@ -102,17 +102,15 @@ public class RoleResource {
 
     /**
      * GET  /roles : get all the roles by id or name.
-     *
-     * @param pageable the pagination information
+     *2018-04-11 az
      * @return the ResponseEntity with status 200 (OK) and the list of roles in body
      */
-    @GetMapping("/roles/{name}or{desc}")
+
+    @GetMapping("/roles/byNameOrDesc/{name}")
     @Timed
-    public ResponseEntity<List<Role>> getAllRolesByNameOrDesc(@PathVariable String name, @PathVariable String desc, @ApiParam Pageable pageable) {
+    public  Role  getAllRolesByNameOrDesc(@PathVariable(value = "name") String name ) {
         log.debug("REST request to get a page of roles");
-        Page<Role> page = roleService.findAllByNameOrDesc(name,desc,pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/roles/{name}or{desc}");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+         return roleService.findAllByNameOrDescription(name );
     }
 
 

@@ -19,9 +19,9 @@ import java.util.Optional;
 public interface RoleRepository extends JpaRepository<Role, Long> {
     /**
      * 通过name或desc查找
-     *
-     * */
-    Page<Role> findAllByNameOrDescContaining(Pageable pageable, String name, String desc);
+     */
+    @Query("select r from Role r where r.name = ?1 or r.description = ?1")
+    Role findAllByNameOrDescription(String name);
 
     Role findOneByName(String name);
 //    Optional<Role> findAllByName(String name);

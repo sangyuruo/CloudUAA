@@ -7,7 +7,7 @@ entity Role {
 name String maxlength(40) required,
 
  /** 角色描述 */
- desc String maxlength(500)
+ description String maxlength(500)
 
 }
 
