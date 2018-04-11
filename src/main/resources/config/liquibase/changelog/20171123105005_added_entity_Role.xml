@@ -26,7 +26,7 @@
                 <constraints nullable="false" />
             </column>
 
-            <column name="desc" type="varchar(500)">
+            <column name="description" type="varchar(500)">
                 <constraints nullable="true" />
             </column>
 

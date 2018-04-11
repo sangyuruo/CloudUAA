@@ -45,8 +45,8 @@ public class Role implements Serializable {
      */
     @Size(max = 500)
     @ApiModelProperty(value = "角色描述")
-    @Column(name = "desc", length = 500)
-    private String desc;
+    @Column(name = "description", length = 500)
+    private String description;
 
 
     @JsonIgnore
@@ -83,16 +83,16 @@ public class Role implements Serializable {
     }
 
     public String getDesc() {
-        return desc;
+        return description;
     }
 
     public Role desc(String desc) {
-        this.desc = desc;
+        this.description = desc;
         return this;
     }
 
     public void setDesc(String desc) {
-        this.desc = desc;
+        this.description = desc;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -121,7 +121,7 @@ public class Role implements Serializable {
         return "Role{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
-            ", desc='" + getDesc() + "'" +
+            ", description='" + getDesc() + "'" +
             "}";
     }
 
