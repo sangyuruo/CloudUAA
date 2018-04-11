@@ -54,7 +54,7 @@
                 <constraints nullable="false" />
             </column>
 
-            <column name="level" type="Integer">
+            <column name="level" type="integer">
                 <constraints nullable="false" />
             </column>
 

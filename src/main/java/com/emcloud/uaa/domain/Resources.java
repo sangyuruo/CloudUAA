@@ -103,7 +103,6 @@ public class Resources implements Serializable {
      * 级别
      */
     @NotNull
-    @Size(max = 100)
     @Column(name = "level", nullable = false)
     @ApiModelProperty(value = "级别", required = true)
     private Integer level;

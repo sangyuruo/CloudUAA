@@ -51,7 +51,6 @@ public class RoleResource {
     @PostMapping("/roles")
     @Timed
     public ResponseEntity<Role> createRole(@Valid @RequestBody Role role) throws URISyntaxException {
-        role.getDesc();
         log.debug("REST request to save Role : {}", role);
         if (role.getId() != null) {
             throw new BadRequestAlertException("A new role cannot already have an ID", ENTITY_NAME, "idexists");

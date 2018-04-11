@@ -60,7 +60,7 @@ public class ResourceResource {
      */
     @PostMapping("/resources")
     @Timed
-    public ResponseEntity<Resources> createResource(@Valid @RequestBody Resources resources) throws URISyntaxException {
+    public ResponseEntity<Resources> createResource( @RequestBody Resources resources) throws URISyntaxException {
         log.debug("REST request to save Resources : {}", resources);
         if (resources.getId() != null) {
             throw new BadRequestAlertException("A new resources cannot already have an ID", ENTITY_NAME, "idexists");
@@ -146,7 +146,6 @@ public class ResourceResource {
                         sb.append("\"partialSelected\"").append(":\"true\"").append(",");
                     }
                 }
-
                 sb.append("\"resourceCode\"").append(":\"").append(nav.getResourceCode()).append("\",");
                 List<Resources> nav1 = resourceService.findByParentCode(resourceCode);
                 if (nav1.size() != 0) {
