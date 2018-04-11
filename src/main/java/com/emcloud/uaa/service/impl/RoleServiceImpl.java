@@ -102,14 +102,13 @@ public class RoleServiceImpl implements RoleService {
     /**
      *  Get all the roles by id or name.
      *
-     *  @param pageable the pagination information
      *  @return the list of entities
      */
     @Override
     @Transactional(readOnly = true)
-    public Page<Role> findAllByNameOrDesc(String name, String desc, Pageable pageable){
-        log.debug("Request to get all roles by id or name");
-        return roleRepository.findAllByNameOrDescContaining(pageable, name,desc);
+    public Role  findAllByNameOrDesc(String name){
+        log.debug("Request to get all roles by name");
+        return roleRepository.findAllByNameOrDesc( name);
     }
 
     /**

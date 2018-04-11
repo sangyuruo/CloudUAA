@@ -21,8 +21,6 @@ public interface RoleService {
     Role save(Role role);
 
 
-
-
     /**
      * Update a role.
      *
@@ -33,38 +31,33 @@ public interface RoleService {
 
 
     /**
-     *  Get all the authorities.
+     * Get all the authorities.
      *
-     *  @param pageable the pagination information
-     *  @return the list of entities
+     * @param pageable the pagination information
+     * @return the list of entities
      */
     Page<Role> findAll(Pageable pageable);
 
 
-  //  Optional<Role> findByName(String name);
+    //  Optional<Role> findByName(String name);
 
     /**
-     *  Get the "id" role.
+     * Get the "id" role.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     Role findOne(Long id);
 
     /**
-     *  Delete the "id" role.
+     * Delete the "id" role.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     void delete(Long id);
 
 
-    /**
-     *  Get all the authorities by desc or name .
-     *  azi
-     *  @param pageable the pagination information
-     *  @return the list of entities
-     */
-    Page<Role> findAllByNameOrDesc(String name , String desc, Pageable pageable);
+    Role findAllByNameOrDesc(String name);
+
 
 }
