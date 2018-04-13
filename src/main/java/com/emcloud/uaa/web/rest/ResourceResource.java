@@ -99,9 +99,9 @@ public class ResourceResource {
      * @return the ResponseEntity with status 200 (OK) and the list of Resources in body
      */
 
-    @GetMapping("/resources/tree/{roleName}")
+    @GetMapping("/resources/tree")
     @Timed
-    public StringBuilder getRoots(@PathVariable String roleName) {
+    public StringBuilder getRoots() {
 
 
 
@@ -110,7 +110,7 @@ public class ResourceResource {
         int curLevelNum = 0; // 本次对象的层次
 
         List<Resources> roots = resourceService.findByParentCode("0");
-        List<RoleResource> roleResource = roleResourceService.findByRoleName(roleName);
+       // List<RoleResource> roleResource = roleResourceService.findByRoleName(roleName);
         StringBuilder sb = new StringBuilder();
         sb.append("[");
         try {//查询所有菜单
@@ -139,13 +139,14 @@ public class ResourceResource {
 
                 sb.append("{ \n");
                 sb.append("\"label\"").append(":\"").append(nav.getResourceName()).append("\",");
-
-                for(RoleResource roleResource1 : roleResource){
+                sb.append("\"expanded\"").append(":\"true\"").append(",");
+               // "expanded":true,
+                /*for(RoleResource roleResource1 : roleResource){
                     String reCode = roleResource1.getResourceCode();
                     if(reCode.equals(nav.getResourceCode())){
                         sb.append("\"partialSelected\"").append(":\"true\"").append(",");
                     }
-                }
+                }*/
                 sb.append("\"resourceCode\"").append(":\"").append(nav.getResourceCode()).append("\",");
                 List<Resources> nav1 = resourceService.findByParentCode(resourceCode);
                 if (nav1.size() != 0) {
@@ -183,14 +184,15 @@ public class ResourceResource {
                             }
                             sb.append("{ \n");
                             sb.append("\"label\"").append(":\"").append(nav2.getResourceName()).append("\",");
-                            for(RoleResource roleResource1 : roleResource){
+                          /*  for(RoleResource roleResource1 : roleResource){
                                 String reCode = roleResource1.getResourceCode();
                                 if(reCode.equals(nav2.getResourceCode())){
                                     sb.append("\"partialSelected\"").append(":true").append(",");
                                 }
-                            }
+                            }*/
                             sb.append("\"resourceCode\"").append(":\"").append(nav2.getResourceCode()).append("\",");
-                            sb.append("\"icon\"").append(":\"").append("fa-file-image-o").append("\"");
+                            sb.append("\"icon\"").append(":\"").append("fa-file-image-o").append("\",");
+                            sb.append("\"leaf\"").append(":").append(true);
                             List<Resources> nav2roots2 = resourceService.findByParentCode(nav2.getResourceCode());
                             if (nav2roots2.size() != 0) {
                     sb.append(",\"leaf\"").append(":").append(false);
