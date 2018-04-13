@@ -147,16 +147,16 @@ public class RoleResourceResource {
 
     @GetMapping("/role-resources/byroleName/{roleName}")
     @Timed
-    public String [] getAllRoleResources(String roleName) {
+    public String [] getAllRoleResources(@PathVariable String roleName) {
         log.debug("REST request to get a page of RoleResources");
         List<RoleResource> roleResource = roleResourceService.findByRoleName(roleName);
-        String [] resourceCodes=null;
-        for(RoleResource roleResource1 :roleResource){
-            for (int i=0;i<roleResource.size();i++){
-                resourceCodes[i]=   roleResource1.getResourceCode();
+        String [] resourceCodes=new String[roleResource.size()];
+
+        for(int i=0;i<roleResource.size();i++){
+                resourceCodes[i]=   roleResource.get(i).getResourceCode();
             }
 
-        }
+
         return resourceCodes;
     }
     /**
