@@ -193,6 +193,28 @@ public class UserResource {
                 .map(UserDTO::new));
     }
 
+    @GetMapping("/users/search/{login}")
+    @Timed
+    public String [] getSearchResource(@PathVariable String login) {
+        List<Resources> roots = userService.findOneByLogin(login);
+        int curLevelNum = 0;
+        List<String> reName = new ArrayList<>();
+
+        for(Resources resources : roots){
+            curLevelNum = getLevelNum(resources);
+            if (curLevelNum == 1) {
+                String resourceName = resources.getResourceName();
+                reName.add(resourceName);
+            }
+        }
+        String [] resourceNames=new String[reName.size()];
+        for(int i=0;i<reName.size();i++){
+            resourceNames[i]=   reName.get(i);
+        }
+        return resourceNames;
+    }
+
+
     @GetMapping("/users/bylogin")
     @Timed
     public StringBuilder getResource(@RequestParam(value = "login") String login) {
