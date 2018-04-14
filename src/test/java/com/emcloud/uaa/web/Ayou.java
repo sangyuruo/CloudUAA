@@ -12,6 +12,6 @@ public class Ayou {
         String baba="01";
         String zaza="0102";
 
-       System.out.println(zaza.substring(0,2)+"         wowoowowowowowoowowowo");
+       System.out.println(zaza.substring(0,2)+"  游洪 游洪游洪游洪游洪      wowoowowowowowoowowowo");
     }
 }

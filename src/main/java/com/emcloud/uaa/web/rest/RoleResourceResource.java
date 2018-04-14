@@ -1,7 +1,9 @@
 package com.emcloud.uaa.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.emcloud.uaa.domain.Resources;
 import com.emcloud.uaa.domain.RoleResource;
+import com.emcloud.uaa.service.ResourceService;
 import com.emcloud.uaa.service.RoleResourceService;
 import com.emcloud.uaa.web.rest.errors.BadRequestAlertException;
 import com.emcloud.uaa.web.rest.util.HeaderUtil;
@@ -10,6 +12,7 @@ import io.swagger.annotations.ApiParam;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -36,7 +39,8 @@ public class RoleResourceResource {
     private static final String ENTITY_NAME = "roleResource";
 
     private final RoleResourceService roleResourceService;
-
+    @Autowired
+    private ResourceService resourceService;
 
     public RoleResourceResource(RoleResourceService roleResourceService) {
         this.roleResourceService = roleResourceService;
@@ -94,15 +98,18 @@ public class RoleResourceResource {
         for (RoleResource roleResource1 : roleResource3){
             roleResourceService.delete(roleResource1.getId());
         }
+        List<RoleResource> roleResources = new ArrayList<>();
+
         for (String s : resourceCodes) {
             RoleResource roleResource2 = new RoleResource();
             roleResource2.setRoleName(roleResource.getRoleName());
             roleResource2.setResourceCode(s);
-            roleResourceService.save(roleResource2);
+            RoleResource roleResources4 = roleResourceService.save(roleResource2);
+            roleResources.add(roleResources4);
         }
-        return roleResource3;
-    }
 
+        return roleResources;
+    }
    /* @PutMapping("/role-resources/update")
     @Timed
     public void update(@Valid @RequestBody RoleResource roleResource) throws URISyntaxException {
@@ -138,12 +145,19 @@ public class RoleResourceResource {
     }
 
 
-    @GetMapping("/role-resources/{roleName}")
+    @GetMapping("/role-resources/byroleName/{roleName}")
     @Timed
-    public List<RoleResource> getAllRoleResources(String roleName) {
+    public String [] getAllRoleResources(@PathVariable String roleName) {
         log.debug("REST request to get a page of RoleResources");
         List<RoleResource> roleResource = roleResourceService.findByRoleName(roleName);
-        return roleResource;
+        String [] resourceCodes=new String[roleResource.size()];
+
+        for(int i=0;i<roleResource.size();i++){
+                resourceCodes[i]=   roleResource.get(i).getResourceCode();
+            }
+
+
+        return resourceCodes;
     }
     /**
      * GET  /role-resources/:id : get the "id" roleResource.

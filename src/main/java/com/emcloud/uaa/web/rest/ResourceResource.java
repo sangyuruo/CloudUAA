@@ -61,7 +61,7 @@ public class ResourceResource {
      */
     @PostMapping("/resources")
     @Timed
-    public ResponseEntity<Resources> createResource(@Valid @RequestBody Resources resources) throws URISyntaxException {
+    public ResponseEntity<Resources> createResource( @RequestBody Resources resources) throws URISyntaxException {
         log.debug("REST request to save Resources : {}", resources);
         if (resources.getId() != null) {
             throw new BadRequestAlertException("A new resources cannot already have an ID", ENTITY_NAME, "idexists");
@@ -100,16 +100,16 @@ public class ResourceResource {
      * @return the ResponseEntity with status 200 (OK) and the list of Resources in body
      */
 
-    @GetMapping("/resources/tree/{roleName}")
+    @GetMapping("/resources/tree")
     @Timed
-    public StringBuilder getRoots(@PathVariable String roleName) {
+    public StringBuilder getRoots() {
 
 
         int lastLevelNum = 0; // 上一次的层次
         int curLevelNum = 0; // 本次对象的层次
 
         List<Resources> roots = resourceService.findByParentCode("0");
-        List<RoleResource> roleResource = roleResourceService.findByRoleName(roleName);
+       // List<RoleResource> roleResource = roleResourceService.findByRoleName(roleName);
         StringBuilder sb = new StringBuilder();
         sb.append("[");
         try {//查询所有菜单
@@ -144,9 +144,8 @@ public class ResourceResource {
                     if (reCode.equals(nav.getResourceCode())) {
                         sb.append("\"partialSelected\"").append(":\"true\"").append(",");
                     }
-                }
-
-                //sb.append("\"resourceCode\"").append(":\"").append(nav.getResourceCode()).append("\",");
+                }*/
+                sb.append("\"resourceCode\"").append(":\"").append(nav.getResourceCode()).append("\",");
                 List<Resources> nav1 = resourceService.findByParentCode(resourceCode);
                 if (nav1.size() != 0) {
                     sb.append("\"leaf\"").append(":").append(false);
@@ -187,9 +186,10 @@ public class ResourceResource {
                                 if (reCode.equals(nav2.getResourceCode())) {
                                     sb.append("\"partialSelected\"").append(":true").append(",");
                                 }
-                            }
+                            }*/
                             sb.append("\"resourceCode\"").append(":\"").append(nav2.getResourceCode()).append("\",");
-                            sb.append("\"icon\"").append(":\"").append("fa-file-image-o").append("\"");
+                            sb.append("\"icon\"").append(":\"").append("fa-file-image-o").append("\",");
+                            sb.append("\"leaf\"").append(":").append(true);
                             List<Resources> nav2roots2 = resourceService.findByParentCode(nav2.getResourceCode());
                             if (nav2roots2.size() != 0) {
                                 sb.append(",\"leaf\"").append(":").append(false);
