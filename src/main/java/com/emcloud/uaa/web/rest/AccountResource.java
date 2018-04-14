@@ -106,7 +106,6 @@ public class AccountResource {
             .map(UserDTO::new)
             .orElseThrow(() -> new InternalServerErrorException("User could not be found"));
     }
-
     /**
     * POST  /account : update the current user information.
     *

@@ -19,11 +19,20 @@ import java.util.Set;
 @Repository
 public interface ResourceRepository extends JpaRepository<Resources, Long> {
     Page<Resources> findAllByResourceNameContaining(Pageable pageable, String resourceName);
+
     List<Resources> findAllByParentCode(String parentCode);
-    Resources  findByResourceCode(String resourceCode);
+
+    Resources findByResourceCode(String resourceCode);
+
     List<Resources> findAllByParentCodeAndRoles(String parentCode, Set<Role> Roles);
+
     List<Resources> findAll();
 
+    @Query("select r from Resources r where r.resourceName like %?1")
+    List<Resources> findByValue(String value);
+
+    @Query("select r.resourceName from Resources r where r.resourceName like concat('%' ,?1,'%')  ")
+    List<String> findByValue2(String value);
 
 
 }

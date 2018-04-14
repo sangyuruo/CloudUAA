@@ -68,4 +68,9 @@ public interface ResourceService {
      *  @param id the id of the entity
      */
     void delete(Long id);
+
+    List<Resources> findByValue(String value);
+
+    List<String> findByValue2(String value);
+
 }

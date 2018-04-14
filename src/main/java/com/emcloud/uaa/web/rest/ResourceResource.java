@@ -46,11 +46,12 @@ public class ResourceResource {
     }
 
     @Autowired
-    private  RoleResourceService roleResourceService;
+    private RoleResourceService roleResourceService;
 
    /* public RoleResourceResource (RoleResourceService roleResourceService){
         this.roleResourceService = roleResourceService;
     }*/
+
     /**
      * POST  /resources : Create a new resources.
      *
@@ -104,8 +105,6 @@ public class ResourceResource {
     public StringBuilder getRoots() {
 
 
-
-
         int lastLevelNum = 0; // 上一次的层次
         int curLevelNum = 0; // 本次对象的层次
 
@@ -139,11 +138,10 @@ public class ResourceResource {
 
                 sb.append("{ \n");
                 sb.append("\"label\"").append(":\"").append(nav.getResourceName()).append("\",");
-                sb.append("\"expanded\"").append(":\"true\"").append(",");
-               // "expanded":true,
-                /*for(RoleResource roleResource1 : roleResource){
+
+                for (RoleResource roleResource1 : roleResource) {
                     String reCode = roleResource1.getResourceCode();
-                    if(reCode.equals(nav.getResourceCode())){
+                    if (reCode.equals(nav.getResourceCode())) {
                         sb.append("\"partialSelected\"").append(":\"true\"").append(",");
                     }
                 }*/
@@ -154,7 +152,6 @@ public class ResourceResource {
                     sb.append(",\"expandedIcon\"").append(":\"").append("fa-folder-open" + "\",");
                     sb.append("\"collapsedIcon\"").append(":\"").append("fa-folder" + "\"");
                     sb.append(",\"children\" :[ \n");
-
 
 
                     int lastLevelNum2 = 0; // 上一次的层次
@@ -184,9 +181,9 @@ public class ResourceResource {
                             }
                             sb.append("{ \n");
                             sb.append("\"label\"").append(":\"").append(nav2.getResourceName()).append("\",");
-                          /*  for(RoleResource roleResource1 : roleResource){
+                            for (RoleResource roleResource1 : roleResource) {
                                 String reCode = roleResource1.getResourceCode();
-                                if(reCode.equals(nav2.getResourceCode())){
+                                if (reCode.equals(nav2.getResourceCode())) {
                                     sb.append("\"partialSelected\"").append(":true").append(",");
                                 }
                             }*/
@@ -195,9 +192,9 @@ public class ResourceResource {
                             sb.append("\"leaf\"").append(":").append(true);
                             List<Resources> nav2roots2 = resourceService.findByParentCode(nav2.getResourceCode());
                             if (nav2roots2.size() != 0) {
-                    sb.append(",\"leaf\"").append(":").append(false);
-                    sb.append(",\"expandedIcon\"").append(":\"").append("fa-folder-open" + "\"");
-                    sb.append("\"collapsedIcon\"").append(":\"").append("fa-folder" + "\"");
+                                sb.append(",\"leaf\"").append(":").append(false);
+                                sb.append(",\"expandedIcon\"").append(":\"").append("fa-folder-open" + "\"");
+                                sb.append("\"collapsedIcon\"").append(":\"").append("fa-folder" + "\"");
                                /* sb.append(",\"children\" :[ \n");
                                 sb.append("] \n");*/
                             }
@@ -206,8 +203,7 @@ public class ResourceResource {
                         }
                         sb.append("} \n");
 
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
@@ -297,6 +293,7 @@ public class ResourceResource {
         List<Resources> list = resourceService.findByRoleIdentify(roleIdentify);
         return list;
     }*/
+
     /**
      * GET  /resources : get all the Resources.
      *
@@ -318,16 +315,16 @@ public class ResourceResource {
      * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of Resources in body
      */
-    @GetMapping("/resources/{resourceName}")
+    @GetMapping("/resources/resourceName/{resourceName}")
     @Timed
     public ResponseEntity<List<Resources>> getAllResourceByResourceName
-    (@RequestParam(value = "query",required = false) String resourceName , @ApiParam Pageable pageable) {
+    (@RequestParam(value = "query", required = false) String resourceName, @ApiParam Pageable pageable) {
         log.debug("REST request to get a page of Resources");
         Page<Resources> page;
-        if(StringUtils.isBlank(resourceName)){
+        if (StringUtils.isBlank(resourceName)) {
             page = resourceService.findAll(pageable);
-        }else{
-            page = resourceService.findByResourceName(pageable,resourceName);
+        } else {
+            page = resourceService.findByResourceName(pageable, resourceName);
         }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/resources");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
@@ -360,5 +357,28 @@ public class ResourceResource {
         log.debug("REST request to delete Resources : {}", id);
         resourceService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
+
+
+    /**
+     * 模糊查询
+     */
+    @GetMapping("/resources/query/{value}")
+    @Timed
+    public List<Resources> getAllResourceByValue(@PathVariable(value = "query") String value) {
+
+        return resourceService.findByValue(value);
+
+    }
+
+    /**
+     * 模糊查询2
+     */
+    @GetMapping("/resources/query2/{value}")
+    @Timed
+    public List<String> getAllResourceByValue2(@PathVariable(value = "query") String value) {
+        log.debug(value);
+        return resourceService.findByValue2(value);
+
     }
 }

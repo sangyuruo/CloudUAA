@@ -82,17 +82,17 @@ public class Role implements Serializable {
         this.name = name;
     }
 
-    public String getDesc() {
+    public String getDescription() {
         return description;
     }
 
-    public Role desc(String desc) {
-        this.description = desc;
+    public Role description(String description) {
+        this.description = description;
         return this;
     }
 
-    public void setDesc(String desc) {
-        this.description = desc;
+    public void setDescription(String description) {
+        this.description = description;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -121,7 +121,7 @@ public class Role implements Serializable {
         return "Role{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
-            ", description='" + getDesc() + "'" +
+            ", description='" + getDescription() + "'" +
             "}";
     }
 

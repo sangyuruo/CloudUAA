@@ -138,5 +138,15 @@ public class ResourceServiceImpl implements ResourceService{
         resourceRepository.delete(id);
     }
 
+    @Override
+    public List<Resources> findByValue(String value) {
+        return resourceRepository.findByValue(value);
+    }
+
+    @Override
+    public List<String> findByValue2(String value) {
+        return resourceRepository.findByValue2(value);
+    }
+
 
 }
