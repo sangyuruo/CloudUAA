@@ -3,28 +3,29 @@
     "relationships": [],
     "fields": [
         {
-            "fieldName": "name",
+            "fieldName": "roleName",
             "javadoc": "角色名",
             "fieldType": "String",
             "fieldValidateRules": [
                 "maxlength",
                 "required"
             ],
-            "fieldValidateRulesMaxlength": 40
+            "fieldValidateRulesMaxlength": 255
         },
         {
-            "fieldName": "description",
-            "javadoc": "角色描述",
+            "fieldName": "resourceCode",
+            "javadoc": "资源编码",
             "fieldType": "String",
             "fieldValidateRules": [
-                "maxlength"
+                "maxlength",
+                "required"
             ],
-            "fieldValidateRulesMaxlength": 500
+            "fieldValidateRulesMaxlength": 255
         }
     ],
-    "changelogDate": "20171123105005",
-    "javadoc": "角色表\n@author daiziying",
-    "entityTableName": "role",
+    "changelogDate": "20180322083512",
+    "javadoc": "角色资源关系表\n@author youhong",
+    "entityTableName": "role_resource",
     "dto": "no",
     "pagination": "pager",
     "service": "serviceImpl",
