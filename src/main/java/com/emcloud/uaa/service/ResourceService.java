@@ -1,8 +1,12 @@
 package com.emcloud.uaa.service;
 
 import com.emcloud.uaa.domain.Resources;
+import com.emcloud.uaa.domain.Role;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * Service Interface for managing Resources.
@@ -24,6 +28,11 @@ public interface ResourceService {
      * @return the persisted entity
      */
     Resources update(Resources resources);
+
+    List<Resources> findByParentCode(String parentCode);
+
+    Resources findByResourceCode(String resourceCode);
+
     /**
      *  Get all the resources.
      *
@@ -31,6 +40,9 @@ public interface ResourceService {
      *  @return the list of entities
      */
     Page<Resources> findAll(Pageable pageable);
+
+
+    List<Resources> findAll();
 
     /**
      *  Get the "id" resource.
@@ -48,10 +60,17 @@ public interface ResourceService {
      */
     Page<Resources> findByResourceName(Pageable pageable, String resourceName);
 
+
+    List<Resources> findAllByParentCodeAndRoles(String parentCode, Set<Role> Roles);
     /**
      *  Delete the "id" resource.
      *
      *  @param id the id of the entity
      */
     void delete(Long id);
+
+    List<Resources> findByValue(String value);
+
+    List<String> findByValue2(String value);
+
 }

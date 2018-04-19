@@ -1,0 +1,13 @@
+/**
+ * 角色资源关系表
+ * @author youhong
+ */
+entity RoleResource {
+  /** 角色名 */
+roleName String maxlength(255) required,
+
+ /** 资源编码 */
+ resourceCode String maxlength(255) required
+
+}
+

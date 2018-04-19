@@ -441,6 +441,27 @@
             <scope>test</scope>
         </dependency>
         <!-- jhipster-needle-maven-add-dependency -->
+
+
+        <!--<dependency>-->
+            <!--<groupId>json</groupId>-->
+            <!--<artifactId>json</artifactId>-->
+            <!--<version>0.7.1</version>-->
+            <!--<systemPath>{basedir}\src\main\lib\json-lib-0.7.1.jar</systemPath>-->
+            <!--<scope>system</scope>-->
+    <!--</dependency>-->
+        <dependency>
+            <groupId>org.scala-lang.modules</groupId>
+            <artifactId>scala-parser-combinators_2.11</artifactId>
+            <version>RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>gherkin</artifactId>
+            <version>RELEASE</version>
+        </dependency>
+
+
     </dependencies>
     <build>
         <defaultGoal>spring-boot:run</defaultGoal>

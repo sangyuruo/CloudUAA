@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import org.springframework.data.jpa.repository.*;
 
+import java.util.List;
+import java.util.Optional;
+
 
 /**
  * Spring Data JPA repository for the Role entity.
@@ -16,9 +19,10 @@ import org.springframework.data.jpa.repository.*;
 public interface RoleRepository extends JpaRepository<Role, Long> {
     /**
      * 通过name或desc查找
-     *
-     * */
-    Page<Role> findAllByNameOrDescContaining(Pageable pageable, String name, String desc);
+     */
+    @Query("select r from Role r where r.name = ?1 or r.description = ?1")
+    Role findAllByNameOrDescription(String name);
 
     Role findOneByName(String name);
+//    Optional<Role> findAllByName(String name);
 }

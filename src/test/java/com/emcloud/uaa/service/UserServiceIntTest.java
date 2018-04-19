@@ -64,11 +64,11 @@ public class UserServiceIntTest {
         Set<Role> authorities = new HashSet<>();
         Role a = new Role();
         a.setName("ROLE_OU");
-        a.setDesc("ROLE_OU");
+//        a.setDesc("ROLE_OU");
         authorities.add( a );
         a = new Role();
         a.setName("ROLE_ADMIN");
-        a.setDesc("ROLE_ADMIN");
+//        a.setDesc("ROLE_ADMIN");
         authorities.add( a );
 
         user.setRoles(authorities);

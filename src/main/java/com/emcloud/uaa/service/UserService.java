@@ -1,5 +1,6 @@
 package com.emcloud.uaa.service;
 
+import com.emcloud.uaa.domain.Resources;
 import com.emcloud.uaa.domain.Role;
 import com.emcloud.uaa.domain.User;
 import com.emcloud.uaa.repository.RoleRepository;
@@ -13,6 +14,7 @@ import com.emcloud.uaa.web.rest.vm.ManagedUserVM;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,6 +46,12 @@ public class UserService {
     private final RoleRepository roleRepository;
 //缓存管理器
     private final CacheManager cacheManager;
+
+    @Autowired
+    private ResourceService resourceService;
+
+    @Autowired
+    private RoleService roleService;
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, CacheManager cacheManager) {
         this.userRepository = userRepository;
@@ -253,4 +261,83 @@ public class UserService {
     public List<String> getRoles() {
         return roleRepository.findAll().stream().map(Role::getName).collect(Collectors.toList());
     }
+
+    public List<Resources> findOneByLogin(String login){
+        Optional<User> user = userRepository.findOneByLogin(login);
+
+        Set<Role> roles = user.get().getRoles();
+        Role role =null;
+        List<Resources> roots = new ArrayList<>();
+        List<Resources> resources1 = resourceService.findAll();
+        for(Resources  resources2 : resources1) {
+            Set<Role> roleSet = resources2.getRoles();
+            for (Role role1 : roleSet){
+                if (roles.contains(role1)) {
+                    roots.add(resources2);
+                    roots = roots.stream().distinct().collect(Collectors.toList());
+                }
+            }
+            //System.out.println(roleSet);
+           /* if (roleSet.contains(roles)) {
+                roots.add(resources2);
+                roots = roots.stream().distinct().collect(Collectors.toList());
+            }*/
+        }
+
+
+
+
+
+       /* for(Role role1 : roles){
+             role =roleService.findByName( role1.getName()).get();
+            Set<Resources> resources = role.getResources();
+
+            roots.addAll(resources);
+            roots = roots.stream().distinct().collect(Collectors.toList());
+        }*/
+        return roots;
+    }
+
+
+
+
+
+//    public List<Resources> findLowerByLogin(String login){
+//        Optional<User> user = userRepository.findOneByLogin(login);
+//        Role role =null;
+//        List<Resources> roots2 = new ArrayList<>();
+//        Set<Role> roles = user.get().getRoles();
+//        for(Role role1 : roles){
+//            role =roleService.findByName( role1.getName()).get();
+//            Set<Resources> resources = role.getResources();
+//            Resources r =null;
+//            List<String> resourcesStr= new ArrayList<>();
+//            for(Resources resources1 : resources){
+//                if(resources1.getLevel()==2) {
+//
+//                        resourcesStr.add(resources1.getResourceCode());
+//                        for(String str : resourcesStr) {
+//                            r =  resourceService.findByResourceCode(str);
+//                        }
+//                        if(r.getLevel()==2) {
+//                            if (roots2.contains(r)) {
+//                                continue;
+//                            } else {
+//                                roots2.add(r);
+//                            }
+//                        }
+//                        else {
+//                            continue;
+//                        }
+//                }
+//                else {
+//                    continue;
+//                }
+//
+//
+//            }
+//        }
+//        return roots2;
+//    }
+
 }

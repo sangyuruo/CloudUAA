@@ -93,17 +93,22 @@ public class RoleServiceImpl implements RoleService {
         return roleRepository.findAll(pageable);
     }
 
+//    public Optional<Role> findByName(String name){
+//        log.debug("Request to get name");
+//        return roleRepository.findAllByName(name);
+//    }
+
+
     /**
      *  Get all the roles by id or name.
      *
-     *  @param pageable the pagination information
      *  @return the list of entities
      */
     @Override
     @Transactional(readOnly = true)
-    public Page<Role> findAllByNameOrDesc(String name, String desc, Pageable pageable){
-        log.debug("Request to get all roles by id or name");
-        return roleRepository.findAllByNameOrDescContaining(pageable, name,desc);
+    public Role   findAllByNameOrDescription(String name){
+        log.debug("Request to get all roles by name");
+        return roleRepository.findAllByNameOrDescription( name);
     }
 
     /**
@@ -129,17 +134,16 @@ public class RoleServiceImpl implements RoleService {
         log.debug("Request to delete Role : {}", id);
         roleRepository.delete(id);
     }
-//阿紫============================阿紫 ============================阿紫=================================================
-    public Optional<RoleDTO> updateRole(RoleDTO roleDTO) {
+  public Optional<RoleDTO> updateRole(RoleDTO roleDTO) {
         return Optional.of(roleRepository
             .findOneByName(roleDTO.getName()))
             .map(role -> {
                 role.setName(roleDTO.getName());
-                role.setDesc(roleDTO.getDesc());
+                role.setDescription(roleDTO.getDescription());
                 Set<Resources> managedResources = role.getResources();
                 managedResources.clear();
                 roleDTO.getResources().stream()
-                    .map(resourceRepository::findOneByResourceCode)
+                    .map(resourceRepository::findByResourceCode)
                     .forEach(managedResources::add);
                // cacheManager.getCache(USERS_CACHE).evict(user.getLogin());
                 log.debug("Changed Information for Role: {}", role);

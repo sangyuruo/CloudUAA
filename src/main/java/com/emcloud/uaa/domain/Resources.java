@@ -1,6 +1,8 @@
 package com.emcloud.uaa.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -8,7 +10,10 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+
 /**
  * A Resources.
  */
@@ -60,6 +65,49 @@ public class Resources implements Serializable {
     private String resourceUrl;
 
     /**
+     * 上级代码
+     */
+    @Size(max = 64)
+    @Column(name = "parent_code", length = 100, nullable = false)
+    @ApiModelProperty(value = "上级代码", required = true)
+    private String parentCode;
+
+    /**
+     * 上级名
+     */
+    @NotNull
+    @Size(max = 100)
+    @Column(name = "parent_name", length = 100, nullable = false)
+    @ApiModelProperty(value = "上级名", required = true)
+    private String parentName;
+
+    /**
+     * 排序
+     */
+    @NotNull
+    @Size(max = 100)
+    @Column(name = "sort", length = 100, nullable = false)
+    @ApiModelProperty(value = "排序", required = true)
+    private String sort;
+
+    /**
+     * 权限标识
+     */
+    @NotNull
+    @Size(max = 100)
+    @Column(name = "role_identify", length = 100, nullable = false)
+    @ApiModelProperty(value = "权限标识", required = true)
+    private String roleIdentify;
+
+    /**
+     * 级别
+     */
+    @NotNull
+    @Column(name = "level", nullable = false)
+    @ApiModelProperty(value = "级别", required = true)
+    private Integer level;
+
+    /**
      * 是否有效
      */
     @NotNull
@@ -96,6 +144,16 @@ public class Resources implements Serializable {
     @ApiModelProperty(value = "修改时间", required = true)
     @Column(name = "update_time", nullable = false)
     private Instant updateTime;
+
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+        name = "role_resource",
+        joinColumns = {@JoinColumn(name = "resource_code", referencedColumnName = "resource_code")},
+        inverseJoinColumns = {@JoinColumn(name = "role_name", referencedColumnName = "name")})
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @BatchSize(size = 20)
+    private Set<Role> roles;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -156,6 +214,75 @@ public class Resources implements Serializable {
 
     public void setResourceUrl(String resourceUrl) {
         this.resourceUrl = resourceUrl;
+    }
+
+    public String getParentCode() {
+        return parentCode;
+    }
+
+    public Resources parentCode(String parentCode) {
+        this.parentCode = parentCode;
+        return this;
+    }
+
+    public void setParentCode(String parentCode) {
+        this.parentCode = parentCode;
+    }
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public Resources parentName(String parentName) {
+        this.parentName = parentName;
+        return this;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
+
+    public String getSort() {
+        return sort;
+    }
+
+    public Resources sort(String sort) {
+        this.sort = sort;
+        return this;
+    }
+
+    public void setSort(String sort) {
+        this.sort = sort;
+    }
+
+    public String getRoleIdentify() {
+        return roleIdentify;
+    }
+
+    public Resources roleIdentify(String roleIdentify) {
+        this.roleIdentify = roleIdentify;
+        return this;
+    }
+
+    public void setRoleIdentify(String roleIdentify) {
+        this.roleIdentify = roleIdentify;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public Resources level(Integer level) {
+        this.level = level;
+        return this;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    public Boolean getEnable() {
+        return enable;
     }
 
     public Boolean isEnable() {
@@ -222,6 +349,15 @@ public class Resources implements Serializable {
     public void setUpdateTime(Instant updateTime) {
         this.updateTime = updateTime;
     }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
@@ -252,6 +388,11 @@ public class Resources implements Serializable {
             ", resourceName='" + getResourceName() + "'" +
             ", resourceType='" + getResourceType() + "'" +
             ", resourceUrl='" + getResourceUrl() + "'" +
+            ", parentCode='" + getParentCode() + "'" +
+            ", parentName='" + getParentName() + "'" +
+            ", sort='" + getSort() + "'" +
+            ", roleIdentify='" + getRoleIdentify() + "'" +
+            ", level='" + getLevel() + "'" +
             ", enable='" + isEnable() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", createTime='" + getCreateTime() + "'" +

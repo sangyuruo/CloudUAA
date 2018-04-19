@@ -87,7 +87,7 @@ public class RoleResourcesIntTest {
     public static Role createEntity(EntityManager em) {
         Role role = new Role()
             .name(DEFAULT_NAME)
-            .desc(DEFAULT_DESC);
+            .description(DEFAULT_DESC);
         return role;
     }
 
@@ -100,7 +100,7 @@ public class RoleResourcesIntTest {
     public void createAuthorityToDB() throws Exception {
         Role role = new Role()
             .name("ROLE_ADMIN")
-            .desc("ROLE_ADMIN");
+            .description("ROLE_ADMIN");
         roleService.save(role);
     }
 
@@ -120,7 +120,7 @@ public class RoleResourcesIntTest {
         assertThat(roleList).hasSize(databaseSizeBeforeCreate + 1);
         Role testRole = roleList.get(roleList.size() - 1);
         assertThat(testRole.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testRole.getDesc()).isEqualTo(DEFAULT_DESC);
+        assertThat(testRole.getDescription()).isEqualTo(DEFAULT_DESC);
     }
 
     @Test
@@ -210,7 +210,7 @@ public class RoleResourcesIntTest {
         Role updatedRole = roleRepository.findOne(role.getId());
         updatedRole
             .name(UPDATED_NAME)
-            .desc(UPDATED_DESC);
+            .description(UPDATED_DESC);
 
         restAuthorityMockMvc.perform(put("/api/authorities")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -222,7 +222,7 @@ public class RoleResourcesIntTest {
         assertThat(roleList).hasSize(databaseSizeBeforeUpdate);
         Role testRole = roleList.get(roleList.size() - 1);
         assertThat(testRole.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testRole.getDesc()).isEqualTo(UPDATED_DESC);
+        assertThat(testRole.getDescription()).isEqualTo(UPDATED_DESC);
     }
 
     @Test
