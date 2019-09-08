@@ -34,11 +34,49 @@ spring:
                 input1:
                     destination: output_batch_msg
                     group: group1
+                    ## 测试消费端指定分区
+                    consumer:
+                        partitioned: true
+                        instanceIndex: 0
+                        instanceCount: 5
                 input2:
                     destination: output_batch_msg
-                    group: group2
+                    group: group1
+                    consumer:
+                        partitioned: true
+                        instanceIndex: 1
+                        instanceCount: 5
+                input3:
+                    destination: output_batch_msg
+                    group: group1
+                    consumer:
+                        partitioned: true
+                        instanceIndex: 2
+                        instanceCount: 5
+                input4:
+                    destination: output_batch_msg
+                    group: group1
+                    consumer:
+                        partitioned: true
+                        instanceIndex: 3
+                        instanceCount: 5
+                input5:
+                    destination: output_batch_msg
+                    group: group1
+                    consumer:
+                        partitioned: true
+                        instanceIndex: 4
+                        instanceCount: 5
+#                input2:
+#                    destination: output_batch_msg
+#                    group: group2
                 output:
                     destination: output_batch_msg
+                    ## 测试消息生产端的分区key
+                    producer:
+                        partitionKeyExtractorName: customPartitionKeyExtractor
+                        partitionSelectorName: customPartitionSelectorClass
+                        partitionCount: 5
         bus:
             trace:
                 enabled: true
