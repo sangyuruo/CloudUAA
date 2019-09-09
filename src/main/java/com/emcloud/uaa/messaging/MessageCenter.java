@@ -6,6 +6,7 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.SubscribableChannel;
 
 public interface MessageCenter {
+    String X_MSG_HEADER = "x-msg";
     String INPUT1 = "input1";
     String INPUT2 = "input2";
     String INPUT3 = "input3";

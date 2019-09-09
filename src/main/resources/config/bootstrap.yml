@@ -74,8 +74,11 @@ spring:
                     destination: output_batch_msg
                     ## 测试消息生产端的分区key
                     producer:
-                        partitionKeyExtractorName: customPartitionKeyExtractor
-                        partitionSelectorName: customPartitionSelectorClass
+                        partitioned: true
+#                        partitionKeyExtractorClass: org.springframework.cloud.stream.partitioning.CustomPartitionKeyExtractorClass
+                        partitionKeyExtractorClass: com.emcloud.uaa.messaging.partition.CustomPartitionKeyExtractorClass
+#                        partitionSelectorClass: org.springframework.cloud.stream.partitioning.CustomPartitionSelectorClass
+                        partitionSelectorClass: com.emcloud.uaa.messaging.partition.CustomPartitionSelectorClass
                         partitionCount: 5
         bus:
             trace:

@@ -1,5 +1,6 @@
 package com.emcloud.uaa.messaging.partition;
 
+import com.emcloud.uaa.messaging.MessageCenter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.stream.binder.PartitionKeyExtractorStrategy;
@@ -9,8 +10,8 @@ public class CustomPartitionKeyExtractorClass implements PartitionKeyExtractorSt
     private final Logger log = LoggerFactory.getLogger(CustomPartitionKeyExtractorClass.class);
     @Override
     public Object extractKey(Message<?> message) {
-        String msg = (String) message.getPayload();
-        log.info("msg hashcode is " + msg.hashCode() );
-        return msg.hashCode();
+        Integer msgIndex = (Integer) message.getHeaders().get(MessageCenter.X_MSG_HEADER);
+        log.info("msg index is " + msgIndex );
+        return msgIndex;
     }
 }

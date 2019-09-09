@@ -7,8 +7,14 @@ import org.springframework.cloud.stream.binder.PartitionSelectorStrategy;
 public class CustomPartitionSelectorClass implements PartitionSelectorStrategy {
     private final Logger log = LoggerFactory.getLogger(CustomPartitionSelectorClass.class);
     @Override
-    public int selectPartition(Object o, int i) {
-        log.info("object is {} , i is {} " , o , i );
-        return o.hashCode() % i;
+    /**
+     * o: partition key
+     * i: partition count
+     */
+    public int selectPartition(Object key, int partitionCount) {
+        log.info("object is {} , i is {} " , key , partitionCount );
+        int partitionIndex = key.hashCode() % partitionCount;
+        log.info("partitionIndex is {} " ,  partitionIndex );
+        return partitionIndex;
     }
 }

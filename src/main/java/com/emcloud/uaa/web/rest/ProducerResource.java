@@ -1,6 +1,7 @@
 package com.emcloud.uaa.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.emcloud.uaa.messaging.MessageCenter;
 import com.emcloud.uaa.messaging.ProducerChannel;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang.time.DateUtils;
@@ -23,13 +24,14 @@ public class ProducerResource {
     @Autowired
     ProducerChannel producerChannel;
 
+
     @GetMapping("/demo/kafka.send/{count}")
     @Timed
     public void produce(@PathVariable int count) {
         String time = DateFormatUtils.ISO_DATETIME_FORMAT.format(new Date());
         while (count > 0) {
             String msg = time + " Hello world!: " + count;
-            producerChannel.output(MessageBuilder.withPayload(msg).build());
+            producerChannel.output(MessageBuilder.withPayload(msg).setHeader(MessageCenter.X_MSG_HEADER, count).build());
             count--;
         }
     }
